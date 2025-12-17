@@ -7,6 +7,7 @@
     <title>Mediaonetix</title>
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/bootstrap.js'])
     <livewire:styles />
+
 </head>
 
 <body>
@@ -21,7 +22,7 @@
 
     <script>
         // Wait for DOM to be fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Toggle sidebar on mobile
             const toggleBtn = document.getElementById('toggleSidebar');
             const sidebar = document.getElementById('sidebar');
@@ -40,6 +41,8 @@
             }
         });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 </body>
 
 </html>
