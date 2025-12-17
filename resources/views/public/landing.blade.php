@@ -29,8 +29,8 @@
 
                     <h1
                         class="hero-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-tight sm:leading-none text-white">
-                        Tickets Made
-                        <span class="gradient-text block">Simple</span>
+                        MediaOne
+                        <span class="gradient-text block">TIX</span>
                     </h1>
 
                     <p
@@ -58,12 +58,12 @@
                     </div>
                 </div>
 
-
                 <!-- Right Visual - Show on mobile too but smaller -->
                 <div class="hero-visual relative mt-8 lg:mt-0">
                     <div class="event-slider-container relative max-w-md mx-auto lg:max-w-none">
-                        <!-- Event Card -->
-                        <div class="event-slide active floating">
+                        
+                        <!-- Slide 1: Electronic Paradise (Blue) -->
+                        <div class="event-slide active floating" data-theme-color="#3B82F6">
                             <div
                                 class="ticket-shape relative bg-gradient-to-br from-blue-600/20 to-blue-400/10 backdrop-blur-xl border border-blue-500/30 p-6 sm:p-8 glow-effect">
                                 <div class="space-y-4 sm:space-y-6">
@@ -106,6 +106,115 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Slide 2: Rock The Night (Red) -->
+                        <div class="event-slide floating" data-theme-color="#EF4444">
+                            <div
+                                class="ticket-shape relative bg-gradient-to-br from-red-600/20 to-red-400/10 backdrop-blur-xl border border-red-500/30 p-6 sm:p-8 glow-effect">
+                                <div class="space-y-4 sm:space-y-6">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="text-xs sm:text-sm text-gray-400 mb-1">ROCK FESTIVAL</div>
+                                            <div class="text-lg sm:text-xl md:text-2xl font-bold text-white truncate">
+                                                Rock The Night</div>
+                                        </div>
+                                        <div
+                                            class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
+                                            <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <div class="border-t border-dashed border-gray-700 pt-4 sm:pt-6 space-y-3 sm:space-y-4">
+                                        <div class="flex justify-between text-xs sm:text-sm">
+                                            <span class="text-gray-400">Date</span>
+                                            <span class="font-semibold text-white">Sep 20, 2024</span>
+                                        </div>
+                                        <div class="flex justify-between text-xs sm:text-sm">
+                                            <span class="text-gray-400">Location</span>
+                                            <span class="font-semibold text-white">Stadium Arena</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-xs sm:text-sm">
+                                            <span class="text-gray-400">Price</span>
+                                            <span class="text-xl sm:text-2xl font-bold text-red-400">$125</span>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        class="w-full py-2.5 sm:py-3 bg-gradient-to-r from-red-600 to-red-500 rounded-xl font-semibold text-sm sm:text-base hover:shadow-lg hover:shadow-red-500/50 transition-all text-white">
+                                        Get Tickets
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3: Jazz Night (Purple) -->
+                        <div class="event-slide floating" data-theme-color="#8B5CF6">
+                            <div
+                                class="ticket-shape relative bg-gradient-to-br from-purple-600/20 to-purple-400/10 backdrop-blur-xl border border-purple-500/30 p-6 sm:p-8 glow-effect">
+                                <div class="space-y-4 sm:space-y-6">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="text-xs sm:text-sm text-gray-400 mb-1">JAZZ EVENING</div>
+                                            <div class="text-lg sm:text-xl md:text-2xl font-bold text-white truncate">
+                                                Smooth Jazz Night</div>
+                                        </div>
+                                        <div
+                                            class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
+                                            <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <div class="border-t border-dashed border-gray-700 pt-4 sm:pt-6 space-y-3 sm:space-y-4">
+                                        <div class="flex justify-between text-xs sm:text-sm">
+                                            <span class="text-gray-400">Date</span>
+                                            <span class="font-semibold text-white">Oct 5, 2024</span>
+                                        </div>
+                                        <div class="flex justify-between text-xs sm:text-sm">
+                                            <span class="text-gray-400">Location</span>
+                                            <span class="font-semibold text-white">Jazz Lounge</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-xs sm:text-sm">
+                                            <span class="text-gray-400">Price</span>
+                                            <span class="text-xl sm:text-2xl font-bold text-purple-400">$65</span>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        class="w-full py-2.5 sm:py-3 bg-gradient-to-r from-purple-600 to-purple-500 rounded-xl font-semibold text-sm sm:text-base hover:shadow-lg hover:shadow-purple-500/50 transition-all text-white">
+                                        Get Tickets
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slider Controls -->
+                        <div class="slider-controls absolute bottom-[-60px] left-1/2 transform -translate-x-1/2 flex items-center gap-4 z-10">
+                            <button class="slider-btn slider-prev w-12 h-12 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center cursor-pointer hover:bg-blue-500/20 hover:border-blue-500/50 transition-all backdrop-blur-sm" aria-label="Previous slide">
+                                <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="slider-dots flex gap-2">
+                                <span class="w-2 h-2 rounded-full bg-blue-400 transition-all"></span>
+                                <span class="w-2 h-2 rounded-full bg-white/30 transition-all"></span>
+                                <span class="w-2 h-2 rounded-full bg-white/30 transition-all"></span>
+                            </div>
+                            <button class="slider-btn slider-next w-12 h-12 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center cursor-pointer hover:bg-blue-500/20 hover:border-blue-500/50 transition-all backdrop-blur-sm" aria-label="Next slide">
+                                <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Decorative Elements - Smaller on mobile -->
@@ -116,6 +225,7 @@
                         class="absolute -bottom-5 -left-5 md:-bottom-10 md:-left-10 w-24 h-24 md:w-40 md:h-40 bg-blue-400 rounded-full filter blur-[60px] md:blur-[80px] opacity-40">
                     </div>
                 </div>
+                
             </div>
         </div>
     </section>

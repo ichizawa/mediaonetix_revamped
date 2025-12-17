@@ -41,8 +41,32 @@ document.addEventListener('DOMContentLoaded', function() {
             stagger: 0.1
         }, '-=0.4');
 
-    // Subtle floating orb animations
+    // Enhanced floating orb animations with position movement and color sync
     const orbs = document.querySelectorAll('.pulse-slow');
+    const decorativeOrbs = document.querySelectorAll('.hero-visual .absolute[class*="bg-blue"]');
+    
+    // Get the current active slide to sync orb colors
+    function getCurrentThemeColor() {
+        const activeSlide = document.querySelector('.event-slide.active');
+        if (activeSlide) {
+            return activeSlide.dataset.themeColor || '#3B82F6';
+        }
+        return '#3B82F6';
+    }
+    
+    // Update orb colors smoothly
+    function updateOrbColors(color) {
+        const allOrbs = [...orbs, ...decorativeOrbs];
+        allOrbs.forEach(orb => {
+            gsap.to(orb, {
+                backgroundColor: color,
+                duration: 0.8,
+                ease: 'power2.inOut'
+            });
+        });
+    }
+    
+    // Floating movement for main orbs
     orbs.forEach((orb, index) => {
         gsap.to(orb, {
             x: index % 2 === 0 ? 50 : -40,
@@ -52,7 +76,30 @@ document.addEventListener('DOMContentLoaded', function() {
             yoyo: true,
             ease: 'sine.inOut'
         });
+        
+        gsap.to(orb, {
+            opacity: 0.4,
+            duration: 4,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+        });
     });
+    
+    // Listen for slide changes and update orbs
+    const sliderContainer = document.querySelector('.event-slider-container');
+    if (sliderContainer) {
+        const observer = new MutationObserver(() => {
+            const newColor = getCurrentThemeColor();
+            updateOrbColors(newColor);
+        });
+        
+        observer.observe(sliderContainer, {
+            attributes: true,
+            subtree: true,
+            attributeFilter: ['class']
+        });
+    }
 
     // Section Header
     gsap.from('.section-header > *', {

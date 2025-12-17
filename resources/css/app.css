@@ -77,6 +77,7 @@ body {
     height: 40px;
     background: #0c1222;
     border-radius: 50%;
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .ticket-shape::before {
@@ -89,6 +90,60 @@ body {
     right: -20px;
     top: 50%;
     transform: translateY(-50%);
+}
+
+/* Ticket shape animation when sliding to next */
+.ticket-shape.ticket-slide-left::before {
+    animation: notch-bounce-left 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.ticket-shape.ticket-slide-left::after {
+    animation: notch-bounce-right 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Ticket shape animation when sliding to previous */
+.ticket-shape.ticket-slide-right::before {
+    animation: notch-bounce-right 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.ticket-shape.ticket-slide-right::after {
+    animation: notch-bounce-left 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes notch-bounce-left {
+    0% {
+        transform: translateY(-50%) translateX(0);
+    }
+    25% {
+        transform: translateY(-50%) translateX(-15px) scale(0.8);
+    }
+    50% {
+        transform: translateY(-50%) translateX(10px) scale(1.2);
+    }
+    75% {
+        transform: translateY(-50%) translateX(-5px) scale(0.95);
+    }
+    100% {
+        transform: translateY(-50%) translateX(0) scale(1);
+    }
+}
+
+@keyframes notch-bounce-right {
+    0% {
+        transform: translateY(-50%) translateX(0);
+    }
+    25% {
+        transform: translateY(-50%) translateX(15px) scale(0.8);
+    }
+    50% {
+        transform: translateY(-50%) translateX(-10px) scale(1.2);
+    }
+    75% {
+        transform: translateY(-50%) translateX(5px) scale(0.95);
+    }
+    100% {
+        transform: translateY(-50%) translateX(0) scale(1);
+    }
 }
 
 .floating {
@@ -109,6 +164,7 @@ body {
 .pulse-slow {
     animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
 .event-slider-container {
     position: relative;
     min-height: 400px;
