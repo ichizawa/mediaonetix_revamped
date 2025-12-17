@@ -39,8 +39,6 @@
                         sell in seconds.
                     </p>
 
-                    
-
                     <div
                         class="hero-stats flex flex-wrap items-center justify-center md:justify-start gap-4 sm:gap-6 md:gap-8 pt-4 sm:pt-6 md:pt-8">
                         <div class="flex-shrink-0">
