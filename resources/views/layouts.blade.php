@@ -11,6 +11,10 @@
 
 <body>
     <div>
+        @if (Route::is('admin.*'))
+            @include('components.navbar')
+            @include('components.sidebar')
+        @endif
         @yield('content')
     </div>
     <livewire:scripts />
