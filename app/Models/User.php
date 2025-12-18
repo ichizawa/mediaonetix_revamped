@@ -4,14 +4,19 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
+    const STATUS = [
+        0 => 'Inactive',
+        1 => 'Active',
+    ];
     /**
      * The attributes that are mass assignable.
      *
@@ -20,6 +25,23 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'username',
+        'first_name',
+        'last_name',
+        'phone_number',
+        'city',
+        'dob',
+        'gender',
+        'country',
+        'zip_code',
+        'address',
+        'image',
+        'email',
+        'password',
+        'is_email_sent',
+        'is_email_resent',
+        'is_active',
+        'role_id',
         'password',
     ];
 
@@ -30,6 +52,10 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'dob' => 'date',
+        'is_email_sent' => 'boolean',
+        'is_email_resent' => 'boolean',
+        'is_active' => 'boolean',
         'remember_token',
     ];
 
@@ -44,5 +70,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
+    }
+
+    public function scopeInactive($query)
+    {
+        return $query->where('is_active', 0);
     }
 }

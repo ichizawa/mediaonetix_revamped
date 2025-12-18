@@ -62,7 +62,7 @@
                 </svg>
                 <span class="font-medium">Settings</span>
             </a>
-            <form method="POST" action="#">
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
