@@ -11,4 +11,12 @@ class EventsController extends Controller
     {
         return view('admin.events');
     }
+    public function store()
+    {
+
+    }
+    public function edit($event_id)
+    {
+        return view('admin.component.event.view-specific');
+    }
 }

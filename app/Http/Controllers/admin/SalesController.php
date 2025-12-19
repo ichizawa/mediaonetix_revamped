@@ -11,4 +11,8 @@ class SalesController extends Controller
     {
         return view('admin.sales');
     }
+    public function edit()
+    {
+        return view('admin.component.sales.view-specific');
+    }
 }

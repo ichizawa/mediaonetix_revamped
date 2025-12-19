@@ -43,7 +43,6 @@
             border: 1px solid rgba(59, 130, 246, 0.3);
         }
     </style>
-
     <div class="min-h-screen bg-[#0c1222]">
         <div class="lg:ml-64">
             <header class="sticky top-0 z-40 bg-[#0c1222]/80 backdrop-blur-xl border-b border-white/10">
