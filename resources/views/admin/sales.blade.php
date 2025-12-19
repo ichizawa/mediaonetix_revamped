@@ -364,6 +364,7 @@
         </div>
     </div>
 
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script>
         // Revenue Chart
@@ -439,6 +440,7 @@
     </script>
 
     <script>
+        // Sales Modal Functions - Main page specific
         function openSalesModal() {
             document.getElementById('salesModal').classList.add('active');
         }
