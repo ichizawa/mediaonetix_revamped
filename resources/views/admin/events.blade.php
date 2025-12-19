@@ -231,14 +231,34 @@
     <!--  Add EVENT MODAL-->
 
     <script>
+        let currentEventId = null;
+        let isEditMode = false;
         // Modal management functions
-        function openModal() {
-            document.getElementById('eventModal').classList.add('active');
+        function openAddModal() {
+            isEditMode = false;
+            currentEventId = null;
+
+            // Reset form
+            document.getElementById('eventForm').reset();
             document.getElementById('modalTitle').textContent = 'Add New Event';
             document.getElementById('submitBtn').textContent = 'Create Event';
-            document.getElementById('formMethod').value = '';
-            document.getElementById('eventForm').reset();
-            document.getElementById('currentImageText').style.display = 'none';
+            document.getElementById('eventId').value = '';
+            document.getElementById('formMethod').value = 'POST';
+
+            // Hide image preview and current image info
+            document.getElementById('imagePreview').classList.add('hidden');
+            document.getElementById('currentImageInfo').classList.add('hidden');
+
+            // Set default values
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('eventDate').value = today;
+            document.getElementById('eventTime').value = '19:00';
+            document.getElementById('eventStatus').value = 'upcoming';
+            document.getElementById('eventTotalTickets').value = '100';
+            document.getElementById('eventPrice').value = '0.00';
+
+            // Show modal
+            document.getElementById('eventModal').classList.add('active');
         }
 
         function closeModal() {

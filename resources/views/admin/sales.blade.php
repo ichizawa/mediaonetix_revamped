@@ -5,12 +5,15 @@
         .sales-card {
             transition: all 0.3s ease;
         }
+
         .sales-card:hover {
             transform: translateY(-2px);
         }
+
         .status-badge {
             transition: all 0.2s ease;
         }
+
         .chart-container {
             position: relative;
             height: 300px;
@@ -26,7 +29,8 @@
                         <div class="flex items-center gap-4">
                             <button id="openSidebar" class="lg:hidden p-2 hover:bg-white/5 rounded-lg text-white">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 6h16M4 12h16M4 18h16"></path>
                                 </svg>
                             </button>
                             <div>
@@ -36,15 +40,21 @@
                         </div>
 
                         <div class="flex items-center gap-3">
-                            <button class="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-white font-medium transition-all">
+                            <button
+                                class="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-white font-medium transition-all">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    </path>
                                 </svg>
                                 <span class="hidden sm:inline">Export</span>
                             </button>
-                            <button onclick="openSalesModal()" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-semibold transition-all">
+                            <button onclick="openSalesModal()"
+                                class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-semibold transition-all">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z">
+                                    </path>
                                 </svg>
                                 <span class="hidden sm:inline">New Sale</span>
                             </button>
@@ -57,18 +67,25 @@
             <div class="p-4 sm:p-6 lg:p-8">
                 <!-- Revenue Stats -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
-                    <div class="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden">
-                        <div class="absolute top-0 right-0 w-24 h-24 bg-blue-500 rounded-full filter blur-[60px] opacity-20"></div>
+                    <div
+                        class="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden">
+                        <div
+                            class="absolute top-0 right-0 w-24 h-24 bg-blue-500 rounded-full filter blur-[60px] opacity-20">
+                        </div>
                         <div class="relative">
                             <div class="flex items-center justify-between mb-4">
-                                <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl flex items-center justify-center">
+                                <div
+                                    class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl flex items-center justify-center">
                                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                        </path>
                                     </svg>
                                 </div>
                                 <span class="text-green-400 text-sm font-semibold flex items-center gap-1">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                                     </svg>
                                     +12.5%
                                 </span>
@@ -79,18 +96,25 @@
                         </div>
                     </div>
 
-                    <div class="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden">
-                        <div class="absolute top-0 right-0 w-24 h-24 bg-purple-500 rounded-full filter blur-[60px] opacity-20"></div>
+                    <div
+                        class="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden">
+                        <div
+                            class="absolute top-0 right-0 w-24 h-24 bg-purple-500 rounded-full filter blur-[60px] opacity-20">
+                        </div>
                         <div class="relative">
                             <div class="flex items-center justify-between mb-4">
-                                <div class="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-400 rounded-xl flex items-center justify-center">
+                                <div
+                                    class="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-400 rounded-xl flex items-center justify-center">
                                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                                        </path>
                                     </svg>
                                 </div>
                                 <span class="text-green-400 text-sm font-semibold flex items-center gap-1">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                                     </svg>
                                     +8.2%
                                 </span>
@@ -101,18 +125,24 @@
                         </div>
                     </div>
 
-                    <div class="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden">
-                        <div class="absolute top-0 right-0 w-24 h-24 bg-green-500 rounded-full filter blur-[60px] opacity-20"></div>
+                    <div
+                        class="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden">
+                        <div
+                            class="absolute top-0 right-0 w-24 h-24 bg-green-500 rounded-full filter blur-[60px] opacity-20">
+                        </div>
                         <div class="relative">
                             <div class="flex items-center justify-between mb-4">
-                                <div class="w-12 h-12 bg-gradient-to-br from-green-600 to-green-400 rounded-xl flex items-center justify-center">
+                                <div
+                                    class="w-12 h-12 bg-gradient-to-br from-green-600 to-green-400 rounded-xl flex items-center justify-center">
                                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                 </div>
                                 <span class="text-green-400 text-sm font-semibold flex items-center gap-1">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                                     </svg>
                                     +15.3%
                                 </span>
@@ -123,18 +153,24 @@
                         </div>
                     </div>
 
-                    <div class="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden">
-                        <div class="absolute top-0 right-0 w-24 h-24 bg-orange-500 rounded-full filter blur-[60px] opacity-20"></div>
+                    <div
+                        class="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden">
+                        <div
+                            class="absolute top-0 right-0 w-24 h-24 bg-orange-500 rounded-full filter blur-[60px] opacity-20">
+                        </div>
                         <div class="relative">
                             <div class="flex items-center justify-between mb-4">
-                                <div class="w-12 h-12 bg-gradient-to-br from-orange-600 to-orange-400 rounded-xl flex items-center justify-center">
+                                <div
+                                    class="w-12 h-12 bg-gradient-to-br from-orange-600 to-orange-400 rounded-xl flex items-center justify-center">
                                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                 </div>
                                 <span class="text-yellow-400 text-sm font-semibold flex items-center gap-1">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4">
+                                        </path>
                                     </svg>
                                     158
                                 </span>
@@ -149,13 +185,17 @@
                 <!-- Revenue Chart and Top Events -->
                 <div class="grid lg:grid-cols-3 gap-6 mb-8">
                     <!-- Revenue Chart -->
-                    <div class="lg:col-span-2 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+                    <div
+                        class="lg:col-span-2 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
                         <div class="flex items-center justify-between mb-6">
                             <h3 class="text-xl font-bold text-white">Revenue Overview</h3>
                             <div class="flex gap-2">
-                                <button class="px-3 py-1 text-sm bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg font-medium">Week</button>
-                                <button class="px-3 py-1 text-sm bg-white/5 text-gray-400 hover:bg-white/10 rounded-lg font-medium transition-all">Month</button>
-                                <button class="px-3 py-1 text-sm bg-white/5 text-gray-400 hover:bg-white/10 rounded-lg font-medium transition-all">Year</button>
+                                <button
+                                    class="px-3 py-1 text-sm bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg font-medium">Week</button>
+                                <button
+                                    class="px-3 py-1 text-sm bg-white/5 text-gray-400 hover:bg-white/10 rounded-lg font-medium transition-all">Month</button>
+                                <button
+                                    class="px-3 py-1 text-sm bg-white/5 text-gray-400 hover:bg-white/10 rounded-lg font-medium transition-all">Year</button>
                             </div>
                         </div>
                         <div class="chart-container">
@@ -164,39 +204,56 @@
                     </div>
 
                     <!-- Top Selling Events -->
-                    <div class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-                        <h3 class="text-xl font-bold text-white mb-6">Top Selling Events</h3>
+                    <div
+                        class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+                        <h3 class="text-xl font-bold text-white mb-6">List of Events</h3>
                         <div class="space-y-4">
                             @for($i = 1; $i <= 5; $i++)
-                            <div class="flex items-center justify-between p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
-                                        {{ $i }}
+                                <a href="#"
+                                    class="flex items-center justify-between p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer group">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform">
+                                            {{ $i }}
+                                        </div>
+                                        <div>
+                                            <p
+                                                class="text-white font-semibold text-sm group-hover:text-blue-400 transition-colors">
+                                                Event Name {{ $i }}</p>
+                                            <p class="text-gray-400 text-xs">{{ 450 - ($i * 50) }} tickets sold</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p class="text-white font-semibold text-sm">Event Name {{ $i }}</p>
-                                        <p class="text-gray-400 text-xs">{{ 450 - ($i * 50) }} tickets</p>
+                                    <div class="flex items-center gap-3">
+                                        <div class="text-right">
+                                            <p class="text-white font-bold">${{ 12500 - ($i * 1500) }}</p>
+                                            <p class="text-green-400 text-xs">+{{ 20 - $i }}%</p>
+                                        </div>
+                                        <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7"></path>
+                                        </svg>
                                     </div>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-white font-bold">${{ 12500 - ($i * 1500) }}</p>
-                                    <p class="text-green-400 text-xs">+{{ 20 - $i }}%</p>
-                                </div>
-                            </div>
+                                </a>
                             @endfor
                         </div>
                     </div>
                 </div>
 
                 <!-- Recent Transactions -->
-                <div class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+                <div
+                    class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-xl font-bold text-white">Recent Transactions</h3>
                         <div class="flex gap-2">
-                            <button class="px-3 py-1 text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">All</button>
-                            <button class="px-3 py-1 text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">Completed</button>
-                            <button class="px-3 py-1 text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">Pending</button>
-                            <button class="px-3 py-1 text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">Failed</button>
+                            <button
+                                class="px-3 py-1 text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">All</button>
+                            <button
+                                class="px-3 py-1 text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">Completed</button>
+                            <button
+                                class="px-3 py-1 text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">Pending</button>
+                            <button
+                                class="px-3 py-1 text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">Failed</button>
                         </div>
                     </div>
 
@@ -217,59 +274,69 @@
                             </thead>
                             <tbody>
                                 @for($i = 1; $i <= 10; $i++)
-                                <tr class="border-b border-white/5 hover:bg-white/5 transition-all">
-                                    <td class="py-4 px-4">
-                                        <span class="text-white font-mono text-sm">#TIX-{{ 1250 - $i }}</span>
-                                    </td>
-                                    <td class="py-4 px-4">
-                                        <div>
-                                            <p class="text-white font-medium text-sm">Customer {{ $i }}</p>
-                                            <p class="text-gray-400 text-xs">customer{{ $i }}@email.com</p>
-                                        </div>
-                                    </td>
-                                    <td class="py-4 px-4">
-                                        <span class="text-white text-sm">Event Name {{ $i }}</span>
-                                    </td>
-                                    <td class="py-4 px-4">
-                                        <span class="text-gray-400 text-sm">Dec {{ $i }}, 2024</span>
-                                    </td>
-                                    <td class="py-4 px-4">
-                                        <span class="text-white text-sm">{{ $i }}</span>
-                                    </td>
-                                    <td class="py-4 px-4">
-                                        <span class="text-white font-semibold">${{ 150 + ($i * 25) }}</span>
-                                    </td>
-                                    <td class="py-4 px-4">
-                                        @if($i % 4 == 0)
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
-                                            Pending
-                                        </span>
-                                        @elseif($i % 7 == 0)
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
-                                            Failed
-                                        </span>
-                                        @else
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
-                                            Completed
-                                        </span>
-                                        @endif
-                                    </td>
-                                    <td class="py-4 px-4">
-                                        <div class="flex gap-2">
-                                            <button class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                                </svg>
-                                            </button>
-                                            <button class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    <tr class="border-b border-white/5 hover:bg-white/5 transition-all">
+                                        <td class="py-4 px-4">
+                                            <span class="text-white font-mono text-sm">#TIX-{{ 1250 - $i }}</span>
+                                        </td>
+                                        <td class="py-4 px-4">
+                                            <div>
+                                                <p class="text-white font-medium text-sm">Customer {{ $i }}</p>
+                                                <p class="text-gray-400 text-xs">customer{{ $i }}@email.com</p>
+                                            </div>
+                                        </td>
+                                        <td class="py-4 px-4">
+                                            <span class="text-white text-sm">Event Name {{ $i }}</span>
+                                        </td>
+                                        <td class="py-4 px-4">
+                                            <span class="text-gray-400 text-sm">Dec {{ $i }}, 2024</span>
+                                        </td>
+                                        <td class="py-4 px-4">
+                                            <span class="text-white text-sm">{{ $i }}</span>
+                                        </td>
+                                        <td class="py-4 px-4">
+                                            <span class="text-white font-semibold">${{ 150 + ($i * 25) }}</span>
+                                        </td>
+                                        <td class="py-4 px-4">
+                                            @if($i % 4 == 0)
+                                                <span
+                                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
+                                                    Pending
+                                                </span>
+                                            @elseif($i % 7 == 0)
+                                                <span
+                                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
+                                                    Failed
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
+                                                    Completed
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="py-4 px-4">
+                                            <div class="flex gap-2">
+                                                <button class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
+                                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                                <button class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
+                                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @endfor
                             </tbody>
                         </table>
@@ -283,8 +350,10 @@
                                 Previous
                             </button>
                             <button class="px-3 py-1.5 bg-blue-600 text-white rounded-lg">1</button>
-                            <button class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all">2</button>
-                            <button class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all">3</button>
+                            <button
+                                class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all">2</button>
+                            <button
+                                class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all">3</button>
                             <button class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all">
                                 Next
                             </button>
@@ -334,7 +403,7 @@
                             borderWidth: 1,
                             displayColors: false,
                             callbacks: {
-                                label: function(context) {
+                                label: function (context) {
                                     return '$' + context.parsed.y.toLocaleString();
                                 }
                             }
@@ -349,7 +418,7 @@
                             },
                             ticks: {
                                 color: '#9ca3af',
-                                callback: function(value) {
+                                callback: function (value) {
                                     return '$' + value.toLocaleString();
                                 }
                             }
@@ -370,26 +439,26 @@
     </script>
 
     <script>
-    function openSalesModal() {
-        document.getElementById('salesModal').classList.add('active');
-    }
+        function openSalesModal() {
+            document.getElementById('salesModal').classList.add('active');
+        }
 
-    function closeSalesModal() {
-        document.getElementById('salesModal').classList.remove('active');
-    }
+        function closeSalesModal() {
+            document.getElementById('salesModal').classList.remove('active');
+        }
 
-    function updateTicketPrice() {
-        const select = document.getElementById('ticketSelect');
-        const price = select.value;
-        document.getElementById('ticketPrice').textContent = price ? parseFloat(price).toFixed(2) : '0.00';
-        calculateTotal();
-    }
+        function updateTicketPrice() {
+            const select = document.getElementById('ticketSelect');
+            const price = select.value;
+            document.getElementById('ticketPrice').textContent = price ? parseFloat(price).toFixed(2) : '0.00';
+            calculateTotal();
+        }
 
-    function calculateTotal() {
-        const price = parseFloat(document.getElementById('ticketSelect').value) || 0;
-        const quantity = parseInt(document.getElementById('quantityInput').value) || 0;
-        const total = price * quantity;
-        document.getElementById('totalPrice').textContent = total.toFixed(2);
-    }
-</script>
+        function calculateTotal() {
+            const price = parseFloat(document.getElementById('ticketSelect').value) || 0;
+            const quantity = parseInt(document.getElementById('quantityInput').value) || 0;
+            const total = price * quantity;
+            document.getElementById('totalPrice').textContent = total.toFixed(2);
+        }
+    </script>
 @endsection
