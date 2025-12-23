@@ -26,6 +26,8 @@ class AuthController extends Controller
                 switch (Auth::user()->role_id) {
                     case 1:
                         return redirect()->route('admin.dashboard');
+                    case 2:
+                        return redirect()->route('merchant.dashboard');
                     default:
                         return redirect()->route('login')->with('error', 'Invalid email or password');
                 }

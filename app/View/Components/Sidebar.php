@@ -22,8 +22,13 @@ class Sidebar extends Component
      */
     public function render()
     {
-        if (Auth::user()) {
-            return view('components.sidebar');
+        // If not logged in, return nothing
+        if (!Auth::check()) {
+            return null; // or return null, Blade will ignore it
         }
+
+        $sidebars = Auth::user()->sidebars;
+
+        return view('components.sidebar', compact('sidebars'));
     }
 }

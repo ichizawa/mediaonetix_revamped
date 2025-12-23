@@ -86,4 +86,34 @@ class User extends Authenticatable
     {
         return $query->where('is_active', 0);
     }
+    public function sidebars()
+    {
+        return $this->hasManyThrough(
+            Sidebar::class,
+            UserPermission::class,
+            'role_id',     // FK on user_permissions
+            'id',          // FK on sidebars
+            'role_id',     // FK on users
+            'sb_id'        // FK on user_permissions
+        )->where('sidebars.status', 1);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role?->type === 'admin';
+    }
+
+    public function isMerchant(): bool
+    {
+        return $this->role?->type === 'merchant';
+    }
+
+    public function routePrefix(): string
+    {
+        return match ($this->role?->type) {
+            'admin' => 'admin',
+            'merchant' => 'merchant',
+            default => 'admin', // fallback
+        };
+    }
 }
