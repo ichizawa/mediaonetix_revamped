@@ -23,14 +23,14 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Category</label>
                     <select id="eventCategory" name="category" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500">
-                        <option value="Music">Music</option>
-                        <option value="Sports">Sports</option>
-                        <option value="Arts">Arts</option>
-                        <option value="Festival">Festival</option>
-                        <option value="Conference">Conference</option>
-                        <option value="Workshop">Workshop</option>
-                        <option value="Networking">Networking</option>
-                        <option value="Other">Other</option>
+                        <option value="Music" class="text-black">Music</option>
+                        <option value="Sports" class="text-black">Sports</option>
+                        <option value="Arts" class="text-black">Arts</option>
+                        <option value="Festival" class="text-black">Festival</option>
+                        <option value="Conference" class="text-black">Conference</option>
+                        <option value="Workshop" class="text-black">Workshop</option>
+                        <option value="Networking" class="text-black">Networking</option>
+                        <option value="Other" class="text-black">Other</option>
                     </select>
                 </div>
             </div>
@@ -52,14 +52,10 @@
                 <label class="block text-sm font-medium text-gray-300 mb-2">Location</label>
                 <input type="text" id="eventLocation" name="location" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500" required>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Total Tickets</label>
                     <input type="number" id="eventTotalTickets" name="total_tickets" min="1" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Price ($)</label>
-                    <input type="number" id="eventPrice" name="price" step="0.01" min="0" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500" required>
                 </div>
             </div>
             <div>
