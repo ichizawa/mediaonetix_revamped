@@ -32,14 +32,22 @@ class EventsController extends Controller
                 'time' => 'required|string',
                 'total_tickets' => 'required|integer',
                 'status' => 'required|string',
-                'image' => 'nullable|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
+
+            $imageName = '';
+
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('images/events'), $imageName);
+            }
 
             $event = new Events();
             $event->event_name = $request->name;
             $event->category = $request->category;
             $event->description = $request->description;
-            // $event->event_image = $request->image;
+            $event->event_image = $imageName ?? null;
             $event->event_date = $request->date;
             $event->event_time = $request->time;
             $event->event_venue = $request->location;
@@ -66,7 +74,7 @@ class EventsController extends Controller
     public function delete($event_id)
     {
         Events::where('id', $event_id)->delete();
-        
+
         return back()->with('success', 'Event deleted successfully');
     }
 }
