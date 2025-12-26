@@ -145,7 +145,11 @@
                         <div
                             class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
                             <div class="relative h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
-                                <div class="absolute inset-0 bg-cover bg-center opacity-40"></div>
+                                <div class="absolute inset-0 bg-cover bg-center opacity-40">
+                                    @if($event->event_image)
+                                        <img src="{{ asset('images/events/' . $event->event_image) }}" alt="Event Image" class="w-full h-full object-cover">
+                                    @endif
+                                </div>
                                 <div class="absolute top-4 right-4">
                                     <span
                                         class="px-3 py-1 bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-full text-xs font-semibold text-green-400">{{ $event->status['label'] }}</span>
