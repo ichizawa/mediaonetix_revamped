@@ -88,7 +88,7 @@
                             </svg>
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Total Events</p>
-                        <h3 class="text-3xl font-bold text-white">23</h3>
+                        <h3 class="text-3xl font-bold text-white">{{ $total_events }}</h3>
                     </div>
                     <div
                         class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
@@ -100,7 +100,7 @@
                             </svg>
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Active Events</p>
-                        <h3 class="text-3xl font-bold text-white">18</h3>
+                        <h3 class="text-3xl font-bold text-white">{{ $active_events }}</h3>
                     </div>
                     <div
                         class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
@@ -113,7 +113,7 @@
                             </svg>
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Tickets Sold</p>
-                        <h3 class="text-3xl font-bold text-white">1,247</h3>
+                        <h3 class="text-3xl font-bold text-white">{{ $tickets_sold }}</h3>
                     </div>
                     <div
                         class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
@@ -125,7 +125,7 @@
                             </svg>
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Upcoming</p>
-                        <h3 class="text-3xl font-bold text-white">12</h3>
+                    <h3 class="text-3xl font-bold text-white">{{ $upcoming_events }}</h3>
                     </div>
                 </div>
 

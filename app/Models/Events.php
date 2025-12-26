@@ -51,12 +51,20 @@ class Events extends Model
             'color' => 'secondary'
         ];
     }
+    public function scopeGetUpcoming()
+    {
+        return $this->where('status', 0);
+    }
+    public function scopeGetActive()
+    {
+        return $this->where('status', 1);
+    }
     public function scopeGetEventByMerchant($query, $merchant_id)
     {
         return $query->where('created_by', $merchant_id);
     }
     public function tickets()
     {
-        
+        return $this->hasMany(Tickets::class, 'event_id');
     }
 }

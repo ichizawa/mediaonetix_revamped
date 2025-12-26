@@ -14,7 +14,11 @@ class EventsController extends Controller
     public function index()
     {
         return view('admin.events', [
-            'events' => Events::all()
+            'tickets_sold' => Events::getEventByMerchant(Auth::user()->id)->count(),
+            'upcoming_events' => Events::getEventByMerchant(Auth::user()->id)->getUpcoming()->count(),
+            'active_events' => Events::getEventByMerchant(Auth::user()->id)->getActive()->count(),
+            'total_events' => Events::getEventByMerchant(Auth::user()->id)->count(),
+            'events' => Events::with('tickets')->getEventByMerchant(Auth::user()->id)->get()
         ]);
     }
     public function store(Request $request)
