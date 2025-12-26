@@ -15,13 +15,32 @@
             @csrf
             <input type="hidden" id="ticketId" name="ticket_id">
             <input type="hidden" id="ticketFormMethod" name="_method" value="POST">
+            <input type="hidden" name="event_id" value="{{ $event_id ?? '' }}">
 
             <div class="p-6 space-y-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Ticket Type Name</label>
-                    <input type="text" id="ticketTypeName" name="ticket_type" required
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Ticket Name <span class="text-red-400">*</span></label>
+                    <input type="text" id="ticketName" name="name" required
                         class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all"
-                        placeholder="e.g., VIP, General Admission, Early Bird">
+                        placeholder="e.g., VIP Pass, General Admission, Early Bird">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Ticket Type <span class="text-red-400">*</span></label>
+                    <input type="text" id="ticketType" name="type" required
+                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all"
+                        placeholder="e.g., VIP, Standard, Premium">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Status <span class="text-red-400">*</span></label>
+                    <select id="ticketStatus" name="status" required
+                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-all appearance-none cursor-pointer">
+                        <option value="" disabled selected class="bg-[#1a2234]">Select status</option>
+                        <option value="active" class="bg-[#1a2234]">Active</option>
+                        <option value="inactive" class="bg-[#1a2234]">Inactive</option>
+                        <option value="out_of_stock" class="bg-[#1a2234]">Out of Stock</option>
+                    </select>
                 </div>
 
                 <div>
@@ -151,23 +170,16 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Description</label>
-                    <textarea id="ticketDescription" name="description" rows="3"
-                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all"
-                        placeholder="Describe what this ticket includes..."></textarea>
-                </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">Price (₱)</label>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Price (₱) <span class="text-red-400">*</span></label>
                         <input type="number" id="ticketPrice" name="price" step="0.01" min="0" required
                             class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all"
                             placeholder="0.00">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">Quantity</label>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Quantity <span class="text-red-400">*</span></label>
                         <input type="number" id="ticketQuantity" name="quantity" min="1" required
                             class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all"
                             placeholder="100">
@@ -309,8 +321,7 @@ document.getElementById('customColorInput').addEventListener('keypress', functio
 
 // Initialize modal close function
 function closeTicketModal() {
-    document.getElementById('ticketModal').classList.add('hidden');
-    document.getElementById('ticketModal').classList.remove('flex');
+    document.getElementById('ticketModal').classList.remove('active');
     closeCustomColorPicker();
 }
 
