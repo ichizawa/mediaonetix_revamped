@@ -5,10 +5,10 @@ namespace App\Http\Controllers\merchant;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class SettingsController extends Controller
+class MerchantController extends Controller
 {
-    public function index()
+    public function profile()
     {
-        return view('merchant.settings');
+        return view('merchant.profile');
     }
 }

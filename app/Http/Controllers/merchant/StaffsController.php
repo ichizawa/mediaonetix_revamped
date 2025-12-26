@@ -9,6 +9,6 @@ class StaffsController extends Controller
 {
     public function index()
     {
-        return view('admin.staffs');
+        return view('merchant.staffs');
     }
 }

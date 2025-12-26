@@ -9,10 +9,10 @@ class SalesController extends Controller
 {
     public function index()
     {
-        return view('admin.sales');
+        return view('merchant.sales');
     }
     public function edit()
     {
-        return view('admin.component.sales.view-specific');
+        return view('merchant.component.sales.view-specific');
     }
 }

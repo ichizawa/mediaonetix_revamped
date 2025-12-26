@@ -9,7 +9,7 @@
                 </svg>
             </button>
         </div>
-        <form id="eventForm" action="{{ route('admin.events.store') }}" method="POST" class="space-y-4" enctype="multipart/form-data">
+        <form id="eventForm" action="{{ route('merchant.events.store') }}" method="POST" class="space-y-4" enctype="multipart/form-data">
             @csrf
             <!-- Hidden field for edit mode -->
             <input type="hidden" id="eventId" name="id" value="">

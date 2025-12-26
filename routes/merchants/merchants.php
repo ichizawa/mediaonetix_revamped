@@ -1,12 +1,11 @@
 <?php
-use App\Http\Controllers\admin\AdminController;
-use App\Http\Controllers\admin\DashboardController;
-use App\Http\Controllers\admin\EventsController;
-use App\Http\Controllers\admin\MerchantController;
-use App\Http\Controllers\admin\SalesController;
-use App\Http\Controllers\admin\SettingsController;
-use App\Http\Controllers\admin\StaffsController;
-use App\Http\Controllers\admin\UsersController;
+use App\Http\Controllers\merchant\DashboardController;
+use App\Http\Controllers\merchant\EventsController;
+use App\Http\Controllers\merchant\MerchantController;
+use App\Http\Controllers\merchant\SalesController;
+use App\Http\Controllers\merchant\SettingsController;
+use App\Http\Controllers\merchant\StaffsController;
+use App\Http\Controllers\merchant\UsersController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('merchant')->name('merchant.')->middleware('role.check:2')->group(function () {
@@ -41,6 +40,11 @@ Route::prefix('merchant')->name('merchant.')->middleware('role.check:2')->group(
         Route::delete('delete/{id}', [StaffsController::class, 'delete'])->name('delete');
     });
     //End Staffs CRUD
+
+    Route::get('profile', [MerchantController::class, 'profile'])->name('profile');
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('store', [MerchantController::class, 'store'])->name('store');
+    });
 
     //Settings CRUD
     Route::get('settings', [SettingsController::class, 'index'])->name('settings');
