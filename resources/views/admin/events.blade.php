@@ -333,6 +333,7 @@
 
     @include('admin.component.event.modal')
     @include ('admin.component.event.view')
+
     <!--  Add EVENT MODAL-->
 
     @if(session('success'))
