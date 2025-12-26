@@ -33,8 +33,9 @@
 
                     <p
                         class="hero-subtitle text-base sm:text-lg md:text-xl text-gray-400 leading-relaxed max-w-xl mx-auto md:mx-0">
-                        The modern way to sell tickets for concerts, festivals, and live events. Get started in minutes,
-                        sell in seconds.
+                        <strong>Convenience and security</strong> are at the heart of MediaoneTix. Whether you’re a casual
+                    event-goer or a regular attendee, our platform helps you find and secure tickets quickly without the
+                    hassle of long queues or physical tickets.
                     </p>
 
                     <div
