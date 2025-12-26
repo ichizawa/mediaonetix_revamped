@@ -41,7 +41,9 @@ class Events extends Model
         'created_by'
     ];
 
-    public function getStatusAttribute()
+    protected $appends = ['status_label'];
+
+    public function getStatusLabelAttribute()
     {
         $status = $this->attributes['status'] ?? 0;
         return self::STATUS[$status] ?? [
@@ -52,5 +54,9 @@ class Events extends Model
     public function scopeGetEventByMerchant($query, $merchant_id)
     {
         return $query->where('created_by', $merchant_id);
+    }
+    public function tickets()
+    {
+        
     }
 }

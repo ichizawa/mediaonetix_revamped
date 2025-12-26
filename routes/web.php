@@ -26,6 +26,4 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
 
     require base_path('routes/admin/admin.php');
-    
-    require base_path('routes/merchants/merchants.php');
 });

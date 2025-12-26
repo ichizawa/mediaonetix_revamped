@@ -36,7 +36,7 @@ class EventsController extends Controller
             ]);
 
             $imageName = '';
-            
+
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . '.' . $image->getClientOriginalExtension();
@@ -67,14 +67,56 @@ class EventsController extends Controller
             return back()->withErrors($e->getMessage())->withInput();
         }
     }
-    public function edit($event_id)
+    public function update(Request $request)
     {
-        return view('admin.component.event.view-specific');
+        try {
+            DB::beginTransaction();
+
+            $request->validate([
+                'id' => 'required|integer|exists:events,id',
+                'name' => 'required|string',
+                'location' => 'required|string',
+                'category' => 'required|string',
+                'description' => 'required|string',
+                'date' => 'required|date',
+                'time' => 'required|string',
+                'total_tickets' => 'required|integer',
+                'status' => 'required|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+
+            $event = Events::find($request->id);
+            $event->event_name = $request->name;
+            $event->category = $request->category;
+            $event->description = $request->description;
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('images/events'), $imageName);
+                $event->event_image = $imageName;
+            }
+            $event->event_date = $request->date;
+            $event->event_time = $request->time;
+            $event->event_venue = $request->location;
+            $event->event_total_tickets = $request->total_tickets;
+            $event->status = $request->status;
+            $event->save();
+
+            DB::commit();
+
+            return back()->with('success', 'Event updated successfully');
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors($e->getMessage())->withInput();
+        }
     }
     public function delete($event_id)
     {
         Events::where('id', $event_id)->delete();
-        
+
         return back()->with('success', 'Event deleted successfully');
     }
 }

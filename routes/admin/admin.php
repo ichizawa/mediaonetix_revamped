@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\EventsController;
 use App\Http\Controllers\admin\MerchantController;
 use App\Http\Controllers\admin\SalesController;
 use App\Http\Controllers\admin\SettingsController;
+use App\Http\Controllers\admin\TicketsController;
 use App\Http\Controllers\admin\UsersController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,8 +17,13 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
     Route::prefix('events')->name('events.')->group(function () {
         Route::post('store', [EventsController::class, 'store'])->name('store');
         Route::get('edit/{id}', [EventsController::class, 'edit'])->name('edit');
-        Route::put('update/{id}', [EventsController::class, 'update'])->name('update');
+        Route::put('update', [EventsController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [EventsController::class, 'delete'])->name('delete');
+
+        Route::get('{event_id}', [TicketsController::class, 'index'])->name('tickets');
+        Route::prefix('tickets')->name('tickets.')->group(function () {
+            
+        });
     });
     //End Events CRUD
 

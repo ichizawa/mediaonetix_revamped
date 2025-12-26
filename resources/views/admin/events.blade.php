@@ -154,7 +154,7 @@
 
                                 <div class="absolute top-4 right-4">
                                     <span
-                                        class="px-3 py-1 bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-full text-xs font-semibold text-green-400">{{ $event->status['label'] }}</span>
+                                        class="px-3 py-1 bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-full text-xs font-semibold text-green-400">{{ $event->status_label['label'] }}</span>
                                 </div>
                             </div>
                             <div class="p-6">
@@ -164,7 +164,8 @@
                                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                                         </path>
                                     </svg>
-                                    <span class="text-sm text-gray-400">{{ $event->event_date }} • {{ date('g:i A', strtotime($event->event_time)) }}</span>
+                                    <span class="text-sm text-gray-400">{{ $event->event_date }} •
+                                        {{ date('g:i A', strtotime($event->event_time)) }}</span>
                                 </div>
                                 <h3 class="text-xl font-bold text-white mb-2">{{ $event->event_name }}</h3>
                                 <p class="text-gray-400 text-sm mb-4">{{ $event->description }}</p>
@@ -214,6 +215,15 @@
                                                 </path>
                                             </svg>
                                         </button>
+                                        <a href="{{ route('admin.events.tickets', $event->id) }}"
+                                            class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
+                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                                </path>
+                                            </svg>
+                                        </a>
                                         <form action="{{ route('admin.events.delete', $event->id) }}" method="POST"
                                             onsubmit="return confirm('Are you sure you want to delete this event?')"
                                             class="inline">
@@ -350,6 +360,7 @@
         function openAddModal() {
             isEditMode = false;
             currentEventId = null;
+            console.log("test");
 
             // Reset form
             document.getElementById('eventForm').reset();
@@ -368,7 +379,7 @@
             document.getElementById('eventTime').value = '19:00';
             document.getElementById('eventStatus').value = 'upcoming';
             document.getElementById('eventTotalTickets').value = '100';
-            document.getElementById('eventPrice').value = '0.00';
+            // document.getElementById('eventPrice').value = '0.00';
 
             // Show modal
             document.getElementById('eventModal').classList.add('active');
@@ -379,9 +390,8 @@
         }
 
         function openViewModal(event) {
-            // const event = sampleEvents[eventIndex] || sampleEvents[0];
             const percentage = Math.round((event.event_total_tickets / event.event_total_tickets) * 100);
-            console.log(event);
+
             // Populate view modal with event data
             document.getElementById('viewEventName').textContent = event.event_name;
             document.getElementById('viewEventCategory').textContent = event.category;
@@ -393,26 +403,7 @@
             document.getElementById('viewEventTotal').textContent = `of ${event.event_total_tickets} tickets`;
             document.getElementById('viewEventPercentage').textContent = `${percentage}%`;
             document.getElementById('viewEventProgress').style.width = `${percentage}%`;
-            document.getElementById('viewEventStatus').textContent = event.status.label;
-
-            // // Set status color based on status
-            // const statusEl = document.getElementById('viewEventStatus');
-            // statusEl.className = 'px-3 py-1 backdrop-blur-sm border rounded-full text-xs font-semibold';
-
-            // switch (event.status.toLowerCase()) {
-            //     case 'active':
-            //         statusEl.classList.add('bg-green-500/20', 'border-green-500/30', 'text-green-400');
-            //         break;
-            //     case 'upcoming':
-            //         statusEl.classList.add('bg-blue-500/20', 'border-blue-500/30', 'text-blue-400');
-            //         break;
-            //     case 'ongoing':
-            //         statusEl.classList.add('bg-yellow-500/20', 'border-yellow-500/30', 'text-yellow-400');
-            //         break;
-            //     case 'completed':
-            //         statusEl.classList.add('bg-gray-500/20', 'border-gray-500/30', 'text-gray-400');
-            //         break;
-            // }
+            document.getElementById('viewEventStatus').textContent = event.status_label.label;
 
             // Set background image
             const imageEl = document.getElementById('viewEventImage');
@@ -445,9 +436,9 @@
             document.getElementById('eventTime').value = event.event_time || '';
             document.getElementById('eventLocation').value = event.event_venue || '';
             document.getElementById('eventTotalTickets').value = event.event_total_tickets || '';
-            // document.getElementById('eventPrice').value = event.price || '';
-            document.getElementById('eventStatus').value = event.status['label'] || 'active';
-
+            document.getElementById('eventStatus').value = event.status;
+            document.getElementById('eventForm').action = "{{ route('admin.events.update') }}";
+            document.getElementById('eventForm').value = "PUT";
             document.getElementById('currentImageText').style.display = 'block';
 
             // Show edit modal
