@@ -28,7 +28,7 @@
                                     </svg>
                                     <span class="text-sm text-white">Event Details</span>
                                 </div>
-                                <h2 class="text-2xl font-bold text-white">Summer Music Festival 2024</h2>
+                                <h2 class="text-2xl font-bold text-white">{{ $event->event_name }}</h2>
                                 <p class="text-sm text-gray-400">View all sales and customer details</p>
                             </div>
                         </div>

@@ -208,8 +208,34 @@
                         class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
                         <h3 class="text-xl font-bold text-white mb-6">List of Events</h3>
                         <div class="space-y-4">
-                            @for($i = 1; $i <= 5; $i++)
-                                <a href="{{ route('admin.sales.edit', 1) }}"
+                            @forelse($events as $event)
+                                <a href="{{ route('admin.sales.edit', $event->id) }}"
+                                    class="flex items-center justify-between p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer group">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform">
+                                        </div>
+                                        <div>
+                                            <p class="text-white font-semibold text-sm group-hover:text-blue-400 transition-colors">
+                                                {{ $event->event_name }}</p>
+                                            {{-- <p class="text-gray-400 text-xs">{{ 450 - ($event->id * 50) }} tickets sold</p> --}}
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="text-right">
+                                            {{-- <p class="text-white font-bold">${{ 12500 - ($event->id * 1500) }}</p>
+                                            <p class="text-green-400 text-xs">+{{ 20 - $event->id  }}%</p> --}}
+                                        </div>
+                                        <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </div>
+                                </a>
+                            @empty
+
+                            @endforelse
+                            {{-- @for($i = 1; $i <= 5; $i++)
+                                <a href="{{ route('admin.sales.edit', $i) }}"
                                     class="flex items-center justify-between p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer group">
                                     <div class="flex items-center gap-3">
                                         <div
@@ -235,7 +261,7 @@
                                         </svg>
                                     </div>
                                 </a>
-                            @endfor
+                            @endfor --}}
                         </div>
                     </div>
                 </div>
