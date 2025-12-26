@@ -145,13 +145,7 @@
                         <div
                             class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
                             <div class="relative h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
-                                <div class="absolute inset-0 bg-cover bg-center opacity-40">
-                                    @if($event->event_image)
-                                        <img src="{{ asset('images/events/' . $event->event_image) }}" alt="Event Image"
-                                            class="w-full h-full object-cover">
-                                    @endif
-                                </div>
-
+                                <div class="absolute inset-0 bg-cover bg-center opacity-40"></div>
                                 <div class="absolute top-4 right-4">
                                     <span
                                         class="px-3 py-1 bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-full text-xs font-semibold text-green-400">{{ $event->status['label'] }}</span>
@@ -215,16 +209,13 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        <form action="{{ route('admin.events.delete', $event->id) }}" method="POST"
-                                            onsubmit="return confirm('Are you sure you want to delete this event?')"
-                                            class="inline">
+                                        <form action="{{ route('merchant.events.delete', $event->id) }}" method="POST"
+                                            onsubmit="return confirm('Are you sure you want to delete this event?')" class="inline">
                                             @csrf
                                             @method('DELETE')
 
-                                            <button type="submit"
-                                                class="p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-all">
-                                                <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
+                                            <button type="submit" class="p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-all">
+                                                <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                                     </path>
@@ -322,8 +313,8 @@
     </div>
     </div>
 
-    @include('admin.component.event.modal')
-    @include ('admin.component.event.view')
+    @include('merchant.component.event.modal')
+    @include ('merchant.component.event.view')
     <!--  Add EVENT MODAL-->
 
     @if(session('success'))
