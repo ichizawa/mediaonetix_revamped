@@ -7,6 +7,7 @@ use App\Models\Events;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class EventsController extends Controller
@@ -14,7 +15,7 @@ class EventsController extends Controller
     public function index()
     {
         return view('admin.events', [
-            'tickets_sold' => Events::getEventByMerchant(Auth::user()->id)->count(),
+            'tickets_sold' => Events::getEventByMerchant(Auth::user()->id)->sum('tickets_sold'),
             'upcoming_events' => Events::getEventByMerchant(Auth::user()->id)->getUpcoming()->count(),
             'active_events' => Events::getEventByMerchant(Auth::user()->id)->getActive()->count(),
             'total_events' => Events::getEventByMerchant(Auth::user()->id)->count(),
@@ -58,6 +59,7 @@ class EventsController extends Controller
             $event->event_total_tickets = $request->total_tickets;
             $event->status = $request->status;
             $event->created_by = Auth::user()->id;
+            // $event->slug = Str::slug($request->name);
             $event->save();
 
             DB::commit();

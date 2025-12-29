@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Events extends Model
 {
+    use SoftDeletes;
+
     const STATUS = [
         0 => [
             'label' => 'Upcoming',
@@ -38,7 +42,9 @@ class Events extends Model
         'event_venue',
         'event_total_tickets',
         'status',
-        'created_by'
+        'created_by',
+        'tickets_sold',
+        'slug'
     ];
 
     protected $appends = ['status_label'];
@@ -66,5 +72,25 @@ class Events extends Model
     public function tickets()
     {
         return $this->hasMany(Tickets::class, 'event_id');
+    }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($event) {
+            $baseSlug = Str::slug($event->event_name);
+            $slug = $baseSlug;
+            $count = 1;
+
+            while (static::withTrashed()->where('slug', $slug)->exists()) {
+                $slug = $baseSlug . '-' . $count++;
+            }
+
+            $event->slug = $slug;
+        });
+    }
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

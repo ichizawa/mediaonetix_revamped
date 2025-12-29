@@ -11,11 +11,11 @@
             </div>
         </div>
 
-        <form id="ticketForm" action="#" method="POST">
+        <form id="ticketForm" action="{{ route('admin.events.tickets.store', $event->slug) }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" id="ticketId" name="ticket_id">
             <input type="hidden" id="ticketFormMethod" name="_method" value="POST">
-            <input type="hidden" name="event_id" value="{{ $event_id ?? '' }}">
+            <input type="hidden" id="eventId" name="event_id" value="{{ $event->id }}">
 
             <div class="p-6 space-y-6">
                 <div>
@@ -37,9 +37,9 @@
                     <select id="ticketStatus" name="status" required
                         class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-all appearance-none cursor-pointer">
                         <option value="" disabled selected class="bg-[#1a2234]">Select status</option>
-                        <option value="active" class="bg-[#1a2234]">Active</option>
-                        <option value="inactive" class="bg-[#1a2234]">Inactive</option>
-                        <option value="out_of_stock" class="bg-[#1a2234]">Out of Stock</option>
+                        <option value="1" class="bg-[#1a2234]">Active</option>
+                        <option value="0" class="bg-[#1a2234]">Inactive</option>
+                        <option value="2" class="bg-[#1a2234]">Out of Stock</option>
                     </select>
                 </div>
 

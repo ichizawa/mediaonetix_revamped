@@ -3,20 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Tickets extends Model
+class PromoCodes extends Model
 {
-    use SoftDeletes;
     protected $fillable = [
-        'name',
+        'slug',
+        'amount',
         'type',
         'event_id',
+        'user_id',
         'status',
-        'color',
-        'price',
-        'quantity',
-        'original_qty'
+        'valid',
+        'quantity'
     ];
 
     public function event()

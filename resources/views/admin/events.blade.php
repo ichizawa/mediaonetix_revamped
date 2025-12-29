@@ -181,12 +181,12 @@
                                 </div>
                                 <div class="mb-4">
                                     <div class="flex justify-between text-sm mb-2">
-                                        <span class="text-gray-400">342 / {{ $event->event_total_tickets }} sold</span>
-                                        <span class="text-blue-400 font-semibold">68%</span>
+                                        <span class="text-gray-400">{{ $event->tickets_sold }} / {{ $event->tickets->sum('original_qty') }} sold</span>
+                                        <span class="text-blue-400 font-semibold">{{ $event->tickets_sold }}%</span>
                                     </div>
                                     <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
                                         <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all"
-                                            style="width: 68%"></div>
+                                            style="width: {{ $event->tickets_sold }}%"></div>
                                     </div>
                                 </div>
                                 <div class="flex items-center justify-between pt-4 border-t border-white/10">
@@ -215,7 +215,7 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        <a href="{{ route('admin.events.tickets', $event->id) }}"
+                                        <a href="{{ route('admin.events.tickets.tickets', $event->slug) }}"
                                             class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
                                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
@@ -245,87 +245,7 @@
                             </div>
                         </div>
                     @empty
-
                     @endforelse
-                    {{-- @for($i = 0; $i < 6; $i++) <div
-                        class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
-                        <div class="relative h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
-                            <div class="absolute inset-0 bg-cover bg-center opacity-40"></div>
-                            <div class="absolute top-4 right-4">
-                                <span
-                                    class="px-3 py-1 bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-full text-xs font-semibold text-green-400">Active</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <div class="flex items-center gap-2 mb-3">
-                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                    </path>
-                                </svg>
-                                <span class="text-sm text-gray-400">August 15, 2024 • 8:00 PM</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-white mb-2">Event Name {{ $i + 1 }}</h3>
-                            <p class="text-gray-400 text-sm mb-4">Event description goes here</p>
-                            <div class="flex items-center gap-2 mb-4">
-                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                    </path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                <span class="text-sm text-gray-400">Event Location</span>
-                            </div>
-                            <div class="mb-4">
-                                <div class="flex justify-between text-sm mb-2">
-                                    <span class="text-gray-400">342 / 500 sold</span>
-                                    <span class="text-blue-400 font-semibold">68%</span>
-                                </div>
-                                <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all"
-                                        style="width: 68%"></div>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between pt-4 border-t border-white/10">
-                                <div>
-                                    <p class="text-sm text-gray-400">Starting from</p>
-                                    <p class="text-xl font-bold text-white">$45</p>
-                                </div>
-                                <div class="flex gap-2">
-                                    <button onclick="openViewModal('{{ $i }}')"
-                                        class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                    <button onclick="openEditModal({{ $i + 1 }})"
-                                        class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                    <button class="p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-all">
-                                        <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                </div>
-                @endfor --}}
             </div>
         </div>
     </div>
@@ -333,26 +253,6 @@
 
     @include('admin.component.event.modal')
     @include ('admin.component.event.view')
-
-    <!--  Add EVENT MODAL-->
-
-    @if(session('success'))
-        <script type="module">
-            Toast.fire({
-                icon: 'success',
-                title: "{{ session('success') }}"
-            });
-        </script>
-    @endif
-
-    @if($errors->any())
-        <script type="module">
-            Toast.fire({
-                icon: 'error',
-                title: "{{ implode(' ', $errors->all()) }}"
-            });
-        </script>
-    @endif
 
     <script>
         let currentEventId = null;

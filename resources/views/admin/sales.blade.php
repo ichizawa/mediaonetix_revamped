@@ -209,50 +209,25 @@
                         <h3 class="text-xl font-bold text-white mb-6">List of Events</h3>
                         <div class="space-y-4">
                             @forelse($events as $event)
-                                <a href="{{ route('admin.sales.edit', $event->id) }}"
+                                <a href="{{ route('admin.sales.edit', $event->slug) }}"
                                     class="flex items-center justify-between p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer group">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform">
+                                        <div
+                                            class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform">
                                         </div>
                                         <div>
-                                            <p class="text-white font-semibold text-sm group-hover:text-blue-400 transition-colors">
-                                                {{ $event->event_name }}</p>
-                                            {{-- <p class="text-gray-400 text-xs">{{ 450 - ($event->id * 50) }} tickets sold</p> --}}
+                                            <p
+                                                class="text-white font-semibold text-sm group-hover:text-blue-400 transition-colors">
+                                                {{ $event->event_name }}
+                                            </p>
+                                            {{-- <p class="text-gray-400 text-xs">{{ 450 - ($event->id * 50) }} tickets sold</p>
+                                            --}}
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-3">
                                         <div class="text-right">
                                             {{-- <p class="text-white font-bold">${{ 12500 - ($event->id * 1500) }}</p>
-                                            <p class="text-green-400 text-xs">+{{ 20 - $event->id  }}%</p> --}}
-                                        </div>
-                                        <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all"
-                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                        </svg>
-                                    </div>
-                                </a>
-                            @empty
-
-                            @endforelse
-                            {{-- @for($i = 1; $i <= 5; $i++)
-                                <a href="{{ route('admin.sales.edit', $i) }}"
-                                    class="flex items-center justify-between p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer group">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform">
-                                            {{ $i }}
-                                        </div>
-                                        <div>
-                                            <p
-                                                class="text-white font-semibold text-sm group-hover:text-blue-400 transition-colors">
-                                                Event Name {{ $i }}</p>
-                                            <p class="text-gray-400 text-xs">{{ 450 - ($i * 50) }} tickets sold</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-3">
-                                        <div class="text-right">
-                                            <p class="text-white font-bold">${{ 12500 - ($i * 1500) }}</p>
-                                            <p class="text-green-400 text-xs">+{{ 20 - $i }}%</p>
+                                            <p class="text-green-400 text-xs">+{{ 20 - $event->id }}%</p> --}}
                                         </div>
                                         <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all"
                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -261,7 +236,36 @@
                                         </svg>
                                     </div>
                                 </a>
-                            @endfor --}}
+                            @empty
+
+                            @endforelse
+                            {{-- @for($i = 1; $i <= 5; $i++) <a href="{{ route('admin.sales.edit', $i) }}"
+                                class="flex items-center justify-between p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer group">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform">
+                                        {{ $i }}
+                                    </div>
+                                    <div>
+                                        <p
+                                            class="text-white font-semibold text-sm group-hover:text-blue-400 transition-colors">
+                                            Event Name {{ $i }}</p>
+                                        <p class="text-gray-400 text-xs">{{ 450 - ($i * 50) }} tickets sold</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="text-right">
+                                        <p class="text-white font-bold">${{ 12500 - ($i * 1500) }}</p>
+                                        <p class="text-green-400 text-xs">+{{ 20 - $i }}%</p>
+                                    </div>
+                                    <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                                </a>
+                                @endfor --}}
                         </div>
                     </div>
                 </div>
@@ -299,46 +303,37 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for($i = 1; $i <= 10; $i++)
+                                @forelse($sales as $sale)
                                     <tr class="border-b border-white/5 hover:bg-white/5 transition-all">
                                         <td class="py-4 px-4">
-                                            <span class="text-white font-mono text-sm">#TIX-{{ 1250 - $i }}</span>
+                                            <span class="text-white font-mono text-sm">{{ $sale->reference_number }}</span>
                                         </td>
                                         <td class="py-4 px-4">
                                             <div>
-                                                <p class="text-white font-medium text-sm">Customer {{ $i }}</p>
-                                                <p class="text-gray-400 text-xs">customer{{ $i }}@email.com</p>
+                                                <p class="text-white font-medium text-sm">{{ $sale->customer_name }}</p>
+                                                <p class="text-gray-400 text-xs">{{ $sale->customer_email }}</p>
                                             </div>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <span class="text-white text-sm">Event Name {{ $i }}</span>
+                                            <span class="text-white text-sm">{{ $sale->event->event_name }}</span>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <span class="text-gray-400 text-sm">Dec {{ $i }}, 2024</span>
+                                            <span class="text-gray-400 text-sm">{{ $sale->created_at->format('M d, Y - h:i A') }}</span>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <span class="text-white text-sm">{{ $i }}</span>
+                                            <div>
+                                                <p class="text-white font-medium text-sm">{{ $sale->ticket->name }}</p>
+                                                <p class="text-gray-400 text-xs">x {{ $sale->quantity }}</p>
+                                            </div>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <span class="text-white font-semibold">${{ 150 + ($i * 25) }}</span>
+                                            <span class="text-white font-semibold">{{ $sale->total_amount }}</span>
                                         </td>
                                         <td class="py-4 px-4">
-                                            @if($i % 4 == 0)
-                                                <span
-                                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
-                                                    Pending
-                                                </span>
-                                            @elseif($i % 7 == 0)
-                                                <span
-                                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
-                                                    Failed
-                                                </span>
-                                            @else
-                                                <span
-                                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
-                                                    Completed
-                                                </span>
-                                            @endif
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $sale->status_label['color'] }}/10 {{ $sale->status_label['color'] }} border {{ $sale->status_label['color'] }}/20">
+                                                {{ $sale->status_label['label'] }}
+                                            </span>
                                         </td>
                                         <td class="py-4 px-4">
                                             <div class="flex gap-2">
@@ -363,7 +358,13 @@
                                             </div>
                                         </td>
                                     </tr>
-                                @endfor
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="py-4 px-4">
+                                            <p class="text-white text-sm">No sales found.</p>
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -389,7 +390,6 @@
             </div>
         </div>
     </div>
-
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script>
@@ -475,18 +475,18 @@
             document.getElementById('salesModal').classList.remove('active');
         }
 
-        function updateTicketPrice() {
-            const select = document.getElementById('ticketSelect');
-            const price = select.value;
-            document.getElementById('ticketPrice').textContent = price ? parseFloat(price).toFixed(2) : '0.00';
-            calculateTotal();
-        }
+        // function updateTicketPrice() {
+        //     const select = document.getElementById('ticketSelect');
+        //     const price = select.value;
+        //     document.getElementById('ticketPrice').textContent = price ? parseFloat(price).toFixed(2) : '0.00';
+        //     calculateTotal();
+        // }
 
-        function calculateTotal() {
-            const price = parseFloat(document.getElementById('ticketSelect').value) || 0;
-            const quantity = parseInt(document.getElementById('quantityInput').value) || 0;
-            const total = price * quantity;
-            document.getElementById('totalPrice').textContent = total.toFixed(2);
-        }
+        // function calculateTotal() {
+        //     const price = parseFloat(document.getElementById('ticketSelect').value) || 0;
+        //     const quantity = parseInt(document.getElementById('quantityInput').value) || 0;
+        //     const total = price * quantity;
+        //     document.getElementById('totalPrice').textContent = total.toFixed(2);
+        // }
     </script>
 @endsection

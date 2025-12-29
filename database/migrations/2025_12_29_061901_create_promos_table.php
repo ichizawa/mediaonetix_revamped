@@ -10,16 +10,16 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('tickets', function (Blueprint $table) {
+        Schema::create('promo_codes', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('type');
+            $table->string('slug');
+            $table->double('amount', 8, 2);
+            $table->boolean('type')->default(0);
             $table->unsignedBigInteger('event_id');
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
-            $table->boolean('status')->default(0);
-            $table->string('color');
-            $table->double('price', 8, 2);
-            $table->unsignedBigInteger('quantity');
+            $table->unsignedBigInteger(column: 'user_id');
+            $table->smallInteger('status')->default(0);
+            $table->date('valid');
+            $table->bigInteger('quantity');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -30,6 +30,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('tickets');
+        Schema::dropIfExists('promos');
     }
 };

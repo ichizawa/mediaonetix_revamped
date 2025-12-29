@@ -3,6 +3,7 @@ use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\EventsController;
 use App\Http\Controllers\admin\MerchantController;
+use App\Http\Controllers\admin\PromoCodesController;
 use App\Http\Controllers\admin\SalesController;
 use App\Http\Controllers\admin\SettingsController;
 use App\Http\Controllers\admin\TicketsController;
@@ -20,9 +21,10 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
         Route::put('update', [EventsController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [EventsController::class, 'delete'])->name('delete');
 
-        Route::get('{event_id}', [TicketsController::class, 'index'])->name('tickets');
-        Route::prefix('tickets')->name('tickets.')->group(function () {
-            
+        Route::prefix('{slug}/tickets')->name('tickets.')->group(function () {
+            Route::get('/', [TicketsController::class, 'index'])->name('tickets');
+            Route::post('/', [TicketsController::class, 'store'])->name('store');
+            Route::delete('{ticket}', [TicketsController::class, 'destroy'])->name('destroy');
         });
     });
     //End Events CRUD
@@ -30,12 +32,17 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
     //Sales CRUD
     Route::get('sales', [SalesController::class, 'index'])->name('sales');
     Route::prefix('sales')->name('sales.')->group(function () {
-        Route::get('store', [SalesController::class, 'store'])->name('store');
-        Route::get('edit/{id}', [SalesController::class, 'edit'])->name('edit');
+        Route::post('store', [SalesController::class, 'store'])->name('store');
+        Route::get('edit/{slug}', [SalesController::class, 'edit'])->name('edit');
         Route::put('update/{id}', [SalesController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [SalesController::class, 'delete'])->name('delete');
     });
     //End Sales CRUD
+
+    Route::prefix('promo_codes')->name('promo_codes.')->group(function () {
+        Route::get('/', [PromoCodesController::class, 'index'])->name('index');
+        Route::post('store', [PromoCodesController::class, 'store'])->name('store');
+    });
 
     Route::get('merchants', [MerchantController::class, 'index'])->name('merchants');
     Route::prefix('merchants')->name('merchants.')->group(function () {
