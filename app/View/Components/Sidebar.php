@@ -5,6 +5,7 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Illuminate\View\Component;
 
 class Sidebar extends Component
@@ -22,9 +23,9 @@ class Sidebar extends Component
      */
     public function render()
     {
-        if (!Auth::check()) {
-            return null;
-        }
+        // if (!Auth::check() || !Route::is('admin.*')) {
+        //     return null;
+        // }
 
         $sidebars = Auth::user()->sidebars;
 

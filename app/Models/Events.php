@@ -13,23 +13,23 @@ class Events extends Model
     const STATUS = [
         0 => [
             'label' => 'Upcoming',
-            'color' => 'warning'
+            'color' => 'yellow'
         ],
         1 => [
             'label' => 'Active',
-            'color' => 'success'
+            'color' => 'green'
         ],
         2 => [
             'label' => 'Ongoing',
-            'color' => 'primary'
+            'color' => 'blue'
         ],
         3 => [
             'label' => 'Completed',
-            'color' => 'secondary'
+            'color' => 'grey'
         ],
         4 => [
             'label' => 'Cancelled',
-            'color' => 'danger'
+            'color' => 'red'
         ]
     ];
     protected $fillable = [
@@ -59,7 +59,11 @@ class Events extends Model
     }
     public function scopeGetUpcoming()
     {
-        return $this->where('status', 0);
+        return $this->where('event_date', '>=', date('Y-m-d'));
+    }
+    public function scopeGetThisWeek()
+    {
+        return $this->where('event_date', '>=', date('Y-m-d'))->orderByDesc('id');
     }
     public function scopeGetActive()
     {
@@ -92,5 +96,9 @@ class Events extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+    public function getTotalTicketsLeftAttribute()
+    {
+        return $this->tickets->sum('quantity');
     }
 }

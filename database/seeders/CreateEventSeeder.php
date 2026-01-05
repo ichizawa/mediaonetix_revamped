@@ -15,6 +15,7 @@ class CreateEventSeeder extends Seeder
     {
         Events::insert([
             [
+                'slug' => 'summer-music-festival-2026',
                 'event_name' => 'Summer Music Festival',
                 'category' => 'Music',
                 'description' => 'A fun outdoor music festival featuring local bands.',
@@ -26,8 +27,10 @@ class CreateEventSeeder extends Seeder
                 'status' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'created_by' => 1
             ],
             [
+                'slug' => 'art-expo-2026',
                 'event_name' => 'Art Expo 2026',
                 'category' => 'Exhibition',
                 'description' => 'An exhibition showcasing modern art from emerging artists.',
@@ -39,6 +42,7 @@ class CreateEventSeeder extends Seeder
                 'status' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'created_by' => 1
             ]
         ]);
     }
