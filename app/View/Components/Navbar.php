@@ -5,6 +5,7 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Illuminate\View\Component;
 
 class Navbar extends Component
@@ -22,8 +23,6 @@ class Navbar extends Component
      */
     public function render()
     {
-        if (Auth::user()) {
-            return view('components.navbar');
-        }
+        return view('components.navbar');
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PromoCodes extends Model
 {
+    
     protected $fillable = [
         'slug',
         'amount',

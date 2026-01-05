@@ -22,7 +22,7 @@ class PromoCodesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'required|string|unique:promos,slug',
+            'code' => 'required|string|unique:promo_codes,slug',
             'value' => 'required|numeric',
             'type' => 'required|string',
             'valid' => 'required|date',
