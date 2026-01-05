@@ -279,7 +279,7 @@
             document.getElementById('eventDate').value = today;
             document.getElementById('eventTime').value = '19:00';
             document.getElementById('eventStatus').value = 'upcoming';
-            document.getElementById('eventTotalTickets').value = '100';
+            // document.getElementById('eventTotalTickets').value = '100';
             // document.getElementById('eventPrice').value = '0.00';
 
             // Show modal
@@ -336,7 +336,7 @@
             document.getElementById('eventDate').value = event.event_date || '';
             document.getElementById('eventTime').value = event.event_time || '';
             document.getElementById('eventLocation').value = event.event_venue || '';
-            document.getElementById('eventTotalTickets').value = event.event_total_tickets || '';
+            // document.getElementById('eventTotalTickets').value = event.event_total_tickets || '';
             document.getElementById('eventStatus').value = event.status;
             document.getElementById('eventForm').action = "{{ route('admin.events.update') }}";
             document.getElementById('eventForm').value = "PUT";

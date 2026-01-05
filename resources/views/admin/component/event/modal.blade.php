@@ -52,12 +52,12 @@
                 <label class="block text-sm font-medium text-gray-300 mb-2">Location</label>
                 <input type="text" id="eventLocation" name="location" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500" required>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
+            <!-- <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Total Tickets</label>
                     <input type="number" id="eventTotalTickets" name="total_tickets" min="1" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500" required>
                 </div>
-            </div>
+            </div> -->
             <div>
                 <label class="block text-sm font-medium text-gray-300 mb-2">Event Image</label>
                 <div class="relative">
