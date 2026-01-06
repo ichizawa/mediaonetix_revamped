@@ -206,6 +206,7 @@
                                                 </path>
                                             </svg>
                                         </button>
+
                                         <button onclick='openEditModal(@json($event))'
                                             class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
                                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
@@ -215,6 +216,7 @@
                                                 </path>
                                             </svg>
                                         </button>
+
                                         <a href="{{ route('admin.events.tickets.tickets', $event->slug) }}"
                                             class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
                                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
@@ -240,6 +242,7 @@
                                                 </svg>
                                             </button>
                                         </form>
+
                                     </div>
                                 </div>
                             </div>

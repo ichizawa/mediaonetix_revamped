@@ -1,5 +1,7 @@
 @extends('layouts')
 @include('admin.component.merchant.view')
+@include('admin.component.merchant.add')
+
 @section('content')
     <style>
         .merchant-card {
@@ -44,8 +46,8 @@
                                 </svg>
                                 <span class="hidden sm:inline">Export</span>
                             </button>
-                            <button
-                                class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-semibold transition-all">
+                            <button onclick="openAddMerchantModal()"
+    class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-semibold transition-all">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 4v16m8-8H4"></path>
