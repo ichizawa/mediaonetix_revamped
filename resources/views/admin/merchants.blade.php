@@ -46,8 +46,7 @@
                                 </svg>
                                 <span class="hidden sm:inline">Export</span>
                             </button>
-                            <button onclick="openAddMerchantModal()"
-    class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-semibold transition-all">
+                            <button onclick="openAddMerchantModal()" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-semibold transition-all">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 4v16m8-8H4"></path>
@@ -87,7 +86,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Total Merchants</p>
-                            <h3 class="text-3xl font-bold text-white">247</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ $users->count()}}</h3>
                             <p class="text-xs text-gray-500 mt-2">Registered merchants</p>
                         </div>
                     </div>
@@ -109,7 +108,7 @@
                                 <span class="text-green-400 text-sm font-semibold">94.3%</span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Active Merchants</p>
-                            <h3 class="text-3xl font-bold text-white">233</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ $active }}</h3>
                             <p class="text-xs text-gray-500 mt-2">Currently active</p>
                         </div>
                     </div>
@@ -131,7 +130,7 @@
                                 <span class="text-yellow-400 text-sm font-semibold">8</span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Pending Review</p>
-                            <h3 class="text-3xl font-bold text-white">8</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ $pending }}</h3>
                             <p class="text-xs text-gray-500 mt-2">Awaiting approval</p>
                         </div>
                     </div>
@@ -153,7 +152,7 @@
                                 <span class="text-red-400 text-sm font-semibold">6</span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Inactive</p>
-                            <h3 class="text-3xl font-bold text-white">6</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ $inactive }}</h3>
                             <p class="text-xs text-gray-500 mt-2">Suspended/Inactive</p>
                         </div>
                     </div>
@@ -208,25 +207,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    $merchants = [
-                                        ['name' => 'Tech Events Co.', 'contact' => 'John Smith', 'email' => 'john@techevents.com', 'phone' => '+1 234-567-8901', 'events' => 24, 'revenue' => 125000, 'status' => 'active'],
-                                        ['name' => 'Music Fest Ltd', 'contact' => 'Sarah Johnson', 'email' => 'sarah@musicfest.com', 'phone' => '+1 234-567-8902', 'events' => 18, 'revenue' => 98500, 'status' => 'active'],
-                                        ['name' => 'Sports Arena', 'contact' => 'Mike Davis', 'email' => 'mike@sportsarena.com', 'phone' => '+1 234-567-8903', 'events' => 31, 'revenue' => 156000, 'status' => 'active'],
-                                        ['name' => 'Art Gallery Events', 'contact' => 'Emily Chen', 'email' => 'emily@artgallery.com', 'phone' => '+1 234-567-8904', 'events' => 12, 'revenue' => 67200, 'status' => 'pending'],
-                                        ['name' => 'Conference Center', 'contact' => 'David Lee', 'email' => 'david@confcenter.com', 'phone' => '+1 234-567-8905', 'events' => 45, 'revenue' => 234000, 'status' => 'active'],
-                                        ['name' => 'Food Festival Inc', 'contact' => 'Lisa Wang', 'email' => 'lisa@foodfest.com', 'phone' => '+1 234-567-8906', 'events' => 8, 'revenue' => 45000, 'status' => 'pending'],
-                                        ['name' => 'Theater Productions', 'contact' => 'Robert Brown', 'email' => 'robert@theater.com', 'phone' => '+1 234-567-8907', 'events' => 22, 'revenue' => 112000, 'status' => 'active'],
-                                        ['name' => 'Comedy Club', 'contact' => 'Jennifer Garcia', 'email' => 'jen@comedyclub.com', 'phone' => '+1 234-567-8908', 'events' => 15, 'revenue' => 78000, 'status' => 'active'],
-                                        ['name' => 'Dance Studio Events', 'contact' => 'Michael Wilson', 'email' => 'michael@dancestudio.com', 'phone' => '+1 234-567-8909', 'events' => 6, 'revenue' => 32000, 'status' => 'inactive'],
-                                        ['name' => 'Exhibition Hall', 'contact' => 'Amanda Martinez', 'email' => 'amanda@exhibition.com', 'phone' => '+1 234-567-8910', 'events' => 19, 'revenue' => 95000, 'status' => 'active'],
-                                    ];
-                                @endphp
-
-                                @foreach($merchants as $index => $merchant)
+                                @forelse($users as $merchant)
                                     <tr class="border-b border-white/5 hover:bg-white/5 transition-all">
                                         <td class="py-4 px-4">
-                                            <span class="text-white font-mono text-sm">#MER-{{ 1000 + $index }}</span>
+                                            <span class="text-white font-mono text-sm">{{ $merchant['id'] }}</span>
                                         </td>
                                         <td class="py-4 px-4">
                                             <div class="flex items-center gap-3">
@@ -238,46 +222,32 @@
                                             </div>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <span class="text-white text-sm">{{ $merchant['contact'] }}</span>
+                                            <span class="text-white text-sm">{{ $merchant['first_name'] }} {{ $merchant['last_name'] }}</span>
                                         </td>
                                         <td class="py-4 px-4">
                                             <span class="text-gray-400 text-sm">{{ $merchant['email'] }}</span>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <span class="text-gray-400 text-sm">{{ $merchant['phone'] }}</span>
+                                            <span class="text-gray-400 text-sm">{{ $merchant['phone_number'] }}</span>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <span class="text-white font-semibold text-sm">{{ $merchant['events'] }}</span>
+                                            <span class="text-white font-semibold text-sm">{{ $merchant['events_count'] }}</span>
                                         </td>
                                         <td class="py-4 px-4">
                                             <span
                                                 class="text-white font-semibold">${{ number_format($merchant['revenue']) }}</span>
                                         </td>
                                         <td class="py-4 px-4">
-                                            @if($merchant['status'] === 'active')
-                                                <span
-                                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
-                                                    <span class="w-1.5 h-1.5 bg-green-400 rounded-full mr-1.5"></span>
-                                                    Active
-                                                </span>
-                                            @elseif($merchant['status'] === 'pending')
-                                                <span
-                                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
-                                                    <span class="w-1.5 h-1.5 bg-yellow-400 rounded-full mr-1.5"></span>
-                                                    Pending
-                                                </span>
-                                            @else
-                                                <span
-                                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
-                                                    <span class="w-1.5 h-1.5 bg-red-400 rounded-full mr-1.5"></span>
-                                                    Inactive
-                                                </span>
-                                            @endif
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-{{ $merchant->status['color'] }}-500/10 text-{{ $merchant->status['color'] }}-400 border border-{{ $merchant->status['color'] }}-500/20">
+                                                <span class="w-1.5 h-1.5 bg-{{ $merchant->status['color'] }}-400 rounded-full mr-1.5"></span>
+                                                {{ $merchant->status['label'] }}
+                                            </span>
                                         </td>
                                         <td class="py-4 px-4">
                                             <div class="flex gap-2">
                                                 <button
-                                                    onclick="openMerchantModal('{{ addslashes($merchant['name']) }}', '{{ addslashes($merchant['contact']) }}', '{{ addslashes($merchant['email']) }}', {{ $merchant['events'] }}, {{ $merchant['revenue'] }}, '{{ $merchant['status'] }}', '{{ $merchant['phone'] }}', '#MER-{{ 1000 + $index }}')"
+                                                    onclick="openMerchantModal('{{ $merchant }}')"
                                                     class="p-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded-lg transition-all group">
                                                     <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
@@ -305,37 +275,33 @@
                                                         </path>
                                                     </svg>
                                                 </button>
+                                                <a href="{{ route('admin.merchants.files', $merchant['id']) }}"
+                                                    class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
+                                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                        </path>
+                                                    </svg>
+                                                </a>
                                             </div>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="9" class="py-4 px-4">
+                                            <p class="text-white text-sm">No merchants found.</p>
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
 
                     <!-- Pagination -->
-                    <div
-                        class="flex flex-col sm:flex-row items-center justify-between mt-6 pt-4 border-t border-white/10 gap-4">
-                        <p class="text-sm text-gray-400">Showing 1 to 10 of 247 merchants</p>
-                        <div class="flex gap-2">
-                            <button
-                                class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                                Previous
-                            </button>
-                            <button class="px-3 py-1.5 bg-blue-600 text-white rounded-lg">1</button>
-                            <button
-                                class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all">2</button>
-                            <button
-                                class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all">3</button>
-                            <button
-                                class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all">...</button>
-                            <button
-                                class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all">25</button>
-                            <button class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all">
-                                Next
-                            </button>
-                        </div>
-                    </div>
+                    {{ $users->links() }}
                 </div>
             </div>
         </div>

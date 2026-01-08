@@ -1,4 +1,5 @@
 <div>
+    @if(count($events) > 0)
     <section class="relative py-16 sm:py-20 md:py-24 lg:py-32 bg-[#111827]">
         <div class="container mx-auto px-4 sm:px-6 lg:px-12">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-12 sm:mb-16">
@@ -24,10 +25,11 @@
             <!-- Events Grid -->
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 @forelse($events as $event)
-                        <div
+                    <div
                         class="group relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-{{ $event->statuslabel['color'] }}-500/50 transition-all duration-500 hover:shadow-xl hover:shadow-{{ $event->statuslabel['color'] }}-500/10">
                         <!-- Image -->
-                        <div class="relative aspect-[16/10] bg-gradient-to-br from-{{ $event->statuslabel['color'] }}-600 to-{{ $event->statuslabel['color'] }}-400 overflow-hidden">
+                        <div
+                            class="relative aspect-[16/10] bg-gradient-to-br from-{{ $event->statuslabel['color'] }}-600 to-{{ $event->statuslabel['color'] }}-400 overflow-hidden">
                             <div class="absolute inset-0 flex items-center justify-center">
                                 <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
@@ -49,8 +51,10 @@
                         <!-- Content -->
                         <div class="p-5 space-y-4">
                             <div>
-                                <div class="text-xs text-{{ $event->statuslabel['color'] }}-400 font-semibold mb-2">{{ $event->category }}</div>
-                                <h3 class="text-xl font-bold text-white mb-2 group-hover:text-{{ $event->statuslabel['color'] }}-400 transition-colors">
+                                <div class="text-xs text-{{ $event->statuslabel['color'] }}-400 font-semibold mb-2">
+                                    {{ $event->category }}</div>
+                                <h3
+                                    class="text-xl font-bold text-white mb-2 group-hover:text-{{ $event->statuslabel['color'] }}-400 transition-colors">
                                     {{ $event->event_name }}
                                 </h3>
                                 <p class="text-sm text-gray-400 line-clamp-2">
@@ -72,7 +76,8 @@
                             <div class="flex items-center justify-between pt-4 border-t border-white/10">
                                 <div>
                                     <div class="text-xs text-gray-500">From</div>
-                                    <div class="text-2xl font-bold text-white">₱{{ number_format($event->tickets_min_price, 2) }}</div>
+                                    <div class="text-2xl font-bold text-white">
+                                        ₱{{ number_format($event->tickets_min_price, 2) }}</div>
                                 </div>
                                 <button
                                     class="px-5 py-2.5 bg-{{ $event->statuslabel['color'] }}-600 hover:bg-{{ $event->statuslabel['color'] }}-500 rounded-lg font-semibold text-sm transition-colors text-white">
@@ -82,7 +87,7 @@
                         </div>
                     </div>
                 @empty
-                    
+
                 @endforelse
                 {{-- <!-- Event Card 1 -->
                 <div
@@ -447,4 +452,5 @@
             </div>
         </div>
     </section>
+    @endif
 </div>

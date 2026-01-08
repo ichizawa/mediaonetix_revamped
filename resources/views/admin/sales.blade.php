@@ -91,7 +91,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Total Revenue</p>
-                            <h3 class="text-3xl font-bold text-white">$48,521</h3>
+                            <h3 class="text-3xl font-bold text-white">$0</h3>
                             <p class="text-xs text-gray-500 mt-2">vs last month</p>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Total Sales</p>
-                            <h3 class="text-3xl font-bold text-white">1,247</h3>
+                            <h3 class="text-3xl font-bold text-white">0</h3>
                             <p class="text-xs text-gray-500 mt-2">Tickets sold</p>
                         </div>
                     </div>
@@ -148,7 +148,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Completed</p>
-                            <h3 class="text-3xl font-bold text-white">1,089</h3>
+                            <h3 class="text-3xl font-bold text-white">0</h3>
                             <p class="text-xs text-gray-500 mt-2">Successful transactions</p>
                         </div>
                     </div>
@@ -176,7 +176,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Pending</p>
-                            <h3 class="text-3xl font-bold text-white">158</h3>
+                            <h3 class="text-3xl font-bold text-white">0</h3>
                             <p class="text-xs text-gray-500 mt-2">Awaiting payment</p>
                         </div>
                     </div>
@@ -221,8 +221,7 @@
                                                 class="text-white font-semibold text-sm group-hover:text-blue-400 transition-colors">
                                                 {{ $event->event_name }}
                                             </p>
-                                            {{-- <p class="text-gray-400 text-xs">{{ 450 - ($event->id * 50) }} tickets sold</p>
-                                            --}}
+                                            {{-- <p class="text-gray-400 text-xs">{{ 450 - ($event->id * 50) }} tickets sold</p> --}}
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-3">
@@ -238,35 +237,8 @@
                                     </div>
                                 </a>
                             @empty
-
+                                <p class="text-white text-sm">No events found.</p>
                             @endforelse
-                            {{-- @for($i = 1; $i <= 5; $i++) <a href="{{ route('admin.sales.edit', $i) }}"
-                                class="flex items-center justify-between p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer group">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform">
-                                        {{ $i }}
-                                    </div>
-                                    <div>
-                                        <p
-                                            class="text-white font-semibold text-sm group-hover:text-blue-400 transition-colors">
-                                            Event Name {{ $i }}</p>
-                                        <p class="text-gray-400 text-xs">{{ 450 - ($i * 50) }} tickets sold</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <div class="text-right">
-                                        <p class="text-white font-bold">${{ 12500 - ($i * 1500) }}</p>
-                                        <p class="text-green-400 text-xs">+{{ 20 - $i }}%</p>
-                                    </div>
-                                    <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </div>
-                                </a>
-                                @endfor --}}
                         </div>
                     </div>
                 </div>
@@ -371,7 +343,7 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="flex items-center justify-between mt-6 pt-4 border-t border-white/10">
+                    {{-- <div class="flex items-center justify-between mt-6 pt-4 border-t border-white/10">
                         <p class="text-sm text-gray-400">Showing 1 to 10 of 247 transactions</p>
                         <div class="flex gap-2">
                             <button class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all">
@@ -386,7 +358,8 @@
                                 Next
                             </button>
                         </div>
-                    </div>
+                    </div> --}}
+                    {{ $sales->links() }}
                 </div>
             </div>
         </div>

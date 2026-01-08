@@ -1,4 +1,5 @@
 <div>
+    @if($event)
     <section
         class="relative py-16 sm:py-20 md:py-24 lg:py-32 bg-gradient-to-b from-[#0c1222] to-[#111827] overflow-hidden">
         <!-- Background Elements -->
@@ -159,4 +160,5 @@
             </div>
         </div>
     </section>
+    @endif
 </div>

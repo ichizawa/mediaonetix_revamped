@@ -143,7 +143,7 @@
                             </svg>
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Total Revenue</p>
-                        <h3 class="text-3xl font-bold text-white">₱186,750.00</h3>
+                        <h3 class="text-3xl font-bold text-white">₱0</h3>
                     </div>
                     <div
                         class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
@@ -155,131 +155,12 @@
                             </svg>
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Tickets Sold</p>
-                        <h3 class="text-3xl font-bold text-white">1,248</h3>
+                        <h3 class="text-3xl font-bold text-white">0</h3>
                     </div>
                 </div>
 
                 <!-- Tickets Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {{-- @php
-                    $mockTickets = [
-                    [
-                    'id' => 1,
-                    'ticket_type' => 'VIP Pass',
-                    'description' => 'Premium seating, backstage access, exclusive merchandise, meet & greet',
-                    'price' => 5000,
-                    'quantity' => 100,
-                    'sold' => 87,
-                    'color' => '#FFD700'
-                    ],
-                    [
-                    'id' => 2,
-                    'ticket_type' => 'General Admission',
-                    'description' => 'Standard entry to the event, standing area access',
-                    'price' => 1500,
-                    'quantity' => 1000,
-                    'sold' => 756,
-                    'color' => '#3B82F6'
-                    ],
-                    [
-                    'id' => 3,
-                    'ticket_type' => 'Early Bird',
-                    'description' => 'Discounted ticket for early purchasers, general admission',
-                    'price' => 1200,
-                    'quantity' => 500,
-                    'sold' => 500,
-                    'color' => '#10B981'
-                    ],
-                    [
-                    'id' => 4,
-                    'ticket_type' => 'Student Discount',
-                    'description' => 'Special rate for students with valid ID, general admission',
-                    'price' => 1000,
-                    'quantity' => 300,
-                    'sold' => 245,
-                    'color' => '#8B5CF6'
-                    ],
-                    [
-                    'id' => 5,
-                    'ticket_type' => 'Group Package',
-                    'description' => 'Package for 5 people, includes reserved seating area',
-                    'price' => 6000,
-                    'quantity' => 50,
-                    'sold' => 38,
-                    'color' => '#F97316'
-                    ]
-                    ];
-                    @endphp
-
-                    @foreach($mockTickets as $ticket)
-                    <div
-                        class="ticket-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
-                        <div class="h-2 w-full" style="background: {{ $ticket['color'] }}"></div>
-                        <div class="p-6">
-                            <div class="flex items-start justify-between mb-4">
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <h3 class="text-xl font-bold text-white">{{ $ticket['ticket_type'] }}</h3>
-                                        <div class="w-4 h-4 rounded-full border-2 border-white/20"
-                                            style="background: {{ $ticket['color'] }}"></div>
-                                    </div>
-                                    <p
-                                        class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-                                        ₱{{ number_format($ticket['price'], 2) }}
-                                    </p>
-                                </div>
-                                <div
-                                    class="px-3 py-1 bg-blue-500/20 backdrop-blur-sm border border-blue-500/30 rounded-full">
-                                    <span class="text-xs font-semibold text-blue-400">{{ $ticket['quantity'] -
-                                        $ticket['sold'] }} Available</span>
-                                </div>
-                            </div>
-
-                            <p class="text-gray-400 text-sm mb-4">{{ $ticket['description'] }}</p>
-
-                            <div class="mb-4">
-                                <div class="flex justify-between text-sm mb-2">
-                                    <span class="text-gray-400">{{ $ticket['sold'] }} / {{ $ticket['quantity'] }}
-                                        sold</span>
-                                    <span class="text-blue-400 font-semibold">{{ round(($ticket['sold'] /
-                                        $ticket['quantity']) * 100) }}%</span>
-                                </div>
-                                <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
-                                    <div class="h-full transition-all"
-                                        style="width: {{ round(($ticket['sold'] / $ticket['quantity']) * 100) }}%; background: {{ $ticket['color'] }}">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flex items-center justify-between pt-4 border-t border-white/10">
-                                <div class="text-sm text-gray-400">
-                                    Revenue: <span class="text-white font-semibold">₱{{ number_format($ticket['price'] *
-                                        $ticket['sold'], 2) }}</span>
-                                </div>
-                                <div class="flex gap-2">
-                                    <button onclick='openEditTicketModal(@json($ticket))'
-                                        class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                    <button onclick="return confirm('Are you sure you want to delete this ticket type?')"
-                                        class="p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-all">
-                                        <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach --}}
                     @forelse($tickets as $ticket)
                         <div
                             class="ticket-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
@@ -309,21 +190,21 @@
 
                                 <div class="mb-4">
                                     <div class="flex justify-between text-sm mb-2">
-                                        <span class="text-gray-400">{{ $ticket->quantity }} sold</span>
+                                        <span class="text-gray-400">0 sold</span>
                                         <span
-                                            class="text-blue-400 font-semibold">{{ round(($ticket->quantity / $ticket->quantity) * 100) }}%</span>
+                                            class="text-blue-400 font-semibold">{{ round((0 / $ticket->quantity) * 100) }}%</span>
                                     </div>
                                     <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
                                         <div class="h-full transition-all"
-                                            style="width: {{ round(($ticket->quantity / $ticket->quantity) * 100) }}%; background: {{ $ticket->color }}">
+                                            style="width: {{ round((0/ $ticket->quantity) * 100) }}%; background: {{ $ticket->color }}">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="flex items-center justify-between pt-4 border-t border-white/10">
                                     <div class="text-sm text-gray-400">
-                                        Revenue: <span
-                                            class="text-white font-semibold">₱{{ number_format($ticket->price * $ticket->quantity, 2) }}</span>
+                                        Revenue: 
+                                        {{-- <span class="text-white font-semibold">₱{{ number_format($ticket->price * $ticket->quantity, 2) }}</span> --}}
                                     </div>
                                     <div class="flex gap-2">
                                         <button onclick='openEditTicketModal(@json($ticket))'
@@ -359,7 +240,7 @@
                         </div>
                     @empty
                         <div>
-
+                            <p class="text-white text-sm">No tickets found.</p>
                         </div>
                     @endforelse
                 </div>

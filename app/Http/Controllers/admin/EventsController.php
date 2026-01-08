@@ -35,7 +35,6 @@ class EventsController extends Controller
                 'description' => 'required|string',
                 'date' => 'required|date',
                 'time' => 'required|string',
-                'total_tickets' => 'required|integer',
                 'status' => 'required|string',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
@@ -56,7 +55,7 @@ class EventsController extends Controller
             $event->event_date = $request->date;
             $event->event_time = $request->time;
             $event->event_venue = $request->location;
-            $event->event_total_tickets = $request->total_tickets;
+            $event->event_total_tickets = 0;
             $event->status = $request->status;
             $event->created_by = Auth::user()->id;
             // $event->slug = Str::slug($request->name);

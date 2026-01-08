@@ -14,9 +14,26 @@ class User extends Authenticatable
     use HasFactory, Notifiable, SoftDeletes;
 
     const STATUS = [
-        0 => 'Inactive',
-        1 => 'Active',
+        0 => [
+            'label' => 'Inactive',
+            'color' => 'red'
+        ],
+        1 => [
+            'label' => 'Active',
+            'color' => 'green'
+        ],
+        2 => [
+            'label' => 'Pending',
+            'color' => 'yellow'
+        ],
     ];
+
+    const GENDER = [
+        0 => 'Male',
+        1 => 'Female',
+        2 => 'Other',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -76,15 +93,37 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
-
+    public function events()
+    {
+        return $this->hasMany(Events::class, 'created_by', 'id');
+    }
     public function scopeActive($query)
     {
         return $query->where('is_active', 1);
     }
-
+    public function scopePending($query)
+    {
+        return $query->where('is_active', 2);
+    }
     public function scopeInactive($query)
     {
         return $query->where('is_active', 0);
+    }
+    public function scopeMerchants($query)
+    {
+        return $query->where('role_id', 2);
+    }
+    public function getGenderAttribute($value)
+    {
+        return self::GENDER[$value];
+    }
+    public function getStatusAttribute()
+    {
+        $status = $this->attributes['is_active'] ?? 0;
+        return self::STATUS[$status] ?? [
+            'label' => 'Unknown',
+            'color' => 'grey'
+        ];
     }
     public function sidebars()
     {

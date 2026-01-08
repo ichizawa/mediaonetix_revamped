@@ -18,8 +18,8 @@ class SalesController extends Controller
 {
     public function index()
     {
-        $events = Events::with('tickets')->getEventByMerchant(Auth::user()->id)->get();
-        $sales = Sales::getAllSalesByMerchant(Auth::user()->id)->get();
+        $events = Events::with('tickets')->getEventByMerchant(Auth::user()->id)->paginate(10);
+        $sales = Sales::getAllSalesByMerchant(Auth::user()->id)->paginate(10);
         return view('admin.sales', compact('events', 'sales'));
     }
     public function edit($slug)

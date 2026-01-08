@@ -164,8 +164,7 @@
                                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                                         </path>
                                     </svg>
-                                    <span class="text-sm text-gray-400">{{ $event->event_date }} •
-                                        {{ date('g:i A', strtotime($event->event_time)) }}</span>
+                                    <span class="text-sm text-gray-400">{{ date('F j, Y', strtotime($event->event_date)) }} • {{ date('g:i A', strtotime($event->event_time)) }}</span>
                                 </div>
                                 <h3 class="text-xl font-bold text-white mb-2">{{ $event->event_name }}</h3>
                                 <p class="text-gray-400 text-sm mb-4">{{ $event->description }}</p>
