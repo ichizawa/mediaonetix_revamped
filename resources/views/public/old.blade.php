@@ -2,219 +2,232 @@
 @section('content')
     <!-- GSAP Library -->
 
-    <!-- Hero Section -->
+
     <section class="relative min-h-screen flex items-center overflow-hidden bg-[#0c1222]">
-    <!-- Animated Background -->
-    <div class="absolute inset-0 mesh-gradient"></div>
+        <!-- Animated Background -->
+        <div class="absolute inset-0 mesh-gradient"></div>
 
-    <!-- Floating Orbs -->
-    <div class="absolute top-10 left-5 w-40 h-40 md:w-72 md:h-72 bg-blue-500 rounded-full filter blur-[80px] md:blur-[120px] opacity-20 pulse-slow"></div>
-    <div class="absolute bottom-10 right-5 w-48 h-48 md:w-96 md:h-96 bg-blue-400 rounded-full filter blur-[80px] md:blur-[120px] opacity-20 pulse-slow" style="animation-delay: 2s;"></div>
+        <!-- Floating Orbs - Smaller on mobile -->
+        <div
+            class="absolute top-10 left-5 w-40 h-40 md:w-72 md:h-72 bg-blue-500 rounded-full filter blur-[80px] md:blur-[120px] opacity-20 pulse-slow">
+        </div>
+        <div class="absolute bottom-10 right-5 w-48 h-48 md:w-96 md:h-96 bg-blue-400 rounded-full filter blur-[80px] md:blur-[120px] opacity-20 pulse-slow"
+            style="animation-delay: 2s;"></div>
 
-    <div class="relative container mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-16 md:py-20">
-        <div class="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center min-h-[calc(100vh-10rem)]">
+        <div class="relative container mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-16 md:py-20">
+            <div class="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
+                <!-- Left Content -->
+                <div
+                    class="hero-content space-y-4 sm:space-y-6 md:space-y-8 text-center md:text-left px-4 sm:px-6 max-w-4xl md:max-w-none md:mx-0 mx-auto">
+                    <div
+                        class="hero-badge inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-500/10 border border-blue-500/20 rounded-full backdrop-blur-sm">
+                        <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
+                        <span class="text-blue-300 text-xs sm:text-sm font-medium">Trusted by 10K+ Event Creators</span>
+                    </div>
 
-            <!-- Left Content - Event Title and Details -->
-            <div class="hero-content space-y-6 md:space-y-8">
-
-                <!-- Event Badge -->
-                <div class="event-badge inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full backdrop-blur-sm mb-4">
-                    <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-                    <span class="text-blue-300 text-sm font-medium" id="event-category">SUMMER FEST 2024</span>
-                </div>
-
-                <!-- Event Title -->
-                <div class="event-title">
-                    <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight text-white mb-6">
-                        <span class="title-line-1 block">Electronic</span>
-                        <span class="title-line-2 gradient-text block">Paradise</span>
+                    <h1
+                        class="hero-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-tight sm:leading-none text-white">
+                        MediaOne
+                        <span class="gradient-text block">TIX</span>
                     </h1>
+
+                    <p
+                        class="hero-subtitle text-base sm:text-lg md:text-xl text-gray-400 leading-relaxed max-w-xl mx-auto md:mx-0">
+                        <strong>Convenience and security</strong> are at the heart of MediaoneTix. Whether you’re a casual
+                    event-goer or a regular attendee, our platform helps you find and secure tickets quickly without the
+                    hassle of long queues or physical tickets.
+                    </p>
+
+                    <div
+                        class="hero-stats flex flex-wrap items-center justify-center md:justify-start gap-4 sm:gap-6 md:gap-8 pt-4 sm:pt-6 md:pt-8">
+                        <div class="flex-shrink-0">
+                            <div class="text-xl sm:text-2xl md:text-3xl font-bold text-white">1M+</div>
+                            <div class="text-xs sm:text-sm text-gray-500 whitespace-nowrap">Tickets Sold</div>
+                        </div>
+                        <div class="w-px h-10 sm:h-12 bg-gray-800 flex-shrink-0"></div>
+                        <div class="flex-shrink-0">
+                            <div class="text-xl sm:text-2xl md:text-3xl font-bold text-white">99.9%</div>
+                            <div class="text-xs sm:text-sm text-gray-500 whitespace-nowrap">Uptime</div>
+                        </div>
+                        <div class="w-px h-10 sm:h-12 bg-gray-800 flex-shrink-0"></div>
+                        <div class="flex-shrink-0">
+                            <div class="text-xl sm:text-2xl md:text-3xl font-bold text-white">24/7</div>
+                            <div class="text-xs sm:text-sm text-gray-500 whitespace-nowrap">Support</div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Event Details -->
-                <div class="event-details space-y-4 mb-8">
-                    <div class="flex items-center gap-4 text-gray-300">
-                        <svg class="w-6 h-6 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        <span class="text-lg font-semibold" id="event-date">August 15, 2024</span>
-                    </div>
+                <!-- Right Visual - Show on mobile too but smaller -->
+                <div class="hero-visual relative mt-8 lg:mt-0">
+                    <div class="event-slider-container relative max-w-md mx-auto lg:max-w-none">
 
-                    <div class="flex items-center gap-4 text-gray-300">
-                        <svg class="w-6 h-6 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        <span class="text-lg font-semibold" id="event-venue">City Arena</span>
-                    </div>
-
-                    <div class="flex items-center gap-4">
-                        <svg class="w-6 h-6 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <span class="text-4xl font-bold text-blue-400" id="event-price">$89</span>
-                    </div>
-                </div>
-
-                <!-- CTA Button -->
-                <button class="cta-button group px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-bold text-lg shadow-lg hover:shadow-blue-500/50 transition-all hover:scale-105 inline-flex items-center gap-3 text-white">
-                    Get Tickets Now
-                    <svg class="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                    </svg>
-                </button>
-
-                <!-- Slider Controls -->
-                <div class="slider-controls flex items-center gap-6 mt-8">
-                    <button class="slider-prev w-12 h-12 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center hover:bg-blue-500/20 hover:border-blue-500/50 transition-all backdrop-blur-sm" aria-label="Previous event">
-                        <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                        </svg>
-                    </button>
-
-                    <div class="slider-dots flex gap-3">
-                        <span class="dot w-3 h-3 rounded-full bg-blue-400 transition-all cursor-pointer" data-index="0"></span>
-                        <span class="dot w-3 h-3 rounded-full bg-white/30 transition-all cursor-pointer" data-index="1"></span>
-                        <span class="dot w-3 h-3 rounded-full bg-white/30 transition-all cursor-pointer" data-index="2"></span>
-                    </div>
-
-                    <button class="slider-next w-12 h-12 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center hover:bg-blue-500/20 hover:border-blue-500/50 transition-all backdrop-blur-sm" aria-label="Next event">
-                        <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Right Content - Large Poster -->
-            <div class="hero-visual relative mt-8 lg:mt-0 h-[70vh] lg:h-[85vh]">
-                <div class="poster-container relative h-full">
-
-                    <!-- Poster Card -->
-                    <div class="relative h-full group">
-                        <!-- Main Poster -->
-                        <div class="poster-main relative h-full overflow-hidden rounded-3xl border-4 border-blue-500/30 shadow-2xl shadow-blue-500/20 transition-all duration-500 group-hover:border-blue-500/50 group-hover:shadow-blue-500/30">
-                            <div class="h-full bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 flex flex-col items-center justify-between relative overflow-hidden p-8 lg:p-12">
-
-                                <!-- Decorative Pattern -->
-                                <div class="absolute inset-0 opacity-10">
-                                    <div class="absolute top-0 left-0 w-full h-full" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px);"></div>
-                                </div>
-
-                                <!-- Top Section - Category -->
-                                <div class="relative z-10 w-full text-center">
-                                    <div class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur-xl rounded-full border-2 border-white/30">
-                                        <span class="text-white font-bold text-sm lg:text-base" id="poster-category">SUMMER FEST 2024</span>
-                                    </div>
-                                </div>
-
-                                <!-- Middle Section - Icon & Title -->
-                                <div class="relative z-10 text-center flex-1 flex flex-col justify-center">
-                                    <!-- <div class="w-32 h-32 lg:w-40 lg:h-40 bg-white/20 backdrop-blur-xl rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-white/30 poster-icon">
-                                        <svg class="w-16 h-16 lg:w-20 lg:h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-                                        </svg>
-                                    </div> -->
-                                    <h2 class="text-5xl lg:text-6xl xl:text-7xl font-black text-white mb-3 drop-shadow-lg poster-title-1">ELECTRONIC</h2>
-                                    <h2 class="text-6xl lg:text-7xl xl:text-8xl font-black text-white drop-shadow-lg poster-title-2">PARADISE</h2>
-                                </div>
-
-                                <!-- Bottom Section - Details -->
-                                <div class="relative z-10 w-full space-y-4">
-                                    <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border-2 border-white/20 poster-details">
-                                        <div class="flex items-center justify-between mb-4 pb-4 border-b border-white/20">
-                                            <div class="flex items-center gap-3">
-                                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                                </svg>
-                                                <span class="text-white font-bold text-lg" id="poster-date">August 15, 2024</span>
-                                            </div>
+                        <!-- Slide 1: Electronic Paradise (Blue) -->
+                        <div class="event-slide active floating" data-theme-color="#3B82F6">
+                            <div
+                                class="ticket-shape relative bg-gradient-to-br from-blue-600/20 to-blue-400/10 backdrop-blur-xl border border-blue-500/30 p-6 sm:p-8 glow-effect">
+                                <div class="space-y-4 sm:space-y-6">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="text-xs sm:text-sm text-gray-400 mb-1">SUMMER FEST 2024</div>
+                                            <div class="text-lg sm:text-xl md:text-2xl font-bold text-white truncate">
+                                                Electronic Paradise</div>
                                         </div>
-
-                                        <div class="flex items-center justify-between mb-4 pb-4 border-b border-white/20">
-                                            <div class="flex items-center gap-3">
-                                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                </svg>
-                                                <span class="text-white font-bold text-lg" id="poster-venue">City Arena</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-white/80 font-medium text-lg">Starting from</span>
-                                            <span class="text-5xl font-black text-white poster-price" id="poster-price">$89</span>
+                                        <div
+                                            class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
+                                            <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3">
+                                                </path>
+                                            </svg>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- Hover Overlay -->
-                                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                    <div class="border-t border-dashed border-gray-700 pt-4 sm:pt-6 space-y-3 sm:space-y-4">
+                                        <div class="flex justify-between text-xs sm:text-sm">
+                                            <span class="text-gray-400">Date</span>
+                                            <span class="font-semibold text-white">Aug 15, 2024</span>
+                                        </div>
+                                        <div class="flex justify-between text-xs sm:text-sm">
+                                            <span class="text-gray-400">Location</span>
+                                            <span class="font-semibold text-white">City Arena</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-xs sm:text-sm">
+                                            <span class="text-gray-400">Price</span>
+                                            <span class="text-xl sm:text-2xl font-bold text-blue-400">$89</span>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        class="w-full py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-semibold text-sm sm:text-base hover:shadow-lg hover:shadow-blue-500/50 transition-all text-white">
+                                        Get Tickets
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Decorative Glow Effects -->
-                        <div class="absolute -top-6 -right-6 w-32 h-32 bg-blue-500 rounded-full filter blur-[80px] opacity-40 poster-glow-1"></div>
-                        <div class="absolute -bottom-6 -left-6 w-40 h-40 bg-cyan-400 rounded-full filter blur-[80px] opacity-40 poster-glow-2"></div>
+                        <!-- Slide 2: Rock The Night (Red) -->
+                        <div class="event-slide floating" data-theme-color="#EF4444">
+                            <div
+                                class="ticket-shape relative bg-gradient-to-br from-red-600/20 to-red-400/10 backdrop-blur-xl border border-red-500/30 p-6 sm:p-8 glow-effect">
+                                <div class="space-y-4 sm:space-y-6">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="text-xs sm:text-sm text-gray-400 mb-1">ROCK FESTIVAL</div>
+                                            <div class="text-lg sm:text-xl md:text-2xl font-bold text-white truncate">
+                                                Rock The Night</div>
+                                        </div>
+                                        <div
+                                            class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
+                                            <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <div class="border-t border-dashed border-gray-700 pt-4 sm:pt-6 space-y-3 sm:space-y-4">
+                                        <div class="flex justify-between text-xs sm:text-sm">
+                                            <span class="text-gray-400">Date</span>
+                                            <span class="font-semibold text-white">Sep 20, 2024</span>
+                                        </div>
+                                        <div class="flex justify-between text-xs sm:text-sm">
+                                            <span class="text-gray-400">Location</span>
+                                            <span class="font-semibold text-white">Stadium Arena</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-xs sm:text-sm">
+                                            <span class="text-gray-400">Price</span>
+                                            <span class="text-xl sm:text-2xl font-bold text-red-400">$125</span>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        class="w-full py-2.5 sm:py-3 bg-gradient-to-r from-red-600 to-red-500 rounded-xl font-semibold text-sm sm:text-base hover:shadow-lg hover:shadow-red-500/50 transition-all text-white">
+                                        Get Tickets
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3: Jazz Night (Purple) -->
+                        <div class="event-slide floating" data-theme-color="#8B5CF6">
+                            <div
+                                class="ticket-shape relative bg-gradient-to-br from-purple-600/20 to-purple-400/10 backdrop-blur-xl border border-purple-500/30 p-6 sm:p-8 glow-effect">
+                                <div class="space-y-4 sm:space-y-6">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="text-xs sm:text-sm text-gray-400 mb-1">JAZZ EVENING</div>
+                                            <div class="text-lg sm:text-xl md:text-2xl font-bold text-white truncate">
+                                                Smooth Jazz Night</div>
+                                        </div>
+                                        <div
+                                            class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
+                                            <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <div class="border-t border-dashed border-gray-700 pt-4 sm:pt-6 space-y-3 sm:space-y-4">
+                                        <div class="flex justify-between text-xs sm:text-sm">
+                                            <span class="text-gray-400">Date</span>
+                                            <span class="font-semibold text-white">Oct 5, 2024</span>
+                                        </div>
+                                        <div class="flex justify-between text-xs sm:text-sm">
+                                            <span class="text-gray-400">Location</span>
+                                            <span class="font-semibold text-white">Jazz Lounge</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-xs sm:text-sm">
+                                            <span class="text-gray-400">Price</span>
+                                            <span class="text-xl sm:text-2xl font-bold text-purple-400">$65</span>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        class="w-full py-2.5 sm:py-3 bg-gradient-to-r from-purple-600 to-purple-500 rounded-xl font-semibold text-sm sm:text-base hover:shadow-lg hover:shadow-purple-500/50 transition-all text-white">
+                                        Get Tickets
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slider Controls -->
+                        <div class="slider-controls absolute bottom-[-60px] left-1/2 transform -translate-x-1/2 flex items-center gap-4 z-10">
+                            <button class="slider-btn slider-prev w-12 h-12 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center cursor-pointer hover:bg-blue-500/20 hover:border-blue-500/50 transition-all backdrop-blur-sm" aria-label="Previous slide">
+                                <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="slider-dots flex gap-2">
+                                <span class="w-2 h-2 rounded-full bg-blue-400 transition-all"></span>
+                                <span class="w-2 h-2 rounded-full bg-white/30 transition-all"></span>
+                                <span class="w-2 h-2 rounded-full bg-white/30 transition-all"></span>
+                            </div>
+                            <button class="slider-btn slider-next w-12 h-12 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center cursor-pointer hover:bg-blue-500/20 hover:border-blue-500/50 transition-all backdrop-blur-sm" aria-label="Next slide">
+                                <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Decorative Elements - Smaller on mobile -->
+                    <div
+                        class="absolute -top-5 -right-5 md:-top-10 md:-right-10 w-20 h-20 md:w-32 md:h-32 bg-blue-500 rounded-full filter blur-[60px] md:blur-[80px] opacity-40">
+                    </div>
+                    <div
+                        class="absolute -bottom-5 -left-5 md:-bottom-10 md:-left-10 w-24 h-24 md:w-40 md:h-40 bg-blue-400 rounded-full filter blur-[60px] md:blur-[80px] opacity-40">
                     </div>
                 </div>
+
             </div>
-
         </div>
-    </div>
-</section>
-
-
-    <style>
-        .gradient-text {
-            background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .mesh-gradient {
-            background:
-                radial-gradient(at 20% 30%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
-                radial-gradient(at 80% 70%, rgba(6, 182, 212, 0.1) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(37, 99, 235, 0.05) 0px, transparent 50%);
-        }
-
-        .pulse-slow {
-            animation: pulse-animation 4s ease-in-out infinite;
-        }
-
-        @keyframes pulse-animation {
-
-            0%,
-            100% {
-                opacity: 0.2;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.3;
-                transform: scale(1.05);
-            }
-        }
-
-        /* Poster Animation Classes */
-        .poster-icon {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-    </style>
+    </section>
 
     <!-- Featured Event Section -->
     <livewire:public-event-this-week-component />
