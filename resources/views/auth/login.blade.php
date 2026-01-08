@@ -89,6 +89,11 @@
                             class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-semibold text-base shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300 hover:scale-[1.02] text-white">
                             Sign In
                         </button>
+
+                         <div class="text-center text-sm text-gray-400">
+                            No account yet?
+                            <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors font-semibold">Sign up here.</a>
+                        </div>
                     </form>
                 </div>
 
