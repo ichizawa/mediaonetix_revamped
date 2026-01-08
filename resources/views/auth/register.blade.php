@@ -1,8 +1,5 @@
 @extends('layouts')
 @section('content')
-    <!-- GSAP Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
     <!-- Register Section -->
     <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0c1222] py-12">
         <!-- Animated Background -->

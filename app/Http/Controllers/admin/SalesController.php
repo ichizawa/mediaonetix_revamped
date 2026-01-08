@@ -18,14 +18,40 @@ class SalesController extends Controller
 {
     public function index()
     {
-        $events = Events::with('tickets')->getEventByMerchant(Auth::user()->id)->paginate(10);
-        $sales = Sales::getAllSalesByMerchant(Auth::user()->id)->paginate(10);
-        return view('admin.sales', compact('events', 'sales'));
+        $events = Events::with('tickets')
+            ->orderByDesc('id')
+            ->getEventByMerchant(Auth::id())
+            ->get();
+
+        $sales = Sales::getAllSalesByMerchant(Auth::id())
+            ->paginate(10);
+
+        $rawData = Sales::revenueByDayOfWeek(Auth::id())->get();
+
+        $dayMap = [
+            2 => 'Mon',
+            3 => 'Tue',
+            4 => 'Wed',
+            5 => 'Thu',
+            6 => 'Fri',
+            7 => 'Sat',
+            1 => 'Sun',
+        ];
+
+        $labels = collect(array_values($dayMap));
+        $values = collect(array_fill(0, 7, 0));
+
+        foreach ($rawData as $row) {
+            $index = array_search($dayMap[$row->day_number], $labels->toArray());
+            $values[$index] = $row->total_revenue;
+        }
+
+        return view('admin.sales', compact('events', 'sales', 'labels', 'values'));
     }
     public function edit($slug)
     {
         $event = Events::getEventByMerchant(Auth::user()->id)->where('slug', $slug)->first();
-        $sales = Sales::with('ticket')->where('event_id', $event->id)->get();
+        $sales = Sales::with('ticket')->where('event_id', $event->id)->orderByDesc('id')->paginate(10);
         return view('admin.component.sales.view-specific', compact('event', 'sales'));
     }
     public function store(SalesRequest $request)
@@ -33,7 +59,7 @@ class SalesController extends Controller
         try {
             DB::beginTransaction();
 
-            $uid = UniqueRefNum::generate();
+            $uid = strtoupper(UniqueRefNum::generate());
 
             if (Sales::where('reference_number', $uid)->exists()) {
                 return back()->with('error', 'Reference Number Already Exists');

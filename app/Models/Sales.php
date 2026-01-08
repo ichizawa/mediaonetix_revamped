@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Sales extends Model
 {
@@ -65,7 +66,16 @@ class Sales extends Model
             'color' => 'secondary'
         ];
     }
-
+    public static function revenueByDayOfWeek($merchantId)
+    {
+        return self::getAllSalesByMerchant($merchantId)
+            ->select(
+                DB::raw('DAYOFWEEK(created_at) as day_number'),
+                DB::raw('SUM(total_amount) as total_revenue')
+            )
+            ->groupBy('day_number')
+            ->orderBy('day_number');
+    }
     public function getPurchaseTypeLabelAttribute()
     {
         return self::PURCHASE_TYPE[$this->purchase_type];

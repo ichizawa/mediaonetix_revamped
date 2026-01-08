@@ -229,12 +229,12 @@
                                             </span>
                                         </td>
                                         <td class="py-4 px-4 whitespace-nowrap">
-                                            <span class="text-white text-sm font-medium">{{ $sale->quantity }}</span>
+                                            <span class="text-white text-sm font-medium">x {{ $sale->quantity }}</span>
                                         </td>
                                         <td class="py-4 px-4 whitespace-nowrap">
-                                            <span class="text-white font-semibold">{{ $sale->total_amount }}</span>
+                                            <span class="text-white font-semibold">₱{{ $sale->total_amount }}</span>
                                         </td>
-                                        <td class="py-4 px-4 whitespace-nowrap">
+                                        <td class="py-4 px-4 text-white whitespace-nowrap">
                                             {{ $sale->payment_method }}
                                         </td>
                                         <td class="py-4 px-4 whitespace-nowrap">
@@ -244,10 +244,14 @@
                                             </span>
                                         </td>
                                         <td class="py-4 px-4 whitespace-nowrap">
-                                            <span class="text-white font-mono text-xs"></span>
+                                            <span class="text-white font-mono text-xs">
+                                                Test
+                                            </span>
                                         </td>
                                         <td class="py-4 px-4 whitespace-nowrap">
-                                            <span class="text-gray-400 font-mono text-xs"></span>
+                                            <span class="text-gray-400 font-mono text-xs">
+                                                Test
+                                            </span>
                                         </td>
                                     </tr>
                                 @empty
@@ -262,7 +266,7 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="flex items-center justify-between mt-6 pt-4 border-t border-white/10">
+                    {{-- <div class="flex items-center justify-between mt-6 pt-4 border-t border-white/10">
                         <p class="text-sm text-gray-400">Showing 1 to 15 of 342 sales</p>
                         <div class="flex gap-2">
                             <button class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all">
@@ -277,7 +281,8 @@
                                 Next
                             </button>
                         </div>
-                    </div>
+                    </div> --}}
+                    {{ $sales->links() }}
                 </div>
             </div>
         </div>

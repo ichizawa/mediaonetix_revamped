@@ -117,14 +117,14 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Ticket Price</label>
                     <div class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white">
-                        PHP <span id="ticketPrice">0.00</span>
+                        ₱<span id="ticketPrice">0.00</span>
                     </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Total Price</label>
                     <div
                         class="w-full px-4 py-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-lg">
-                        <span class="text-2xl font-bold text-white">$<span id="totalPrice">0.00</span></span>
+                        <span class="text-2xl font-bold text-white">₱<span id="totalPrice">0.00</span></span>
                     </div>
                 </div>
             </div>

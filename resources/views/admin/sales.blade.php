@@ -300,7 +300,7 @@
                                             </div>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <span class="text-white font-semibold">{{ $sale->total_amount }}</span>
+                                            <span class="text-white font-semibold">₱{{ $sale->total_amount }}</span>
                                         </td>
                                         <td class="py-4 px-4">
                                             <span
@@ -373,10 +373,10 @@
             new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    labels: @json($labels),
                     datasets: [{
                         label: 'Revenue',
-                        data: [4200, 5100, 4800, 6200, 5800, 7100, 6500],
+                        data: @json($values),
                         borderColor: 'rgb(59, 130, 246)',
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         tension: 0.4,
@@ -405,7 +405,7 @@
                             displayColors: false,
                             callbacks: {
                                 label: function (context) {
-                                    return '$' + context.parsed.y.toLocaleString();
+                                    return '₱' + context.parsed.y.toLocaleString();
                                 }
                             }
                         }
@@ -420,7 +420,7 @@
                             ticks: {
                                 color: '#9ca3af',
                                 callback: function (value) {
-                                    return '$' + value.toLocaleString();
+                                    return '₱' + value.toLocaleString();
                                 }
                             }
                         },
