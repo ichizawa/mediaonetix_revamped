@@ -92,7 +92,7 @@
 
                          <div class="text-center text-sm text-gray-400">
                             No account yet?
-                            <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors font-semibold">Sign up here.</a>
+                            <a href="{{ route('register') }}" class="text-blue-400 hover:text-blue-300 transition-colors font-semibold">Sign up here.</a>
                         </div>
                     </form>
                 </div>

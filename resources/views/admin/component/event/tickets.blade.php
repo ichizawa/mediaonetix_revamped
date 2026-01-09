@@ -155,7 +155,7 @@
                             </svg>
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Tickets Sold</p>
-                        <h3 class="text-3xl font-bold text-white">0</h3>
+                        <h3 class="text-3xl font-bold text-white">{{ $event->tickets_sold }}</h3>
                     </div>
                 </div>
 
@@ -188,18 +188,33 @@
 
                                 <p class="text-gray-400 text-sm mb-4">{{ $ticket->type }}</p>
 
+                                @php
+                                    $totalQty = $ticket->original_qty;
+                                    $soldQty = $ticket->quantity;
+                                    $percentage = $totalQty > 0 ? (($totalQty - $soldQty) / $totalQty) * 100 : 0;
+                                @endphp
+
                                 <div class="mb-4">
                                     <div class="flex justify-between text-sm mb-2">
-                                        <span class="text-gray-400">0 sold</span>
-                                        <span
-                                            class="text-blue-400 font-semibold">{{ round((0 / $ticket->quantity) * 100) }}%</span>
+                                        <span class="text-gray-400">
+                                            {{ $soldQty }} / {{ $totalQty }} sold
+                                        </span>
+                                        <span class="text-blue-400 font-semibold">
+                                            {{ number_format($percentage, 0) }}%
+                                        </span>
                                     </div>
+
                                     <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
-                                        <div class="h-full transition-all"
-                                            style="width: {{ round((0/ $ticket->quantity) * 100) }}%; background: {{ $ticket->color }}">
+                                        <div
+                                            class="h-full transition-all"
+                                            style="
+                                                width: {{ min(100, $percentage) }}%;
+                                                background: {{ $ticket->color }};
+                                            ">
                                         </div>
                                     </div>
                                 </div>
+
 
                                 <div class="flex items-center justify-between pt-4 border-t border-white/10">
                                     <div class="text-sm text-gray-400">

@@ -91,7 +91,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Total Revenue</p>
-                            <h3 class="text-3xl font-bold text-white">$0</h3>
+                            <h3 class="text-3xl font-bold text-white">₱{{ number_format($total_sales, 2) }}</h3>
                             <p class="text-xs text-gray-500 mt-2">vs last month</p>
                         </div>
                     </div>

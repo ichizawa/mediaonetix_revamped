@@ -178,14 +178,19 @@
                                     </svg>
                                     <span class="text-sm text-gray-400">{{ $event->event_venue }}</span>
                                 </div>
+                                @php
+                                    $totalTickets = $event->tickets->sum('original_qty');
+                                    $soldTickets = $event->tickets_sold;
+                                    $percentage = $totalTickets > 0 ? ($soldTickets / $totalTickets) * 100 : 0;
+                                @endphp
                                 <div class="mb-4">
                                     <div class="flex justify-between text-sm mb-2">
-                                        <span class="text-gray-400">{{ $event->tickets_sold }} / {{ $event->tickets->sum('original_qty') }} sold</span>
-                                        <span class="text-blue-400 font-semibold">{{ $event->tickets_sold }}%</span>
+                                        <span class="text-gray-400">{{ $soldTickets }} / {{ $totalTickets }} sold</span>
+                                        <span class="text-blue-400 font-semibold">{{ number_format($percentage, 0) }}%</span>
                                     </div>
                                     <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
                                         <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all"
-                                            style="width: {{ $event->tickets_sold }}%"></div>
+                                            style="width: {{ $percentage }}%"></div>
                                     </div>
                                 </div>
                                 <div class="flex items-center justify-between pt-4 border-t border-white/10">

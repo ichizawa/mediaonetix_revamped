@@ -24,6 +24,7 @@ class SalesController extends Controller
             ->get();
 
         $sales = Sales::getAllSalesByMerchant(Auth::id())
+            ->orderByDesc('id')
             ->paginate(10);
 
         $rawData = Sales::revenueByDayOfWeek(Auth::id())->get();
@@ -46,7 +47,9 @@ class SalesController extends Controller
             $values[$index] = $row->total_revenue;
         }
 
-        return view('admin.sales', compact('events', 'sales', 'labels', 'values'));
+        $total_sales = Sales::getAllSalesByMerchant(Auth::id())->where('status', 1)->sum('total_amount');
+
+        return view('admin.sales', compact('events', 'sales', 'labels', 'values', 'total_sales'));
     }
     public function edit($slug)
     {
@@ -74,7 +77,7 @@ class SalesController extends Controller
             $event = Events::find($request->event);
             $event->increment('tickets_sold', $request->quantity);
             $event->save();
-            
+
             $sale = new Sales();
             $sale->ticket_id = $request->ticket;
             $sale->event_id = $request->event;

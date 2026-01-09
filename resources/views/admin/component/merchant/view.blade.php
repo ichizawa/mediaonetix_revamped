@@ -37,7 +37,7 @@
                     </div>
                     <div class="bg-white/5 rounded-lg p-4">
                         <p class="text-gray-400 text-sm mb-1">Phone Number</p>
-                        <p id="modalPhone" class="text-white font-medium">+1 234-567-8901</p>
+                        <p id="modalPhone" class="text-white font-medium">1 234-567-8901</p>
                     </div>
                     <div class="bg-white/5 rounded-lg p-4">
                         <p class="text-gray-400 text-sm mb-1">Status</p>
@@ -111,32 +111,37 @@
 <script>
 function openMerchantModal(details) {
     const modal = document.getElementById('merchantModal');
+    const data = JSON.parse(details);
+
+    console.log(JSON.parse(details));
 
     // // Set basic info
-    // document.getElementById('modalMerchantName').textContent = name;
-    // document.getElementById('modalInitial').textContent = name.charAt(0).toUpperCase();
-    // document.getElementById('modalContactPerson').textContent = contact;
-    // document.getElementById('modalEmail').textContent = email;
-    // document.getElementById('modalTotalEvents').textContent = events;
-    // document.getElementById('modalRevenue').textContent = '$' + revenue.toLocaleString();
+    document.getElementById('modalMerchantId').textContent = data.id;
+    document.getElementById('modalMerchantName').textContent = data.name;
+    document.getElementById('modalInitial').textContent = data.name.charAt(0).toUpperCase();
+    document.getElementById('modalContactPerson').textContent = data.first_name + ' ' + data.last_name;
+    document.getElementById('modalPhone').textContent = data.phone_number;
+    document.getElementById('modalEmail').textContent = data.email;
+    document.getElementById('modalTotalEvents').textContent = data.events_count;
+    document.getElementById('modalRevenue').textContent = 0;
 
     // // Set status
-    // const statusElement = document.getElementById('modalStatus');
-    // if (status === 'active') {
-    //     statusElement.className = 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20';
-    //     statusElement.innerHTML = '<span class="w-1.5 h-1.5 bg-green-400 rounded-full mr-1.5"></span>Active';
-    // } else if (status === 'pending') {
-    //     statusElement.className = 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/20';
-    //     statusElement.innerHTML = '<span class="w-1.5 h-1.5 bg-yellow-400 rounded-full mr-1.5"></span>Pending';
-    // } else {
-    //     statusElement.className = 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20';
-    //     statusElement.innerHTML = '<span class="w-1.5 h-1.5 bg-red-400 rounded-full mr-1.5"></span>Inactive';
-    // }
+    const statusElement = document.getElementById('modalStatus');
+    if (data.is_active === 1) {
+        statusElement.className = 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20';
+        statusElement.innerHTML = '<span class="w-1.5 h-1.5 bg-green-400 rounded-full mr-1.5"></span>Active';
+    } else if (status === 0) {
+        statusElement.className = 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/20';
+        statusElement.innerHTML = '<span class="w-1.5 h-1.5 bg-yellow-400 rounded-full mr-1.5"></span>Pending';
+    } else {
+        statusElement.className = 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20';
+        statusElement.innerHTML = '<span class="w-1.5 h-1.5 bg-red-400 rounded-full mr-1.5"></span>Inactive';
+    }
 
     // // Get events for this merchant
     // const events_list = merchantEvents[name] || [];
-    // const eventsList = document.getElementById('modalEventsList');
-    // document.getElementById('modalOngoingCount').textContent = events_list.length;
+    const eventsList = document.getElementById('modalEventsList');
+    document.getElementById('modalOngoingCount').textContent = data.events_count;
 
     // // Calculate average price
     // const avgPrice = events_list.length > 0
@@ -145,64 +150,64 @@ function openMerchantModal(details) {
     // document.getElementById('modalAvgPrice').textContent = '$' + avgPrice;
 
     // // Build events list HTML
-    // if (events_list.length > 0) {
-    //     eventsList.innerHTML = events_list.map(event => `
-    //         <div class="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-4 transition-all">
-    //             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-    //                 <div class="flex-1">
-    //                     <div class="flex items-start gap-3">
-    //                         <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
-    //                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    //                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-    //                             </svg>
-    //                         </div>
-    //                         <div class="flex-1 min-w-0">
-    //                             <h5 class="text-white font-semibold mb-1">${event.name}</h5>
-    //                             <div class="flex flex-wrap items-center gap-3 text-sm text-gray-400">
-    //                                 <span class="flex items-center gap-1">
-    //                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    //                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-    //                                     </svg>
-    //                                     ${event.date}
-    //                                 </span>
-    //                                 <span class="flex items-center gap-1">
-    //                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    //                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-    //                                     </svg>
-    //                                     ${event.category}
-    //                                 </span>
-    //                             </div>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //                 <div class="flex sm:flex-col items-center sm:items-end gap-3 sm:gap-1">
-    //                     <div class="text-right flex-1 sm:flex-none">
-    //                         <p class="text-2xl font-bold text-white">${event.price === 0 ? 'FREE' : '$' + event.price}</p>
-    //                         <p class="text-xs text-gray-400">per ticket</p>
-    //                     </div>
-    //                     <div class="flex-1 sm:flex-none">
-    //                         <div class="bg-white/10 rounded-lg px-3 py-2">
-    //                             <p class="text-xs text-gray-400 mb-1">Tickets Sold</p>
-    //                             <p class="text-sm font-semibold text-white">${event.sold} / ${event.tickets}</p>
-    //                             <div class="mt-1 bg-white/10 rounded-full h-1.5 overflow-hidden">
-    //                                 <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-full rounded-full" style="width: ${(event.sold / event.tickets * 100).toFixed(1)}%"></div>
-    //                             </div>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     `).join('');
-    // } else {
-    //     eventsList.innerHTML = `
-    //         <div class="text-center py-8">
-    //             <svg class="w-16 h-16 text-gray-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    //                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-    //             </svg>
-    //             <p class="text-gray-400">No ongoing events</p>
-    //         </div>
-    //     `;
-    // }
+    if (data.events_count > 0) {
+        eventsList.innerHTML = events_list.map(event => `
+            <div class="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-4 transition-all">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex-1">
+                        <div class="flex items-start gap-3">
+                            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h5 class="text-white font-semibold mb-1">${event.name}</h5>
+                                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-400">
+                                    <span class="flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                        ${event.date}
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                        </svg>
+                                        ${event.category}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex sm:flex-col items-center sm:items-end gap-3 sm:gap-1">
+                        <div class="text-right flex-1 sm:flex-none">
+                            <p class="text-2xl font-bold text-white">${event.price === 0 ? 'FREE' : '$' + event.price}</p>
+                            <p class="text-xs text-gray-400">per ticket</p>
+                        </div>
+                        <div class="flex-1 sm:flex-none">
+                            <div class="bg-white/10 rounded-lg px-3 py-2">
+                                <p class="text-xs text-gray-400 mb-1">Tickets Sold</p>
+                                <p class="text-sm font-semibold text-white">${event.sold} / ${event.tickets}</p>
+                                <div class="mt-1 bg-white/10 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-full rounded-full" style="width: ${(event.sold / event.tickets * 100).toFixed(1)}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    } else {
+        eventsList.innerHTML = `
+            <div class="text-center py-8">
+                <svg class="w-16 h-16 text-gray-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <p class="text-gray-400">No ongoing events</p>
+            </div>
+        `;
+    }
 
     modal.classList.remove('hidden');
     modal.classList.add('flex');

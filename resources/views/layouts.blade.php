@@ -17,6 +17,8 @@
         @if(Route::is('admin.*'))
             <x-navbar />
             <x-sidebar />
+        @else
+            <x-public-navbar />
         @endif
        
         @yield('content')

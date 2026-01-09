@@ -32,7 +32,8 @@
                     class="register-card relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 glow-effect">
                     <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-500/0 rounded-2xl"></div>
 
-                    <form class="relative space-y-6">
+                    <form class="relative space-y-6" action="{{ route('register.post') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
                         <!-- Name Fields Row -->
                         <div class="grid sm:grid-cols-2 gap-4">
                             <!-- First Name -->
@@ -166,7 +167,7 @@
                             <label class="block text-sm font-semibold text-gray-300 mb-3">Account Type</label>
                             <div class="grid sm:grid-cols-2 gap-4">
                                 <label class="relative cursor-pointer">
-                                    <input type="radio" name="account_type" value="organizer" class="peer sr-only" checked>
+                                    <input type="radio" name="account_type" value="2" class="peer sr-only">
                                     <div
                                         class="p-4 bg-white/5 border-2 border-white/10 rounded-xl peer-checked:border-blue-500 peer-checked:bg-blue-500/10 transition-all hover:bg-white/10">
                                         <div class="flex items-center gap-3">
@@ -188,7 +189,7 @@
                                 </label>
 
                                 <label class="relative cursor-pointer">
-                                    <input type="radio" name="account_type" value="attendee" class="peer sr-only">
+                                    <input type="radio" name="account_type" value="4" class="peer sr-only" checked>
                                     <div
                                         class="p-4 bg-white/5 border-2 border-white/10 rounded-xl peer-checked:border-blue-500 peer-checked:bg-blue-500/10 transition-all hover:bg-white/10">
                                         <div class="flex items-center gap-3">
@@ -231,12 +232,10 @@
                             Create Account
                         </button>
 
-
-
                         <!-- Sign In Link -->
                         <div class="text-center text-sm text-gray-400">
                             Already have an account?
-                            <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors font-semibold">Sign
+                            <a href="{{ route('login') }}" class="text-blue-400 hover:text-blue-300 transition-colors font-semibold">Sign
                                 in</a>
                         </div>
                     </form>
@@ -284,6 +283,4 @@
             ease: 'power2.out'
         });
     </script>
-
-
 @endsection
