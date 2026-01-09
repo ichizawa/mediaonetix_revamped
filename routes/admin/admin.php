@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\admin\ControlPanelController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\EventsController;
 use App\Http\Controllers\admin\MerchantController;
@@ -55,9 +56,10 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
         Route::post('store', [UsersController::class, 'store'])->name('store');
     });
 
-    Route::get('control-panel', [AdminController::class, 'index'])->name('control-panel');
+    Route::get('control-panel', [ControlPanelController::class, 'index'])->name('control-panel');
     Route::prefix('control-panel')->name('control-panel.')->group(function () {
-        Route::post('store', [AdminController::class, 'store'])->name('store');
+        Route::post('control', [ControlPanelController::class, 'control'])->name('control');
+        Route::post('quick-action', [ControlPanelController::class, 'quickAction'])->name('quick-action');
     });
 
     Route::get('profile', [AdminController::class, 'profile'])->name('profile');

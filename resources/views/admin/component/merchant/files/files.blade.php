@@ -201,7 +201,7 @@
 
                     <!-- Files Grid -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        @php
+                        {{-- @php
                             $files = [
                                 ['name' => 'Business License.pdf', 'merchant' => 'Tech Events Co.', 'type' => 'pdf', 'size' => '2.4 MB', 'date' => '2024-01-05', 'thumbnail' => null],
                                 ['name' => 'Event Banner.jpg', 'merchant' => 'Music Fest Ltd', 'type' => 'image', 'size' => '1.8 MB', 'date' => '2024-01-04', 'thumbnail' => 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400'],
@@ -213,7 +213,6 @@
                                 ['name' => 'Stage Setup.png', 'merchant' => 'Comedy Club', 'type' => 'image', 'size' => '4.5 MB', 'date' => '2023-12-28', 'thumbnail' => 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=400'],
                             ];
                         @endphp
-
                         @foreach($files as $index => $file)
                             <div
                                 class="file-card group relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:border-white/20 cursor-pointer">
@@ -299,7 +298,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        @endforeach --}}
                     </div>
 
                     <!-- Pagination -->

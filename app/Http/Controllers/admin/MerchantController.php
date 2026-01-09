@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MerchantRequest;
+use App\Models\MerchantFiles;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -77,8 +78,11 @@ class MerchantController extends Controller
             return back()->withErrors($e->getMessage())->withInput();
         }
     }
-    public function files()
+
+    public function files($id)
     {
-        return view('admin.component.merchant.files.files');
+        $files = MerchantFiles::where('merchant_id', $id)->paginate(10);
+
+        return view('admin.component.merchant.files.files', compact('files'));
     }
 }
