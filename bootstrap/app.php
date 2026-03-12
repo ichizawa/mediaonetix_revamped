@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Middleware\CheckComingSoon;
+use App\Http\Middleware\Cors;
+use App\Http\Middleware\ForceJsonResponse;
 use App\Http\Middleware\RoleCheck;
 use App\Models\User;
 use Illuminate\Foundation\Application;
@@ -13,12 +15,18 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__ . '/../routes/web.php',
         commands: __DIR__ . '/../routes/console.php',
+        api: __DIR__ . '/../routes/api.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        
+
         $middleware->web([
             CheckComingSoon::class
+        ]);
+
+        $middleware->api([
+            ForceJsonResponse::class,
+            Cors::class
         ]);
 
         $middleware->alias([
