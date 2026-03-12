@@ -9,6 +9,6 @@ class SettingsController extends Controller
 {
     public function index()
     {
-        return view('admin.settings');
+        return view(auth()->user()->routePrefix() . '.settings');
     }
 }

@@ -14,11 +14,9 @@
 
 <body>
     <div>
-        @if(Route::is('admin.*'))
+        @if(Route::is('admin.*') || Route::is('merchant.*'))
             <x-navbar />
             <x-sidebar />
-        @else
-            <x-public-navbar />
         @endif
        
         @yield('content')

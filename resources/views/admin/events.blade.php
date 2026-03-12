@@ -46,34 +46,6 @@
 
     <div class="min-h-screen bg-[#0c1222]">
         <div class="lg:ml-64">
-            <header class="sticky top-0 z-40 bg-[#0c1222]/80 backdrop-blur-xl border-b border-white/10">
-                <div class="px-4 sm:px-6 lg:px-8 py-4">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-4">
-                            <button id="openSidebar" class="lg:hidden p-2 hover:bg-white/5 rounded-lg text-white">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 6h16M4 12h16M4 18h16"></path>
-                                </svg>
-                            </button>
-                            <div>
-                                <h2 class="text-2xl font-bold text-white">Events Management</h2>
-                                <p class="text-sm text-gray-400">Manage and create your events</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <button onclick="openAddModal()"
-                                class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-semibold transition-all">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
-                                <span class="hidden sm:inline">Add Event</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </header>
 
             <div class="p-4 sm:p-6 lg:p-8">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
@@ -125,7 +97,7 @@
                             </svg>
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Upcoming</p>
-                    <h3 class="text-3xl font-bold text-white">{{ $upcoming_events }}</h3>
+                        <h3 class="text-3xl font-bold text-white">{{ $upcoming_events }}</h3>
                     </div>
                 </div>
 
@@ -142,8 +114,8 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @forelse($events as $event)
-                        <div
-                            class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
+                        <div onclick="setActiveEvent('{{ $event->slug }}')"
+                            class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm rounded-2xl overflow-hidden {{ $event->latestShowcase ? 'border border-green-400' : '' }}">
                             <div class="relative h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
                                 <div class="absolute inset-0 bg-cover bg-center opacity-40">
                                     @if($event->event_image)
@@ -154,7 +126,9 @@
 
                                 <div class="absolute top-4 right-4">
                                     <span
-                                        class="px-3 py-1 bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-full text-xs font-semibold text-green-400">{{ $event->status_label['label'] }}</span>
+                                        class="px-3 py-1 bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-full text-xs font-semibold text-green-400">
+                                        {{$event->status_label['label'] }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="p-6">
@@ -164,7 +138,8 @@
                                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                                         </path>
                                     </svg>
-                                    <span class="text-sm text-gray-400">{{ date('F j, Y', strtotime($event->event_date)) }} • {{ date('g:i A', strtotime($event->event_time)) }}</span>
+                                    <span class="text-sm text-gray-400">{{ date('F j, Y', strtotime($event->event_date)) }} •
+                                        {{ date('g:i A', strtotime($event->event_time)) }}</span>
                                 </div>
                                 <h3 class="text-xl font-bold text-white mb-2">{{ $event->event_name }}</h3>
                                 <p class="text-gray-400 text-sm mb-4">{{ $event->description }}</p>
@@ -178,19 +153,16 @@
                                     </svg>
                                     <span class="text-sm text-gray-400">{{ $event->event_venue }}</span>
                                 </div>
-                                @php
-                                    $totalTickets = $event->tickets->sum('original_qty');
-                                    $soldTickets = $event->tickets_sold;
-                                    $percentage = $totalTickets > 0 ? ($soldTickets / $totalTickets) * 100 : 0;
-                                @endphp
                                 <div class="mb-4">
                                     <div class="flex justify-between text-sm mb-2">
-                                        <span class="text-gray-400">{{ $soldTickets }} / {{ $totalTickets }} sold</span>
-                                        <span class="text-blue-400 font-semibold">{{ number_format($percentage, 0) }}%</span>
+                                        <span class="text-gray-400">{{ $event->tickets_sold }} /
+                                            {{ $event->tickets->sum('original_qty') }} sold</span>
+                                        <span class="text-blue-400 font-semibold">{{ number_format($event->percentage, 0)
+                                                                                                }}%</span>
                                     </div>
                                     <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
                                         <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all"
-                                            style="width: {{ $percentage }}%"></div>
+                                            style="width: {{ $event->percentage }}%"></div>
                                     </div>
                                 </div>
                                 <div class="flex items-center justify-between pt-4 border-t border-white/10">
@@ -253,9 +225,9 @@
                         </div>
                     @empty
                     @endforelse
+                </div>
             </div>
         </div>
-    </div>
     </div>
 
     @include('admin.component.event.modal')
@@ -298,19 +270,24 @@
         }
 
         function openViewModal(event) {
-            const percentage = Math.round((event.event_total_tickets / event.event_total_tickets) * 100);
+            // const percentage = Math.round((event.event_total_tickets / event.event_total_tickets) * 100);
+            const totalTickets = event.tickets.reduce((sum, ticket) => {
+                return sum + ticket.original_qty;
+            }, 0);
+            const lowestPrice = Math.min(...event.tickets.map(ticket => ticket.price));
 
+            // console.log(event);
             // Populate view modal with event data
             document.getElementById('viewEventName').textContent = event.event_name;
             document.getElementById('viewEventCategory').textContent = event.category;
             document.getElementById('viewEventDateTime').textContent = `${formatDate(event.event_date)} • ${formatTime(event.event_time)}`;
             document.getElementById('viewEventLocation').textContent = event.event_venue;
-            document.getElementById('viewEventPrice').textContent = event.price;
+            document.getElementById('viewEventPrice').textContent = '₱ ' + lowestPrice.toFixed(2);
             document.getElementById('viewEventDescription').textContent = event.description;
-            document.getElementById('viewEventSold').textContent = `${event.soldTickets} sold`;
-            document.getElementById('viewEventTotal').textContent = `of ${event.event_total_tickets} tickets`;
-            document.getElementById('viewEventPercentage').textContent = `${percentage}%`;
-            document.getElementById('viewEventProgress').style.width = `${percentage}%`;
+            document.getElementById('viewEventSold').textContent = `${event.tickets_sold} sold`;
+            document.getElementById('viewEventTotal').textContent = `of ${totalTickets} tickets`;
+            document.getElementById('viewEventPercentage').textContent = `${event.percentage}%`;
+            document.getElementById('viewEventProgress').style.width = `${event.percentage}%`;
             document.getElementById('viewEventStatus').textContent = event.status_label.label;
 
             // Set background image
@@ -322,6 +299,14 @@
 
             // // Show the view modal
             document.getElementById('viewEventModal').classList.add('active');
+
+            document.getElementById('openEditModalFromView').addEventListener('click', function () {
+                // console.log(event);
+                closeViewModal();
+                setTimeout(() => {
+                    openEditModal(event);
+                }, 300);
+            });
         }
 
         function closeViewModal() {
@@ -359,9 +344,9 @@
         function formatDate(dateString) {
             const date = new Date(dateString);
             return date.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
+                year: 'numeric'
+                , month: 'long'
+                , day: 'numeric'
             });
         }
 
@@ -373,14 +358,34 @@
             return `${formattedHour}:${minutes} ${ampm}`;
         }
 
-        function openEditModalFromView() {
-            const eventId = document.getElementById('viewEventModal').dataset.eventId;
-            closeViewModal();
-            setTimeout(() => {
-                openEditModal(eventId);
-            }, 300);
-        }
+        function setActiveEvent(eventSlug) {
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+            fetch("{{ route('admin.events.set-active') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": token
+                },
+                body: JSON.stringify({
+                    slug: eventSlug
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // console.log("Active event set:", data);
+                    // Swal.fire()
+                    Toast.fire({
+                        icon: 'success',
+                        title: data.message
+                    });
+
+                    window.location.reload(); // temporary reload but should implement websocket
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        }
         // Event listeners
         document.addEventListener('DOMContentLoaded', function () {
             // Tab functionality
@@ -406,26 +411,8 @@
                     closeModal();
                 }
             });
-
-            // // Form submission
-            // document.getElementById('eventForm').addEventListener('submit', function (e) {
-            //     e.preventDefault();
-
-            //     const formData = new FormData(this);
-            //     const method = document.getElementById('formMethod').value;
-            //     const isEdit = method === 'PUT';
-
-            //     // In real app, send to server
-            //     console.log('Form submitted:', Object.fromEntries(formData));
-
-            //     // Show success message
-            //     alert(isEdit ? 'Event updated successfully!' : 'Event created successfully!');
-            //     closeModal();
-
-            //     // In real app, you would refresh the events list
-            //     // window.location.reload();
-            // });
         });
+
     </script>
 
 @endsection

@@ -10,7 +10,7 @@
                 </button>
                 <div>
                     <h2 class="text-2xl font-bold text-white">Dashboard</h2>
-                    <p class="text-sm text-gray-400">Welcome back, Admin</p>
+                    <p class="text-sm text-gray-400">Welcome back, {{ auth()->user()->name }}</p>
                 </div>
             </div>
             
@@ -35,7 +35,7 @@
                         <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
                             <span class="text-white text-sm font-bold">A</span>
                         </div>
-                        <span class="hidden md:block text-white font-medium">Admin</span>
+                        <span class="hidden md:block text-white font-medium">{{ auth()->user()->name }}</span>
                     </button>
                 </div>
             </div>

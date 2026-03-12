@@ -10,10 +10,10 @@ class AdminController extends Controller
 {
     public function index()
     {
-        return view('admin.control-panel');
+        return view(auth()->user()->routePrefix() . '.control-panel');
     }
     public function profile()
     {
-        return view('admin.profile');
+        return view(auth()->user()->routePrefix() . '.profile');
     }
 }

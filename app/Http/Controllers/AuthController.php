@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -27,14 +28,7 @@ class AuthController extends Controller
             $validated = $user->validated();
 
             if (Auth::attempt(['email' => $validated['email'], 'password' => $user['password']])) {
-                switch (Auth::user()->role_id) {
-                    case 1:
-                        return redirect()->route('admin.dashboard');
-                    case 2:
-                        return redirect()->route('merchant.dashboard');
-                    default:
-                        return redirect()->route('login')->with('error', 'Invalid email or password');
-                }
+                return redirect()->route(auth()->user()->routePrefix() . '.dashboard');
             }
 
             return redirect()->route('login')->with('error', 'Invalid email or password');
@@ -51,14 +45,48 @@ class AuthController extends Controller
     }
     public function postRegister(RegisterRequest $request)
     {
+        $data = $request->validated();
+
+        DB::beginTransaction();
+
         try {
-            DB::beginTransaction();
+            $user = User::withTrashed()->where('email', $data['email'])->first();
 
-            $data = $request->validated();
+            if ($user) {
+                if ($user->trashed()) {
+                    $user->restore();
 
-            User::firstOrCreate([
+                    // Update user info
+                    $user->fill([
+                        'name' => $data['first_name'] . ' ' . $data['last_name'],
+                        'first_name' => $data['first_name'],
+                        'last_name' => $data['last_name'],
+                        'phone_number' => $data['phone'],
+                        'dob' => $data['dob'],
+                        'password' => Hash::make($data['password']),
+                        'role_id' => $data['account_type'],
+                        'is_active' => 2,
+                    ])->save();
+
+                    if (!$user->hasVerifiedEmail()) {
+                        $user->sendEmailVerificationNotification();
+                    }
+
+                    DB::commit();
+                    Auth::login($user);
+
+                    return redirect()->route('verification.notice')
+                        ->with('success', 'Registration restored. Please activate your account via email.');
+
+                } else {
+                    return back()
+                        ->withInput()
+                        ->with('error', 'This email is already registered.');
+                }
+            }
+
+            $user = User::create([
                 'email' => $data['email'],
-            ], [
                 'name' => $data['first_name'] . ' ' . $data['last_name'],
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
@@ -66,24 +94,28 @@ class AuthController extends Controller
                 'dob' => $data['dob'],
                 'password' => Hash::make($data['password']),
                 'role_id' => $data['account_type'],
-                'is_active' => 2
+                'is_active' => 2,
             ]);
 
+            $user->sendEmailVerificationNotification();
+
             DB::commit();
-            return redirect()->route('login')->with('success', 'Registration successful. Please login.');
-        } catch (ValidationException $e) {
-            DB::rollBack();
-            $messages = implode(' ', collect($e->errors())->flatten()->toArray());
-            return back()->withErrors($messages)->withInput()->with('error', $messages);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors($e->getMessage())->withInput()->with('error', $e->getMessage());
+            Auth::login($user);
+
+            return redirect()->route('verification.notice')
+                ->with('success', 'Registration successful. Please activate your account via email.');
+
         } catch (\Throwable $e) {
             DB::rollBack();
-            return back()->withErrors($e->getMessage())->withInput()->with('error', $e->getMessage());
-        } catch (\Error $e) {
-            DB::rollBack();
-            return back()->withErrors($e->getMessage())->withInput()->with('error', $e->getMessage());
+
+            Log::error('User Registration Error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'data' => $data,
+            ]);
+
+            return back()
+                ->withInput()
+                ->with('error', 'An unexpected error occurred. Please try again or contact support.');
         }
     }
     public function logout(Request $request)

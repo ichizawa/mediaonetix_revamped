@@ -7,13 +7,13 @@
                 MediaOne<span
                     class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">TIX</span>
             </h1>
-            <p class="text-sm text-gray-400 mt-1">Admin Dashboard</p>
+            <p class="text-sm text-gray-400 mt-1">{{ auth()->user()->roleName() }} Dashboard</p>
         </div>
 
         <!-- Navigation -->
         <nav class="flex-1 p-6 space-y-2 overflow-y-auto">
             <a href="{{ route(auth()->user()->routePrefix() . '.dashboard') }}"
-                class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('admin.dashboard') ? 'bg-blue-500/20 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
+                class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs(auth()->user()->routePrefix() . '.dashboard') ? 'bg-blue-500/20 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
@@ -41,7 +41,7 @@
                 </a>
             @endforelse --}}
             <a href="{{ route(auth()->user()->routePrefix() . '.events') }}"
-                class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('admin.events*') ? 'bg-blue-500/20 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
+                class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs(auth()->user()->routePrefix() . '.events*') ? 'bg-blue-500/20 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
@@ -51,7 +51,7 @@
             </a>
 
             <a href="{{ route(auth()->user()->routePrefix() . '.sales') }}"
-                class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('admin.sales*') ? 'bg-blue-500/20 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
+                class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs(auth()->user()->routePrefix() . '.sales*') ? 'bg-blue-500/20 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z">
@@ -60,7 +60,8 @@
                 <span class="font-medium">Sales</span>
             </a>
 
-            <a href="{{ route(auth()->user()->routePrefix() . '.merchants') }}"
+            @if(auth()->user()->isAdmin())
+            <a href="{{ route(auth()->user()->routePrefix() . '.merchants.merchant') }}"
                 class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs(auth()->user()->routePrefix() . '.merchants*') ? 'bg-blue-500/20 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -69,6 +70,7 @@
                 </svg>
                 <span class="font-medium">Merchants</span>
             </a>
+            @endif
 
             <a href="{{ route(auth()->user()->routePrefix() . '.users') }}"
                 class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs(auth()->user()->routePrefix() . '.users*') ? 'bg-blue-500/20 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
@@ -80,6 +82,7 @@
                 <span class="font-medium">Users</span>
             </a>
 
+            @if(auth()->user()->isAdmin())
             <a href="{{ route(auth()->user()->routePrefix() . '.control-panel') }}"
                 class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs(auth()->user()->routePrefix() . '.control-panel*') ? 'bg-blue-500/20 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,6 +92,7 @@
                 </svg>
                 <span class="font-medium">Control Panel</span>
             </a>
+            @endif
         </nav>
 
         <!-- Bottom Actions -->

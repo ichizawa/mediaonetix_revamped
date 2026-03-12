@@ -3,12 +3,14 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\VerifyEmailNotification;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
@@ -88,7 +90,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new VerifyEmailNotification());
+    }
     public function role()
     {
         return $this->belongsTo(Role::class);
@@ -103,11 +108,11 @@ class User extends Authenticatable
     }
     public function scopePending($query)
     {
-        return $query->where('is_active', 2);
+        return $query->where('is_active', 0)->orWhere('email_verified_at', null);
     }
     public function scopeInactive($query)
     {
-        return $query->where('is_active', 0);
+        return $query->where('is_active', 0)->whereNull('deleted_at');
     }
     public function scopeMerchants($query)
     {
@@ -119,8 +124,14 @@ class User extends Authenticatable
     }
     public function getStatusAttribute()
     {
-        $status = $this->attributes['is_active'] ?? 0;
-        return self::STATUS[$status] ?? [
+        $isActive = $this->attributes['is_active'] ?? 0;
+        $emailVerified = $this->email_verified_at;
+
+        if ($isActive === 0 && is_null($emailVerified)) {
+            return self::STATUS[2]; // pending
+        }
+
+        return self::STATUS[$isActive] ?? [
             'label' => 'Unknown',
             'color' => 'grey'
         ];
@@ -147,12 +158,19 @@ class User extends Authenticatable
         return $this->role?->type === 'merchant';
     }
 
+    public function isUser(): bool
+    {
+        return $this->role?->type === 'user';
+    }
+
+    public function RoleName(): string
+    {
+        return $this->role?->name ?? 'user';
+    }
+
     public function routePrefix(): string
     {
-        return match ($this->role?->type) {
-            'admin' => 'admin',
-            'merchant' => 'merchant',
-            default => 'admin', // fallback
-        };
+        return $this->role?->type ?? 'admin';
     }
+
 }

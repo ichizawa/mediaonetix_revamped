@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Events;
+use App\Models\ShowCases;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,12 +15,12 @@ class EventsController extends Controller
 {
     public function index()
     {
-        return view('admin.events', [
+        return view(auth()->user()->routePrefix() . '.events', [
             'tickets_sold' => Events::getEventByMerchant(Auth::user()->id)->sum('tickets_sold'),
             'upcoming_events' => Events::getEventByMerchant(Auth::user()->id)->getUpcoming()->count(),
             'active_events' => Events::getEventByMerchant(Auth::user()->id)->getActive()->count(),
             'total_events' => Events::getEventByMerchant(Auth::user()->id)->count(),
-            'events' => Events::with('tickets')->getEventByMerchant(Auth::user()->id)->get()
+            'events' => Events::with(['tickets', 'latestShowcase'])->getEventByMerchant(Auth::user()->id)->get()
         ]);
     }
     public function store(Request $request)
@@ -122,5 +123,42 @@ class EventsController extends Controller
         Events::where('id', $event_id)->delete();
 
         return back()->with('success', 'Event deleted successfully');
+    }
+    public function setActive(Request $request)
+    {
+        try {
+            $event = Events::where('slug', $request->input('slug'))->firstOrFail();
+
+            $showcase = ShowCases::where('event_id', $event->id)
+                ->where('user_id', Auth::id())
+                ->first();
+
+            if ($showcase) {
+                $showcase->delete();
+
+                $message = 'Event removed from showcase';
+            } else {
+                ShowCases::create([
+                    'event_id' => $event->id,
+                    'user_id' => Auth::id(),
+                    'position' => 1
+                ]);
+
+                $message = 'Event placed in showcase';
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => null,
+                'message' => $message
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'data' => null,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -49,13 +49,13 @@ class SalesController extends Controller
 
         $total_sales = Sales::getAllSalesByMerchant(Auth::id())->where('status', 1)->sum('total_amount');
 
-        return view('admin.sales', compact('events', 'sales', 'labels', 'values', 'total_sales'));
+        return view(auth()->user()->routePrefix() . '.sales', compact('events', 'sales', 'labels', 'values', 'total_sales'));
     }
     public function edit($slug)
     {
         $event = Events::getEventByMerchant(Auth::user()->id)->where('slug', $slug)->first();
         $sales = Sales::with('ticket')->where('event_id', $event->id)->orderByDesc('id')->paginate(10);
-        return view('admin.component.sales.view-specific', compact('event', 'sales'));
+        return view(auth()->user()->routePrefix() . '.component.sales.view-specific', compact('event', 'sales'));
     }
     public function store(SalesRequest $request)
     {

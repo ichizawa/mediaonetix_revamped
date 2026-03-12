@@ -46,8 +46,7 @@ class Events extends Model
         'tickets_sold',
         'slug'
     ];
-
-    protected $appends = ['status_label'];
+    protected $appends = ['status_label', 'percentage', 'total_tickets_left', 'event_image_url'];
 
     public function getStatusLabelAttribute()
     {
@@ -77,6 +76,14 @@ class Events extends Model
     {
         return $this->hasMany(Tickets::class, 'event_id');
     }
+    public function showcases()
+    {
+        return $this->hasMany(ShowCases::class, 'event_id');
+    }
+    public function latestShowcase()
+    {
+        return $this->hasOne(ShowCases::class, 'event_id')->latestOfMany();
+    }
     protected static function boot()
     {
         parent::boot();
@@ -100,5 +107,15 @@ class Events extends Model
     public function getTotalTicketsLeftAttribute()
     {
         return $this->tickets->sum('quantity');
+    }
+    public function getPercentageAttribute()
+    {
+        $totalTickets = $this->tickets->sum('original_qty');
+        $soldTickets = $this->tickets_sold;
+        return $totalTickets > 0 ? ($soldTickets / $totalTickets) * 100 : 0;
+    }
+    public function getEventImageUrlAttribute()
+    {
+        return asset('images/events/' . $this->event_image);
     }
 }

@@ -21,6 +21,7 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
         Route::get('edit/{id}', [EventsController::class, 'edit'])->name('edit');
         Route::put('update', [EventsController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [EventsController::class, 'delete'])->name('delete');
+        Route::post('set-active', [EventsController::class, 'setActive'])->name('set-active');
 
         Route::prefix('{slug}/tickets')->name('tickets.')->group(function () {
             Route::get('/', [TicketsController::class, 'index'])->name('tickets');
@@ -45,8 +46,9 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
         Route::post('store', [PromoCodesController::class, 'store'])->name('store');
     });
 
-    Route::get('merchants', [MerchantController::class, 'index'])->name('merchants');
+    // Route::get('merchants', [MerchantController::class, 'index'])->name('merchants');
     Route::prefix('merchants')->name('merchants.')->group(function () {
+        Route::get('/', [MerchantController::class, 'index'])->name('merchant');
         Route::post('store', [MerchantController::class, 'store'])->name('store');
         Route::get('files/{id}', [MerchantController::class, 'files'])->name('files');
     });
@@ -60,6 +62,7 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
     Route::prefix('control-panel')->name('control-panel.')->group(function () {
         Route::post('control', [ControlPanelController::class, 'control'])->name('control');
         Route::post('quick-action', [ControlPanelController::class, 'quickAction'])->name('quick-action');
+        Route::post('save-comming-soon', [ControlPanelController::class, 'update_coming_soon'])->name('update.coming.soon');
     });
 
     Route::get('profile', [AdminController::class, 'profile'])->name('profile');

@@ -17,7 +17,12 @@ class AddSystemControlls extends Seeder
             [
                 'name' => 'Maintenance Mode',
                 'type' => 'maintenance_mode',
-                'value' => '1',
+                'value' => '0',
+            ],
+            [
+                'name' => 'Coming Soon Mode',
+                'type' => 'coming_soon_mode',
+                'value' => '0',
             ],
             [
                 'name' => 'Ticket Sales',

@@ -23,6 +23,7 @@ class MerchantController extends Controller
         $pending = User::pending()->merchants()->count();
         return view('admin.merchants', compact('users', 'active', 'inactive', 'pending'));
     }
+
     public function store(MerchantRequest $request)
     {
         try {
