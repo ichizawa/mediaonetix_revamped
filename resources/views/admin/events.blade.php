@@ -102,19 +102,19 @@
                 </div>
 
                 <div class="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
-                    <button class="tab-btn active px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">All
+                    <button data-filter="all" class="tab-btn active px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">All
                         Events</button>
-                    <button
+                    <button data-filter="0"
                         class="tab-btn px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">Upcoming</button>
-                    <button
+                    <button data-filter="2"
                         class="tab-btn px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">Ongoing</button>
-                    <button
+                    <button data-filter="3"
                         class="tab-btn px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">Completed</button>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @forelse($events as $event)
-                        <div onclick="setActiveEvent('{{ $event->slug }}')"
+                        <div data-status="{{ $event->status }}" onclick="setActiveEvent('{{ $event->slug }}')"
                             class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm rounded-2xl overflow-hidden {{ $event->latestShowcase ? 'border border-green-400' : '' }}">
                             <div class="relative h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
                                 <div class="absolute inset-0 bg-cover bg-center opacity-40">
@@ -125,9 +125,25 @@
                                 </div>
 
                                 <div class="absolute top-4 right-4">
-                                    <span
-                                        class="px-3 py-1 bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-full text-xs font-semibold text-green-400">
-                                        {{$event->status_label['label'] }}
+                                    @php
+                                        $statusStyles = [
+                                            0 => ['bg'=>'rgba(147,51,234,0.2)','border'=>'rgba(147,51,234,0.4)','color'=>'#c084fc'],
+                                            1 => ['bg'=>'rgba(34,197,94,0.2)', 'border'=>'rgba(34,197,94,0.4)', 'color'=>'#4ade80'],
+                                            2 => ['bg'=>'rgba(59,130,246,0.2)', 'border'=>'rgba(59,130,246,0.4)', 'color'=>'#60a5fa'],
+                                            3 => ['bg'=>'rgba(107,114,128,0.2)','border'=>'rgba(107,114,128,0.4)','color'=>'#9ca3af'],
+                                            4 => ['bg'=>'rgba(239,68,68,0.2)', 'border'=>'rgba(239,68,68,0.4)', 'color'=>'#f87171'],
+                                        ];
+                                        $s = $statusStyles[$event->status] ?? $statusStyles[0];
+                                    @endphp
+                                    <span class="px-3 py-1 backdrop-blur-sm rounded-full text-xs font-semibold flex items-center gap-1"
+                                        style="background:{{ $s['bg'] }};border:1px solid {{ $s['border'] }};color:{{ $s['color'] }}">
+                                        @if($event->status === 1)
+                                            <span class="relative flex h-2 w-2">
+                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color:#4ade80"></span>
+                                                <span class="relative inline-flex rounded-full h-2 w-2" style="background-color:#4ade80"></span>
+                                            </span>
+                                        @endif
+                                        {{ $event->status_label['label'] }}
                                     </span>
                                 </div>
                             </div>
@@ -157,8 +173,9 @@
                                     <div class="flex justify-between text-sm mb-2">
                                         <span class="text-gray-400">{{ $event->tickets_sold }} /
                                             {{ $event->tickets->sum('original_qty') }} sold</span>
-                                        <span class="text-blue-400 font-semibold">{{ number_format($event->percentage, 0)
-                                                                                                }}%</span>
+                                        <span
+                                            class="text-blue-400 font-semibold">{{ number_format($event->percentage, 0)
+                                                                                                                                                                }}%</span>
                                     </div>
                                     <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
                                         <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all"
@@ -195,10 +212,12 @@
 
                                         <a href="{{ route('admin.events.tickets.tickets', $event->slug) }}"
                                             class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 -1 17 18">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                                    d="M4 4.85v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9z">
+                                                </path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                                    d="M1.5 3A1.5 1.5 0 0 0 0 4.5V6a.5.5 0 0 0 .5.5 1.5 1.5 0 1 1 0 3 .5.5 0 0 0-.5.5v1.5A1.5 1.5 0 0 0 1.5 13h13a1.5 1.5 0 0 0 1.5-1.5V10a.5.5 0 0 0-.5-.5 1.5 1.5 0 0 1 0-3A.5.5 0 0 0 16 6V4.5A1.5 1.5 0 0 0 14.5 3zM1 4.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v1.05a2.5 2.5 0 0 0 0 4.9v1.05a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-1.05a2.5 2.5 0 0 0 0-4.9z">
                                                 </path>
                                             </svg>
                                         </a>
@@ -388,11 +407,20 @@
         }
         // Event listeners
         document.addEventListener('DOMContentLoaded', function () {
-            // Tab functionality
+            // Tab filtering
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', function () {
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
+
+                    const filter = this.dataset.filter;
+                    document.querySelectorAll('.event-card').forEach(card => {
+                        if (filter === 'all' || card.dataset.status === filter) {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
                 });
             });
 
