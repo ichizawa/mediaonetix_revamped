@@ -1,5 +1,5 @@
 @extends('layouts')
-@include('admin.component.sales.modal')
+@include('merchant.component.sales.modal')
 @section('content')
     <style>
         .sales-card {

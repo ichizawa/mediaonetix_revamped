@@ -138,20 +138,22 @@ function openMerchantModal(details) {
         statusElement.innerHTML = '<span class="w-1.5 h-1.5 bg-red-400 rounded-full mr-1.5"></span>Inactive';
     }
 
-    // // Get events for this merchant
-    // const events_list = merchantEvents[name] || [];
+
+    // Get events for this merchant
     const eventsList = document.getElementById('modalEventsList');
-    document.getElementById('modalOngoingCount').textContent = data.events_count;
+    document.getElementById('modalOngoingCount').textContent = data.events ? data.events.length : 0;
 
-    // // Calculate average price
-    // const avgPrice = events_list.length > 0
-    //     ? Math.round(events_list.reduce((sum, e) => sum + e.price, 0) / events_list.length)
-    //     : 0;
-    // document.getElementById('modalAvgPrice').textContent = '$' + avgPrice;
+    // Calculate average price
+    let avgPrice = 0;
+    if (data.events && data.events.length > 0) {
+        const totalPrice = data.events.reduce((sum, e) => sum + (e.price || 0), 0);
+        avgPrice = Math.round(totalPrice / data.events.length);
+    }
+    document.getElementById('modalAvgPrice').textContent = '$' + avgPrice;
 
-    // // Build events list HTML
-    if (data.events_count > 0) {
-        eventsList.innerHTML = events_list.map(event => `
+    // Build events list HTML
+    if (data.events && data.events.length > 0) {
+        eventsList.innerHTML = data.events.map(event => `
             <div class="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-4 transition-all">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div class="flex-1">
@@ -168,13 +170,13 @@ function openMerchantModal(details) {
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                         </svg>
-                                        ${event.date}
+                                        ${event.date || ''}
                                     </span>
                                     <span class="flex items-center gap-1">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
                                         </svg>
-                                        ${event.category}
+                                        ${event.category || ''}
                                     </span>
                                 </div>
                             </div>
@@ -188,9 +190,9 @@ function openMerchantModal(details) {
                         <div class="flex-1 sm:flex-none">
                             <div class="bg-white/10 rounded-lg px-3 py-2">
                                 <p class="text-xs text-gray-400 mb-1">Tickets Sold</p>
-                                <p class="text-sm font-semibold text-white">${event.sold} / ${event.tickets}</p>
+                                <p class="text-sm font-semibold text-white">${event.sold || 0} / ${event.tickets || 0}</p>
                                 <div class="mt-1 bg-white/10 rounded-full h-1.5 overflow-hidden">
-                                    <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-full rounded-full" style="width: ${(event.sold / event.tickets * 100).toFixed(1)}%"></div>
+                                    <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-full rounded-full" style="width: ${(event.tickets && event.tickets > 0 ? ((event.sold || 0) / event.tickets * 100).toFixed(1) : 0)}%"></div>
                                 </div>
                             </div>
                         </div>

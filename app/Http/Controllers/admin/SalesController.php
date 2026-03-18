@@ -20,7 +20,6 @@ class SalesController extends Controller
     {
         $events = Events::with('tickets')
             ->orderByDesc('id')
-            ->getEventByMerchant(Auth::id())
             ->get();
 
         $sales = Sales::getAllSalesByMerchant(Auth::id())
@@ -53,7 +52,7 @@ class SalesController extends Controller
     }
     public function edit($slug)
     {
-        $event = Events::getEventByMerchant(Auth::user()->id)->where('slug', $slug)->first();
+        $event = Events::where('slug', $slug)->first();
         $sales = Sales::with('ticket')->where('event_id', $event->id)->orderByDesc('id')->paginate(10);
         return view(auth()->user()->routePrefix() . '.component.sales.view-specific', compact('event', 'sales'));
     }

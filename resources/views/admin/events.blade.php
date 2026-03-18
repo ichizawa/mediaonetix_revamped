@@ -380,7 +380,8 @@
                         title: data.message
                     });
 
-                    window.location.reload(); // temporary reload but should implement websocket
+                    {{-- window.location.reload(); --}}
+                     // temporary reload but should implement websocket
                 })
                 .catch(error => {
                     console.error("Error:", error);

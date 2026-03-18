@@ -20,7 +20,7 @@ class EventsController extends Controller
             'upcoming_events' => Events::getEventByMerchant(Auth::user()->id)->getUpcoming()->count(),
             'active_events' => Events::getEventByMerchant(Auth::user()->id)->getActive()->count(),
             'total_events' => Events::getEventByMerchant(Auth::user()->id)->count(),
-            'events' => Events::with(['tickets', 'latestShowcase'])->getEventByMerchant(Auth::user()->id)->get()
+            'events' => Events::with(['tickets', 'latestShowcase'])->get()
         ]);
     }
     public function store(Request $request)
