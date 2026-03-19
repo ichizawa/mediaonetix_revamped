@@ -306,22 +306,52 @@
             document.getElementById('formMethod').value = 'POST';
 
             // Hide image preview and current image info
-            document.getElementById('imagePreview').classList.add('hidden');
-            document.getElementById('currentImageInfo').classList.add('hidden');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewImage = document.getElementById('previewImage');
+            const imagePlaceholder = document.getElementById('eventImagePlaceholder');
+            const eventDropZone = document.getElementById('eventDropZone');
+            const currentImageInfo = document.getElementById('currentImageInfo');
+            const seatPlanPreview = document.getElementById('seatPlanPreview');
+            const seatPlanPlaceholder = document.getElementById('seatPlanPlaceholder');
+
+            if (imagePreview) imagePreview.classList.add('hidden');
+            if (previewImage) {
+                previewImage.classList.add('hidden');
+                previewImage.removeAttribute('src');
+            }
+            if (imagePlaceholder) imagePlaceholder.classList.remove('hidden');
+            if (eventDropZone) {
+                eventDropZone.classList.remove('border-blue-500', 'bg-blue-500/10');
+                eventDropZone.classList.add('border-[#a7a7a7]');
+            }
+            if (currentImageInfo) currentImageInfo.classList.add('hidden');
+            if (seatPlanPreview) {
+                seatPlanPreview.classList.add('hidden');
+                seatPlanPreview.removeAttribute('src');
+            }
+            if (seatPlanPlaceholder) seatPlanPlaceholder.classList.remove('hidden');
 
             // Set default values
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('eventDate').value = today;
             document.getElementById('eventTime').value = '19:00';
-            setCustomSelect('eventStatus', '0');
-            setCustomSelect('eventCategory', 'Music');
+            document.getElementById('eventStatus').value = '0';
+            const statusLabel = document.querySelector('[data-target="eventStatus"] .custom-select-label');
+            if (statusLabel) statusLabel.textContent = statusLabel.getAttribute('data-default-text') || 'Status';
+            document.getElementById('eventCategory').value = 'Music';
+            const categoryLabel = document.querySelector('[data-target="eventCategory"] .custom-select-label');
+            if (categoryLabel) categoryLabel.textContent = categoryLabel.getAttribute('data-default-text') || 'Category';
 
             // Show modal
-            document.getElementById('eventModal').classList.add('active');
+            const eventModal = document.getElementById('eventModal');
+            eventModal.classList.remove('hidden');
+            eventModal.classList.add('flex');
         }
 
         function closeModal() {
-            document.getElementById('eventModal').classList.remove('active');
+            const eventModal = document.getElementById('eventModal');
+            eventModal.classList.add('hidden');
+            eventModal.classList.remove('flex');
         }
 
         function openViewModal(event) {
@@ -385,10 +415,14 @@
             setCustomSelect('eventStatus', String(event.status));
             document.getElementById('eventForm').action = "{{ route('merchant.events.update') }}";
             document.getElementById('currentImageText').style.display = 'block';
+            document.getElementById('currentImageInfo').classList.remove('hidden');
+            document.getElementById('currentImageName').textContent = event.event_image ? 'Current image selected' : '';
 
             // Show edit modal
             setTimeout(() => {
-                document.getElementById('eventModal').classList.add('active');
+                const eventModal = document.getElementById('eventModal');
+                eventModal.classList.remove('hidden');
+                eventModal.classList.add('flex');
             }, 300);
         }
 
@@ -440,6 +474,87 @@
         }
         // Event listeners
         document.addEventListener('DOMContentLoaded', function () {
+            const eventImageInput = document.getElementById('eventImage');
+            const previewImage = document.getElementById('previewImage');
+            const imagePlaceholder = document.getElementById('eventImagePlaceholder');
+            const eventDropZone = document.getElementById('eventDropZone');
+            const seatPlanInput = document.getElementById('seatPlanImage');
+            const seatPlanPreview = document.getElementById('seatPlanPreview');
+            const seatPlanPlaceholder = document.getElementById('seatPlanPlaceholder');
+
+            function showEventImagePreview(file) {
+                if (!file || !previewImage || !imagePlaceholder) return;
+
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    previewImage.src = evt.target.result;
+                    previewImage.classList.remove('hidden');
+                    imagePlaceholder.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+
+            if (eventImageInput && previewImage && imagePlaceholder) {
+                eventImageInput.addEventListener('change', function (e) {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+                    showEventImagePreview(file);
+                });
+            }
+
+            if (eventDropZone && eventImageInput) {
+                const highlightDropZone = () => {
+                    eventDropZone.classList.add('border-blue-500', 'bg-blue-500/10');
+                    eventDropZone.classList.remove('border-[#a7a7a7]');
+                };
+
+                const unhighlightDropZone = () => {
+                    eventDropZone.classList.remove('border-blue-500', 'bg-blue-500/10');
+                    eventDropZone.classList.add('border-[#a7a7a7]');
+                };
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    eventDropZone.addEventListener(eventName, function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        highlightDropZone();
+                    });
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    eventDropZone.addEventListener(eventName, function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        unhighlightDropZone();
+                    });
+                });
+
+                eventDropZone.addEventListener('drop', function (e) {
+                    const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+                    if (!file) return;
+
+                    const transfer = new DataTransfer();
+                    transfer.items.add(file);
+                    eventImageInput.files = transfer.files;
+                    showEventImagePreview(file);
+                });
+            }
+
+            if (seatPlanInput && seatPlanPreview && seatPlanPlaceholder) {
+                seatPlanInput.addEventListener('change', function (e) {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function (evt) {
+                        seatPlanPreview.src = evt.target.result;
+                        seatPlanPreview.classList.remove('hidden');
+                        seatPlanPlaceholder.classList.add('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
             // --- Custom select dropdowns ---
             document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
                 wrapper.style.position = 'relative';
@@ -509,7 +624,7 @@
                     closeViewModal();
                 }
 
-                if (eventModal && eventModal.classList.contains('active') &&
+                if (eventModal && !eventModal.classList.contains('hidden') &&
                     event.target === eventModal) {
                     closeModal();
                 }
