@@ -312,7 +312,7 @@
                                             <div class="flex gap-2">
                                                 <button class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
                                                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
+                                                        viewBox="0 0 24z 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

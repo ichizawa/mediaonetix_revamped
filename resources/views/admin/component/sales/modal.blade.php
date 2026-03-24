@@ -28,7 +28,8 @@
                         <option value="100" class="text-black" data-event="Salindayaw Music Festival">Smooth Jazz Night
                         </option> --}}
                         @forelse($events as $event)
-                            <option value="{{ $event->id }}" class="text-black" data-event='@json($event)'>
+                            <option value="{{ $event->id }}" class="text-black"
+                                data-event='@json($event)'>
                                 {{ $event->event_name }}
                             </option>
                         @empty
@@ -38,8 +39,8 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Ticket Quantity</label>
-                    <input type="number" onchange="updateTotalPrice(this)" name="quantity" id="quantityInput" min="1"
-                        value="1"
+                    <input type="number" onchange="updateTotalPrice(this)" name="quantity" id="quantityInput"
+                        min="1" value="1"
                         class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500"
                         required>
                 </div>
@@ -65,7 +66,8 @@
                     <select name="payment_method"
                         class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500"
                         required>
-                        <option value="" class="text-black" selected hidden disabled>Select Payment Method</option>
+                        <option value="" class="text-black" selected hidden disabled>Select Payment Method
+                        </option>
                         <option value="cash" class="text-black">Cash</option>
                         <option value="credit_card" class="text-black">Credit Card</option>
                         <option value="debit_card" class="text-black">Debit Card</option>
@@ -147,6 +149,12 @@
         </form>
     </div>
 </div>
+
+
+
+
+
+</div>
 <script>
     function updateTickets(selectEl) {
         const selectedOption = selectEl.options[selectEl.selectedIndex];
@@ -154,9 +162,12 @@
         // $('#ticket_selection').empty();
 
         eventData.tickets.forEach((ticket, index) => {
-            $('#ticket_selection').append(`<option value="${ticket.id}" class="text-black" data-ticket='${JSON.stringify(ticket)}'>${ticket.name}</option>`);
+            $('#ticket_selection').append(
+                `<option value="${ticket.id}" class="text-black" data-ticket='${JSON.stringify(ticket)}'>${ticket.name}</option>`
+            );
         });
     }
+
     function updateTicketPrice(selectEl) {
         const selectedOption = selectEl.options[selectEl.selectedIndex];
         const ticket = JSON.parse(selectedOption.dataset.ticket);
@@ -164,6 +175,7 @@
         $('#ticketPrice').text(ticket.price);
         $('#totalPrice').text(ticket.price);
     }
+
     function updateTotalPrice(sel) {
         const ticketPrice = parseFloat($('#ticketPrice').text()) || 0;
         const quantity = parseInt($(sel).val()) || 0;
@@ -171,5 +183,4 @@
         const total = ticketPrice * quantity;
         $('#totalPrice').text(total.toFixed(2));
     }
-
 </script>

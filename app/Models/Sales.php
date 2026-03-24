@@ -68,7 +68,8 @@ class Sales extends Model
     }
     public static function revenueByDayOfWeek($merchantId)
     {
-        return self::getAllSalesByMerchant($merchantId)
+        $query = $merchantId ? self::getAllSalesByMerchant($merchantId) : self::query();
+        return $query
             ->select(
                 DB::raw('DAYOFWEEK(created_at) as day_number'),
                 DB::raw('SUM(total_amount) as total_revenue')

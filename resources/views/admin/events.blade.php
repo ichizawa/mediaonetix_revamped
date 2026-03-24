@@ -1,6 +1,23 @@
 @extends('layouts')
 @section('content')
     <style>
+        /* SweetAlert2 dark theme custom button styles */
+        .swal2-confirm-dark {
+            background: linear-gradient(to right, #2563eb, #6366f1) !important;
+            color: #fff !important;
+            border-radius: 0.5rem !important;
+            font-weight: 600 !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+        .swal2-cancel-dark {
+            background: #23263a !important;
+            color: #fff !important;
+            border-radius: 0.5rem !important;
+            font-weight: 600 !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
         .event-card {
             transition: all 0.3s ease;
         }
@@ -102,7 +119,8 @@
                 </div>
 
                 <div class="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
-                    <button data-filter="all" class="tab-btn active px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">All
+                    <button data-filter="all"
+                        class="tab-btn active px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">All
                         Events</button>
                     <button data-filter="0"
                         class="tab-btn px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">Upcoming</button>
@@ -118,7 +136,7 @@
                             class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm rounded-2xl overflow-hidden {{ $event->latestShowcase ? 'border border-green-400' : '' }}">
                             <div class="relative h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
                                 <div class="absolute inset-0 bg-cover bg-center opacity-40">
-                                    @if($event->event_image)
+                                    @if ($event->event_image)
                                         <img src="{{ asset('images/events/' . $event->event_image) }}" alt="Event Image"
                                             class="w-full h-full object-cover">
                                     @endif
@@ -127,20 +145,44 @@
                                 <div class="absolute top-4 right-4">
                                     @php
                                         $statusStyles = [
-                                            0 => ['bg'=>'rgba(147,51,234,0.2)','border'=>'rgba(147,51,234,0.4)','color'=>'#c084fc'],
-                                            1 => ['bg'=>'rgba(34,197,94,0.2)', 'border'=>'rgba(34,197,94,0.4)', 'color'=>'#4ade80'],
-                                            2 => ['bg'=>'rgba(59,130,246,0.2)', 'border'=>'rgba(59,130,246,0.4)', 'color'=>'#60a5fa'],
-                                            3 => ['bg'=>'rgba(107,114,128,0.2)','border'=>'rgba(107,114,128,0.4)','color'=>'#9ca3af'],
-                                            4 => ['bg'=>'rgba(239,68,68,0.2)', 'border'=>'rgba(239,68,68,0.4)', 'color'=>'#f87171'],
+                                            0 => [
+                                                'bg' => 'rgba(147,51,234,0.2)',
+                                                'border' => 'rgba(147,51,234,0.4)',
+                                                'color' => '#c084fc',
+                                            ],
+                                            1 => [
+                                                'bg' => 'rgba(34,197,94,0.2)',
+                                                'border' => 'rgba(34,197,94,0.4)',
+                                                'color' => '#4ade80',
+                                            ],
+                                            2 => [
+                                                'bg' => 'rgba(59,130,246,0.2)',
+                                                'border' => 'rgba(59,130,246,0.4)',
+                                                'color' => '#60a5fa',
+                                            ],
+                                            3 => [
+                                                'bg' => 'rgba(107,114,128,0.2)',
+                                                'border' => 'rgba(107,114,128,0.4)',
+                                                'color' => '#9ca3af',
+                                            ],
+                                            4 => [
+                                                'bg' => 'rgba(239,68,68,0.2)',
+                                                'border' => 'rgba(239,68,68,0.4)',
+                                                'color' => '#f87171',
+                                            ],
                                         ];
                                         $s = $statusStyles[$event->status] ?? $statusStyles[0];
                                     @endphp
-                                    <span class="px-3 py-1 backdrop-blur-sm rounded-full text-xs font-semibold flex items-center gap-1"
+                                    <span
+                                        class="px-3 py-1 backdrop-blur-sm rounded-full text-xs font-semibold flex items-center gap-1"
                                         style="background:{{ $s['bg'] }};border:1px solid {{ $s['border'] }};color:{{ $s['color'] }}">
-                                        @if($event->status === 1)
+                                        @if ($event->status === 1)
                                             <span class="relative flex h-2 w-2">
-                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color:#4ade80"></span>
-                                                <span class="relative inline-flex rounded-full h-2 w-2" style="background-color:#4ade80"></span>
+                                                <span
+                                                    class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                                                    style="background-color:#4ade80"></span>
+                                                <span class="relative inline-flex rounded-full h-2 w-2"
+                                                    style="background-color:#4ade80"></span>
                                             </span>
                                         @endif
                                         {{ $event->status_label['label'] }}
@@ -149,18 +191,21 @@
                             </div>
                             <div class="p-6">
                                 <div class="flex items-center gap-2 mb-3">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                                         </path>
                                     </svg>
-                                    <span class="text-sm text-gray-400">{{ date('F j, Y', strtotime($event->event_date)) }} •
+                                    <span class="text-sm text-gray-400">{{ date('F j, Y', strtotime($event->event_date)) }}
+                                        •
                                         {{ date('g:i A', strtotime($event->event_time)) }}</span>
                                 </div>
                                 <h3 class="text-xl font-bold text-white mb-2">{{ $event->event_name }}</h3>
                                 <p class="text-gray-400 text-sm mb-4">{{ $event->description }}</p>
                                 <div class="flex items-center gap-2 mb-4">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
                                         </path>
@@ -174,8 +219,7 @@
                                         <span class="text-gray-400">{{ $event->tickets_sold }} /
                                             {{ $event->tickets->sum('original_qty') }} sold</span>
                                         <span
-                                            class="text-blue-400 font-semibold">{{ number_format($event->percentage, 0)
-                                                                                                                                                                }}%</span>
+                                            class="text-blue-400 font-semibold">{{ number_format($event->percentage, 0) }}%</span>
                                     </div>
                                     <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
                                         <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all"
@@ -201,12 +245,12 @@
                                         </button>
 
                                         <button onclick='openEditModal(@json($event))'
-                                            class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                            class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all"
+                                            title="Approve Event">
+                                            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                </path>
+                                                    d="M5 13l4 4L19 7" />
                                             </svg>
                                         </button>
 
@@ -299,7 +343,8 @@
             // Populate view modal with event data
             document.getElementById('viewEventName').textContent = event.event_name;
             document.getElementById('viewEventCategory').textContent = event.category;
-            document.getElementById('viewEventDateTime').textContent = `${formatDate(event.event_date)} • ${formatTime(event.event_time)}`;
+            document.getElementById('viewEventDateTime').textContent =
+                `${formatDate(event.event_date)} • ${formatTime(event.event_time)}`;
             document.getElementById('viewEventLocation').textContent = event.event_venue;
             document.getElementById('viewEventPrice').textContent = '₱ ' + lowestPrice.toFixed(2);
             document.getElementById('viewEventDescription').textContent = event.description;
@@ -319,7 +364,7 @@
             // // Show the view modal
             document.getElementById('viewEventModal').classList.add('active');
 
-            document.getElementById('openEditModalFromView').addEventListener('click', function () {
+            document.getElementById('openEditModalFromView').addEventListener('click', function() {
                 // console.log(event);
                 closeViewModal();
                 setTimeout(() => {
@@ -337,9 +382,11 @@
             closeViewModal();
 
             // Populate edit form
-            document.getElementById('modalTitle').textContent = 'Edit Event';
-            document.getElementById('submitBtn').textContent = 'Update Event';
+            document.getElementById('modalTitle').textContent = 'Event Details';
+            document.getElementById('approveBtn').textContent = 'Approve Event';
             document.getElementById('eventId').value = event.id || '';
+            document.getElementById('approvedAt').value = event.approved_at || '';
+            document.getElementById('imagePreview').classList.add('hidden');
             document.getElementById('formMethod').value = 'PUT';
             document.getElementById('eventName').value = event.event_name || '';
             document.getElementById('eventCategory').value = event.category || 'Music';
@@ -353,19 +400,55 @@
             document.getElementById('eventForm').value = "PUT";
             document.getElementById('currentImageText').style.display = 'block';
 
+            // Set approve form action for this event
+            var approveForm = document.getElementById('approveEventForm');
+            if (approveForm) {
+                approveForm.action = '/admin/events/approve/' + event.id;
+            }
+
             // Show edit modal
             setTimeout(() => {
                 document.getElementById('eventModal').classList.add('active');
             }, 300);
         }
 
+
+
+        var approveForm = document.getElementById('approveEventForm');
+        if (approveForm) {
+            approveForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                Swal.fire({
+                    background: '#181c2a',
+                    color: '#fff',
+                    customClass: {
+                        confirmButton: 'swal2-confirm-dark',
+                        cancelButton: 'swal2-cancel-dark'
+                    },
+                    title: 'Approve this event?',
+                    text: "Are you sure you want to approve this event?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, approve it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('approvedAt').value = new Date().toISOString();
+                        approveForm.submit();
+                    }
+                });
+            });
+        }
+
+
         // Utility functions
         function formatDate(dateString) {
             const date = new Date(dateString);
             return date.toLocaleDateString('en-US', {
-                year: 'numeric'
-                , month: 'long'
-                , day: 'numeric'
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             });
         }
 
@@ -381,15 +464,15 @@
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
             fetch("{{ route('admin.events.set-active') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": token
-                },
-                body: JSON.stringify({
-                    slug: eventSlug
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": token
+                    },
+                    body: JSON.stringify({
+                        slug: eventSlug
+                    })
                 })
-            })
                 .then(response => response.json())
                 .then(data => {
                     // console.log("Active event set:", data);
@@ -400,18 +483,19 @@
                     });
 
                     {{-- window.location.reload(); --}}
-                     // temporary reload but should implement websocket
+                    // temporary reload but should implement websocket
                 })
                 .catch(error => {
                     console.error("Error:", error);
                 });
         }
         // Event listeners
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Tab filtering
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove(
+                        'active'));
                     this.classList.add('active');
 
                     const filter = this.dataset.filter;
@@ -426,7 +510,7 @@
             });
 
             // Close modals when clicking outside
-            document.addEventListener('click', function (event) {
+            document.addEventListener('click', function(event) {
                 const viewModal = document.getElementById('viewEventModal');
                 const eventModal = document.getElementById('eventModal');
 
@@ -441,7 +525,5 @@
                 }
             });
         });
-
     </script>
-
 @endsection

@@ -18,15 +18,23 @@ class SalesController extends Controller
 {
     public function index()
     {
-        $events = Events::with('tickets')
-            ->orderByDesc('id')
-            ->get();
 
-        $sales = Sales::getAllSalesByMerchant(Auth::id())
-            ->orderByDesc('id')
-            ->paginate(10);
+        $eventsQuery = Auth::user()->isAdmin()
+            ? Events::with(['tickets', 'latestShowcase'])
+            : Events::getEventByMerchant(Auth::user()->id)
+            ->with(['tickets', 'latestShowcase'])
+            ->where('created_by', Auth::user()->id);
 
-        $rawData = Sales::revenueByDayOfWeek(Auth::id())->get();
+        $events = $eventsQuery->get();
+
+        $salesQuery = Auth::user()->isAdmin()
+            ? Sales::with('ticket')
+            : Sales::getAllSalesByMerchant(Auth::user()->id)->with('ticket');
+
+
+        $sales = $salesQuery->orderByDesc('id')->paginate(10);
+
+        $rawData = Sales::revenueByDayOfWeek(null)->get();
 
         $dayMap = [
             2 => 'Mon',
@@ -46,15 +54,15 @@ class SalesController extends Controller
             $values[$index] = $row->total_revenue;
         }
 
-        $total_sales = Sales::getAllSalesByMerchant(Auth::id())->where('status', 1)->sum('total_amount');
+        $total_sales = Sales::where('status', 1)->sum('total_amount');
 
-        return view(auth()->user()->routePrefix() . '.sales', compact('events', 'sales', 'labels', 'values', 'total_sales'));
+        return view('admin.sales', compact('events', 'sales', 'labels', 'values', 'total_sales'));
     }
     public function edit($slug)
     {
         $event = Events::where('slug', $slug)->first();
         $sales = Sales::with('ticket')->where('event_id', $event->id)->orderByDesc('id')->paginate(10);
-        return view(auth()->user()->routePrefix() . '.component.sales.view-specific', compact('event', 'sales'));
+        return view('admin.component.sales.view-specific', compact('event', 'sales'));
     }
     public function store(SalesRequest $request)
     {
