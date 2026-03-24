@@ -307,4 +307,9 @@
             </div>
         </div>
     </div>
+
+    
+    @include('admin.component.event.modal')
+    @include ('admin.component.event.view')
+    
 @endsection

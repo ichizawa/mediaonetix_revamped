@@ -1,5 +1,5 @@
 @extends('layouts')
-@include('admin.component.sales.modal')
+@include('merchant.component.sales.modal')
 @section('content')
     <style>
         .sales-card {
@@ -209,9 +209,9 @@
                         <h3 class="text-xl font-bold text-white mb-6">List of Events</h3>
                         <div class="space-y-4">
                             @forelse($events as $event)
-                                <a href="{{ route('admin.sales.edit', $event->slug) }}"
+                                <a href="{{ route('merchant.sales.edit', $event->slug) }}"
                                     class="flex items-center justify-between p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer group">
-                                    <div class="flex items-center gap-3">
+                                      <div class="flex items-center gap-3">
                                         <div
                                             class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform">
                                             {{ substr($event->event_name, 0, 1) }}

@@ -130,19 +130,19 @@
                 </div>
 
                 <div class="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
-                    <button class="tab-btn active px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">All
+                    <button data-filter="all" class="tab-btn active px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">All
                         Events</button>
-                    <button
+                    <button data-filter="0"
                         class="tab-btn px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">Upcoming</button>
-                    <button
+                    <button data-filter="2"
                         class="tab-btn px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">Ongoing</button>
-                    <button
+                    <button data-filter="3"
                         class="tab-btn px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">Completed</button>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @forelse($events as $event)
-                        <div
+                        <div data-status="{{ $event->status }}"
                             class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm rounded-2xl overflow-hidden {{ $event->latestShowcase ? 'border border-green-400' : '' }}">
                             <div class="relative h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
                                 <div class="absolute inset-0 bg-cover bg-center opacity-40">
@@ -153,9 +153,25 @@
                                 </div>
 
                                 <div class="absolute top-4 right-4">
-                                    <span
-                                        class="px-3 py-1 bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-full text-xs font-semibold text-green-400">
-                                        {{$event->status_label['label'] }}
+                                    @php
+                                        $statusStyles = [
+                                            0 => ['bg'=>'rgba(147,51,234,0.2)','border'=>'rgba(147,51,234,0.4)','color'=>'#c084fc'],
+                                            1 => ['bg'=>'rgba(34,197,94,0.2)', 'border'=>'rgba(34,197,94,0.4)', 'color'=>'#4ade80'],
+                                            2 => ['bg'=>'rgba(59,130,246,0.2)', 'border'=>'rgba(59,130,246,0.4)', 'color'=>'#60a5fa'],
+                                            3 => ['bg'=>'rgba(107,114,128,0.2)','border'=>'rgba(107,114,128,0.4)','color'=>'#9ca3af'],
+                                            4 => ['bg'=>'rgba(239,68,68,0.2)', 'border'=>'rgba(239,68,68,0.4)', 'color'=>'#f87171'],
+                                        ];
+                                        $s = $statusStyles[$event->status] ?? $statusStyles[0];
+                                    @endphp
+                                    <span class="px-3 py-1 backdrop-blur-sm rounded-full text-xs font-semibold flex items-center gap-1"
+                                        style="background:{{ $s['bg'] }};border:1px solid {{ $s['border'] }};color:{{ $s['color'] }}">
+                                        @if($event->status === 1)
+                                            <span class="relative flex h-2 w-2">
+                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color:#4ade80"></span>
+                                                <span class="relative inline-flex rounded-full h-2 w-2" style="background-color:#4ade80"></span>
+                                            </span>
+                                        @endif
+                                        {{ $event->status_label['label'] }}
                                     </span>
                                 </div>
                             </div>
@@ -215,17 +231,19 @@
                                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a      2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
                                                 </path>
                                             </svg>
                                         </button>
 
                                         <a href="{{ route('merchant.events.tickets.tickets', $event->slug) }}"
                                             class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                            <svg class="w-6 h-6 text-white" fill="currentColor"
+                                                viewBox="0 -1 17 18">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                                    d="M4 4.85v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9z"> </path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                                   d="M1.5 3A1.5 1.5 0 0 0 0 4.5V6a.5.5 0 0 0 .5.5 1.5 1.5 0 1 1 0 3 .5.5 0 0 0-.5.5v1.5A1.5 1.5 0 0 0 1.5 13h13a1.5 1.5 0 0 0 1.5-1.5V10a.5.5 0 0 0-.5-.5 1.5 1.5 0 0 1 0-3A.5.5 0 0 0 16 6V4.5A1.5 1.5 0 0 0 14.5 3zM1 4.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v1.05a2.5 2.5 0 0 0 0 4.9v1.05a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-1.05a2.5 2.5 0 0 0 0-4.9z">
                                                 </path>
                                             </svg>
                                         </a>
@@ -263,11 +281,22 @@
     <script>
         let currentEventId = null;
         let isEditMode = false;
+        // Helper: set value + label for a custom dropdown
+        function setCustomSelect(id, value) {
+            const hidden = document.getElementById(id);
+            if (!hidden) return;
+            hidden.value = value;
+            const wrapper = hidden.nextElementSibling; // .custom-select-wrapper
+            if (!wrapper) return;
+            const label = wrapper.querySelector('.custom-select-label');
+            const option = wrapper.querySelector(`.custom-select-option[data-value="${value}"]`);
+            if (label && option) label.textContent = option.textContent;
+        }
+
         // Modal management functions
         function openAddModal() {
             isEditMode = false;
             currentEventId = null;
-            // console.log("test");
 
             // Reset form
             document.getElementById('eventForm').reset();
@@ -277,23 +306,52 @@
             document.getElementById('formMethod').value = 'POST';
 
             // Hide image preview and current image info
-            document.getElementById('imagePreview').classList.add('hidden');
-            document.getElementById('currentImageInfo').classList.add('hidden');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewImage = document.getElementById('previewImage');
+            const imagePlaceholder = document.getElementById('eventImagePlaceholder');
+            const eventDropZone = document.getElementById('eventDropZone');
+            const currentImageInfo = document.getElementById('currentImageInfo');
+            const seatPlanPreview = document.getElementById('seatPlanPreview');
+            const seatPlanPlaceholder = document.getElementById('seatPlanPlaceholder');
+
+            if (imagePreview) imagePreview.classList.add('hidden');
+            if (previewImage) {
+                previewImage.classList.add('hidden');
+                previewImage.removeAttribute('src');
+            }
+            if (imagePlaceholder) imagePlaceholder.classList.remove('hidden');
+            if (eventDropZone) {
+                eventDropZone.classList.remove('border-blue-500', 'bg-blue-500/10');
+                eventDropZone.classList.add('border-[#a7a7a7]');
+            }
+            if (currentImageInfo) currentImageInfo.classList.add('hidden');
+            if (seatPlanPreview) {
+                seatPlanPreview.classList.add('hidden');
+                seatPlanPreview.removeAttribute('src');
+            }
+            if (seatPlanPlaceholder) seatPlanPlaceholder.classList.remove('hidden');
 
             // Set default values
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('eventDate').value = today;
             document.getElementById('eventTime').value = '19:00';
-            document.getElementById('eventStatus').value = 'upcoming';
-            // document.getElementById('eventTotalTickets').value = '100';
-            // document.getElementById('eventPrice').value = '0.00';
+            document.getElementById('eventStatus').value = '0';
+            const statusLabel = document.querySelector('[data-target="eventStatus"] .custom-select-label');
+            if (statusLabel) statusLabel.textContent = statusLabel.getAttribute('data-default-text') || 'Status';
+            document.getElementById('eventCategory').value = 'Music';
+            const categoryLabel = document.querySelector('[data-target="eventCategory"] .custom-select-label');
+            if (categoryLabel) categoryLabel.textContent = categoryLabel.getAttribute('data-default-text') || 'Category';
 
             // Show modal
-            document.getElementById('eventModal').classList.add('active');
+            const eventModal = document.getElementById('eventModal');
+            eventModal.classList.remove('hidden');
+            eventModal.classList.add('flex');
         }
 
         function closeModal() {
-            document.getElementById('eventModal').classList.remove('active');
+            const eventModal = document.getElementById('eventModal');
+            eventModal.classList.add('hidden');
+            eventModal.classList.remove('flex');
         }
 
         function openViewModal(event) {
@@ -341,7 +399,6 @@
         }
 
         function openEditModal(event) {
-            const eventIndex = document.getElementById('viewEventModal').dataset.eventId;
             closeViewModal();
 
             // Populate edit form
@@ -350,20 +407,22 @@
             document.getElementById('eventId').value = event.id || '';
             document.getElementById('formMethod').value = 'PUT';
             document.getElementById('eventName').value = event.event_name || '';
-            document.getElementById('eventCategory').value = event.category || 'Music';
+            setCustomSelect('eventCategory', event.category || 'Music');
             document.getElementById('eventDescription').value = event.description || '';
             document.getElementById('eventDate').value = event.event_date || '';
             document.getElementById('eventTime').value = event.event_time || '';
             document.getElementById('eventLocation').value = event.event_venue || '';
-            // document.getElementById('eventTotalTickets').value = event.event_total_tickets || '';
-            document.getElementById('eventStatus').value = event.status;
+            setCustomSelect('eventStatus', String(event.status));
             document.getElementById('eventForm').action = "{{ route('merchant.events.update') }}";
-            document.getElementById('eventForm').value = "PUT";
             document.getElementById('currentImageText').style.display = 'block';
+            document.getElementById('currentImageInfo').classList.remove('hidden');
+            document.getElementById('currentImageName').textContent = event.event_image ? 'Current image selected' : '';
 
             // Show edit modal
             setTimeout(() => {
-                document.getElementById('eventModal').classList.add('active');
+                const eventModal = document.getElementById('eventModal');
+                eventModal.classList.remove('hidden');
+                eventModal.classList.add('flex');
             }, 300);
         }
 
@@ -415,11 +474,143 @@
         }
         // Event listeners
         document.addEventListener('DOMContentLoaded', function () {
+            const eventImageInput = document.getElementById('eventImage');
+            const previewImage = document.getElementById('previewImage');
+            const imagePlaceholder = document.getElementById('eventImagePlaceholder');
+            const eventDropZone = document.getElementById('eventDropZone');
+            const seatPlanInput = document.getElementById('seatPlanImage');
+            const seatPlanPreview = document.getElementById('seatPlanPreview');
+            const seatPlanPlaceholder = document.getElementById('seatPlanPlaceholder');
+
+            function showEventImagePreview(file) {
+                if (!file || !previewImage || !imagePlaceholder) return;
+
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    previewImage.src = evt.target.result;
+                    previewImage.classList.remove('hidden');
+                    imagePlaceholder.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+
+            if (eventImageInput && previewImage && imagePlaceholder) {
+                eventImageInput.addEventListener('change', function (e) {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+                    showEventImagePreview(file);
+                });
+            }
+
+            if (eventDropZone && eventImageInput) {
+                const highlightDropZone = () => {
+                    eventDropZone.classList.add('border-blue-500', 'bg-blue-500/10');
+                    eventDropZone.classList.remove('border-[#a7a7a7]');
+                };
+
+                const unhighlightDropZone = () => {
+                    eventDropZone.classList.remove('border-blue-500', 'bg-blue-500/10');
+                    eventDropZone.classList.add('border-[#a7a7a7]');
+                };
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    eventDropZone.addEventListener(eventName, function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        highlightDropZone();
+                    });
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    eventDropZone.addEventListener(eventName, function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        unhighlightDropZone();
+                    });
+                });
+
+                eventDropZone.addEventListener('drop', function (e) {
+                    const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+                    if (!file) return;
+
+                    const transfer = new DataTransfer();
+                    transfer.items.add(file);
+                    eventImageInput.files = transfer.files;
+                    showEventImagePreview(file);
+                });
+            }
+
+            if (seatPlanInput && seatPlanPreview && seatPlanPlaceholder) {
+                seatPlanInput.addEventListener('change', function (e) {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function (evt) {
+                        seatPlanPreview.src = evt.target.result;
+                        seatPlanPreview.classList.remove('hidden');
+                        seatPlanPlaceholder.classList.add('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // --- Custom select dropdowns ---
+            document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+                wrapper.style.position = 'relative';
+                const btn = wrapper.querySelector('.custom-select-btn');
+                const dropdown = wrapper.querySelector('.custom-select-dropdown');
+                const targetId = wrapper.dataset.target;
+
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    // Close all other open dropdowns first
+                    document.querySelectorAll('.custom-select-dropdown').forEach(d => {
+                        if (d !== dropdown) {
+                            d.classList.add('hidden');
+                            d.previousElementSibling.querySelector('svg').style.transform = '';
+                        }
+                    });
+                    dropdown.classList.toggle('hidden');
+                    btn.querySelector('svg').style.transform = dropdown.classList.contains('hidden') ? '' : 'rotate(180deg)';
+                });
+
+                wrapper.querySelectorAll('.custom-select-option').forEach(option => {
+                    option.addEventListener('click', function () {
+                        const value = this.dataset.value;
+                        const label = this.textContent;
+                        document.getElementById(targetId).value = value;
+                        wrapper.querySelector('.custom-select-label').textContent = label;
+                        dropdown.classList.add('hidden');
+                        btn.querySelector('svg').style.transform = '';
+                    });
+                });
+            });
+
+            // Close custom dropdowns when clicking outside
+            document.addEventListener('click', function () {
+                document.querySelectorAll('.custom-select-dropdown').forEach(d => {
+                    if (!d.classList.contains('hidden')) {
+                        d.classList.add('hidden');
+                        d.previousElementSibling.querySelector('svg').style.transform = '';
+                    }
+                });
+            });
+
             // Tab functionality
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', function () {
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
+
+                    const filter = this.dataset.filter;
+                    document.querySelectorAll('.event-card').forEach(card => {
+                        if (filter === 'all' || card.dataset.status === filter) {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
                 });
             });
 
@@ -433,7 +624,7 @@
                     closeViewModal();
                 }
 
-                if (eventModal && eventModal.classList.contains('active') &&
+                if (eventModal && !eventModal.classList.contains('hidden') &&
                     event.target === eventModal) {
                     closeModal();
                 }

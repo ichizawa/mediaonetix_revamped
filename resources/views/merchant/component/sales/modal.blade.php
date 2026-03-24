@@ -11,7 +11,7 @@
             </button>
         </div>
 
-        <form action="{{ route('admin.sales.store') }}" method="POST" class="space-y-4">
+        <form action="{{ route('merchant.sales.store') }}" method="POST" class="space-y-4">
             @csrf
             <!-- Ticket Selection and Quantity -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

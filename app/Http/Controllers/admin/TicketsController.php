@@ -15,7 +15,7 @@ class TicketsController extends Controller
 {
     public function index($slug)
     {
-        $event = Events::where('slug', $slug)->getEventByMerchant(Auth::user()->id)->first();
+        $event = Events::where('slug', $slug)->get()->first();
         $tickets = Tickets::where('event_id', $event->id)->get();
         return view(auth()->user()->routePrefix() . '.component.event.tickets', [
             'event' => $event,

@@ -15,12 +15,28 @@ class EventsController extends Controller
 {
     public function index()
     {
+
+        $eventsQuery = Auth::user()->isAdmin()
+            ? Events::with(['tickets', 'latestShowcase'])
+            : Events::getEventByMerchant(Auth::user()->id)
+            ->with(['tickets', 'latestShowcase'])
+            ->where('created_by', Auth::user()->id);
+
+        $events = $eventsQuery->get();
+
+
+        $tickets_sold = $events->sum('tickets_sold');
+        $upcoming_events = $eventsQuery->getUpcoming()->count();
+        $active_events = $eventsQuery->getActive()->count();
+        $total_events = $eventsQuery->count();
+
         return view(auth()->user()->routePrefix() . '.events', [
-            'tickets_sold' => Events::getEventByMerchant(Auth::user()->id)->sum('tickets_sold'),
-            'upcoming_events' => Events::getEventByMerchant(Auth::user()->id)->getUpcoming()->count(),
-            'active_events' => Events::getEventByMerchant(Auth::user()->id)->getActive()->count(),
-            'total_events' => Events::getEventByMerchant(Auth::user()->id)->count(),
-            'events' => Events::with(['tickets', 'latestShowcase'])->getEventByMerchant(Auth::user()->id)->get()
+            'tickets_sold' => $tickets_sold,
+            'upcoming_events' => $upcoming_events,
+            'active_events' => $active_events,
+            'total_events' => $total_events,
+            'events' => $events,
+
         ]);
     }
     public function store(Request $request)
@@ -59,6 +75,8 @@ class EventsController extends Controller
             $event->event_total_tickets = 0;
             $event->status = $request->status;
             $event->created_by = Auth::user()->id;
+            $event->approved_at = null;
+            $event->rejected_at = null;
             // $event->slug = Str::slug($request->name);
             $event->save();
 
@@ -105,6 +123,11 @@ class EventsController extends Controller
             $event->event_venue = $request->location;
             // $event->event_total_tickets = 0;
             $event->status = $request->status;
+
+            if ($request->filled('approved_at')) {
+                $event->approved_at = now();
+            }
+            
             $event->save();
 
             DB::commit();
@@ -152,7 +175,6 @@ class EventsController extends Controller
                 'data' => null,
                 'message' => $message
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -160,5 +182,23 @@ class EventsController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function approve($event_id)
+    {
+        $event = Events::find($event_id);
+        $event->approved_at = now();
+        $event->save();
+
+        return back()->with('success', 'Event approved successfully');
+    }
+
+    public function reject($event_id)
+    {
+        $event = Events::find($event_id);
+        $event->rejected_at = now();
+        $event->save();
+
+        return back()->with('success', 'Event rejected successfully');
     }
 }

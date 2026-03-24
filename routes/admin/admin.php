@@ -22,6 +22,8 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
         Route::put('update', [EventsController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [EventsController::class, 'delete'])->name('delete');
         Route::post('set-active', [EventsController::class, 'setActive'])->name('set-active');
+        Route::post('approve/{id}', [EventsController::class, 'approve'])->name('approve');
+        Route::post('reject/{id}', [EventsController::class, 'reject'])->name('reject');
 
         Route::prefix('{slug}/tickets')->name('tickets.')->group(function () {
             Route::get('/', [TicketsController::class, 'index'])->name('tickets');
