@@ -10,6 +10,7 @@
             box-shadow: none !important;
             border: none !important;
         }
+
         .swal2-cancel-dark {
             background: #23263a !important;
             color: #fff !important;
@@ -18,6 +19,7 @@
             box-shadow: none !important;
             border: none !important;
         }
+
         .event-card {
             transition: all 0.3s ease;
         }
@@ -63,6 +65,33 @@
 
     <div class="min-h-screen bg-[#0c1222]">
         <div class="lg:ml-64">
+
+            <header class="sticky top-0 z-40 bg-[#0c1222]/80 backdrop-blur-xl border-b border-white/10">
+                <div class="px-4 sm:px-6 lg:px-8 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <button id="toggleSidebar" class="lg:hidden p-2 hover:bg-white/5 rounded-lg text-white">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 6h16M4 12h16M4 18h16"></path>
+                                </svg>
+                            </button>
+                            <div>
+                                <h2 class="text-2xl font-bold text-white">Events Management</h2>
+                                <p class="text-sm text-gray-400">Manage and create your events</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="hidden sm:flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-full">
+                                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                <span class="text-green-300 text-sm font-medium">System Online</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
 
             <div class="p-4 sm:p-6 lg:p-8">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
@@ -197,7 +226,8 @@
                                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                                         </path>
                                     </svg>
-                                    <span class="text-sm text-gray-400">{{ date('F j, Y', strtotime($event->event_date)) }}
+                                    <span
+                                        class="text-sm text-gray-400">{{ date('F j, Y', strtotime($event->event_date)) }}
                                         •
                                         {{ date('g:i A', strtotime($event->event_time)) }}</span>
                                 </div>

@@ -60,9 +60,28 @@ class SalesController extends Controller
     }
     public function edit($slug)
     {
-        $event = Events::where('slug', $slug)->first();
-        $sales = Sales::with('ticket')->where('event_id', $event->id)->orderByDesc('id')->paginate(10);
-        return view('admin.component.sales.view-specific', compact('event', 'sales'));
+        if (Auth::user()->isAdmin()) {
+            // Admin Logic
+            $event = Events::where('slug', $slug)->first();
+
+            // Good practice: Check if event exists for admin too
+            if (!$event) {
+                return redirect()->back()->with('error', 'Event not found.');
+            }
+
+            $sales = Sales::with('ticket')->where('event_id', $event->id)->orderByDesc('id')->paginate(10);
+            return view('admin.component.sales.view-specific', compact('event', 'sales'));
+        } else {
+            // Merchant Logic
+            $event = Events::where('slug', $slug)->where('created_by', Auth::user()->id)->first();
+
+            if (!$event) {
+                return redirect()->route('merchant.sales')->with('error', 'Event not found or access denied.');
+            }
+
+            $sales = Sales::with('ticket')->where('event_id', $event->id)->orderByDesc('id')->paginate(10);
+            return view('merchant.component.sales.view-specific', compact('event', 'sales'));
+        }
     }
     public function store(SalesRequest $request)
     {
