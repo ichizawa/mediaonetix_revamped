@@ -414,9 +414,9 @@
             document.getElementById('eventLocation').value = event.event_venue || '';
             setCustomSelect('eventStatus', String(event.status));
             document.getElementById('eventForm').action = "{{ route('merchant.events.update') }}";
-            document.getElementById('currentImageText').style.display = 'block';
+            {{-- document.getElementById('currentImageText').style.display = 'block';
             document.getElementById('currentImageInfo').classList.remove('hidden');
-            document.getElementById('currentImageName').textContent = event.event_image ? 'Current image selected' : '';
+            document.getElementById('currentImageName').textContent = event.event_image ? 'Current image selected' : ''; --}}
 
             // Show edit modal
             setTimeout(() => {

@@ -29,6 +29,6 @@ class Sidebar extends Component
 
         $sidebars = Auth::user()->sidebars;
 
-        return view('components.sidebar');
+    return view('components.sidebar', compact('sidebars'));
     }
 }

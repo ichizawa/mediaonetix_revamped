@@ -14,16 +14,16 @@
 
 <body>
     <div>
-        @if(Route::is('admin.*') || Route::is('merchant.*'))
+        @if (Route::is('admin.*') || Route::is('merchant.*') || Route::is('staff.*'))
             <x-navbar />
             <x-sidebar />
         @endif
-       
+
         @yield('content')
         <livewire:scripts />
     </div>
 
-    @if(session('success'))
+    @if (session('success'))
         <script type="module">
             Toast.fire({
                 icon: 'success',
@@ -31,8 +31,8 @@
             });
         </script>
     @endif
-    
-    @if($errors->any())
+
+    @if ($errors->any())
         <script type="module">
             Toast.fire({
                 icon: 'error',
@@ -40,7 +40,7 @@
             });
         </script>
     @endif
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="{{ asset('js/login.js') }}"></script>

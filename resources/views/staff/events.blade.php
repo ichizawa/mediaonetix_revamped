@@ -1,25 +1,6 @@
 @extends('layouts')
 @section('content')
     <style>
-        /* SweetAlert2 dark theme custom button styles */
-        .swal2-confirm-dark {
-            background: linear-gradient(to right, #2563eb, #6366f1) !important;
-            color: #fff !important;
-            border-radius: 0.5rem !important;
-            font-weight: 600 !important;
-            box-shadow: none !important;
-            border: none !important;
-        }
-
-        .swal2-cancel-dark {
-            background: #23263a !important;
-            color: #fff !important;
-            border-radius: 0.5rem !important;
-            font-weight: 600 !important;
-            box-shadow: none !important;
-            border: none !important;
-        }
-
         .event-card {
             transition: all 0.3s ease;
         }
@@ -65,12 +46,11 @@
 
     <div class="min-h-screen bg-[#0c1222]">
         <div class="lg:ml-64">
-
             <header class="sticky top-0 z-40 bg-[#0c1222]/80 backdrop-blur-xl border-b border-white/10">
                 <div class="px-4 sm:px-6 lg:px-8 py-4">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-4">
-                            <button id="toggleSidebar" class="lg:hidden p-2 hover:bg-white/5 rounded-lg text-white">
+                            <button id="openSidebar" class="lg:hidden p-2 hover:bg-white/5 rounded-lg text-white">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 6h16M4 12h16M4 18h16"></path>
@@ -81,13 +61,15 @@
                                 <p class="text-sm text-gray-400">Manage and create your events</p>
                             </div>
                         </div>
-
                         <div class="flex items-center gap-4">
-                            <div
-                                class="hidden sm:flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-full">
-                                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                                <span class="text-green-300 text-sm font-medium">System Online</span>
-                            </div>
+                            <button onclick="openAddModal()"
+                                class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-semibold transition-all">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                <span class="hidden sm:inline">Add Event</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -148,8 +130,7 @@
                 </div>
 
                 <div class="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
-                    <button data-filter="all"
-                        class="tab-btn active px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">All
+                    <button data-filter="all" class="tab-btn active px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">All
                         Events</button>
                     <button data-filter="0"
                         class="tab-btn px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">Upcoming</button>
@@ -161,11 +142,11 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @forelse($events as $event)
-                        <div data-status="{{ $event->status }}" onclick="setActiveEvent('{{ $event->slug }}')"
+                        <div data-status="{{ $event->status }}"
                             class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm rounded-2xl overflow-hidden {{ $event->latestShowcase ? 'border border-green-400' : '' }}">
                             <div class="relative h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
                                 <div class="absolute inset-0 bg-cover bg-center opacity-40">
-                                    @if ($event->event_image)
+                                    @if($event->event_image)
                                         <img src="{{ asset('images/events/' . $event->event_image) }}" alt="Event Image"
                                             class="w-full h-full object-cover">
                                     @endif
@@ -174,44 +155,20 @@
                                 <div class="absolute top-4 right-4">
                                     @php
                                         $statusStyles = [
-                                            0 => [
-                                                'bg' => 'rgba(147,51,234,0.2)',
-                                                'border' => 'rgba(147,51,234,0.4)',
-                                                'color' => '#c084fc',
-                                            ],
-                                            1 => [
-                                                'bg' => 'rgba(34,197,94,0.2)',
-                                                'border' => 'rgba(34,197,94,0.4)',
-                                                'color' => '#4ade80',
-                                            ],
-                                            2 => [
-                                                'bg' => 'rgba(59,130,246,0.2)',
-                                                'border' => 'rgba(59,130,246,0.4)',
-                                                'color' => '#60a5fa',
-                                            ],
-                                            3 => [
-                                                'bg' => 'rgba(107,114,128,0.2)',
-                                                'border' => 'rgba(107,114,128,0.4)',
-                                                'color' => '#9ca3af',
-                                            ],
-                                            4 => [
-                                                'bg' => 'rgba(239,68,68,0.2)',
-                                                'border' => 'rgba(239,68,68,0.4)',
-                                                'color' => '#f87171',
-                                            ],
+                                            0 => ['bg'=>'rgba(147,51,234,0.2)','border'=>'rgba(147,51,234,0.4)','color'=>'#c084fc'],
+                                            1 => ['bg'=>'rgba(34,197,94,0.2)', 'border'=>'rgba(34,197,94,0.4)', 'color'=>'#4ade80'],
+                                            2 => ['bg'=>'rgba(59,130,246,0.2)', 'border'=>'rgba(59,130,246,0.4)', 'color'=>'#60a5fa'],
+                                            3 => ['bg'=>'rgba(107,114,128,0.2)','border'=>'rgba(107,114,128,0.4)','color'=>'#9ca3af'],
+                                            4 => ['bg'=>'rgba(239,68,68,0.2)', 'border'=>'rgba(239,68,68,0.4)', 'color'=>'#f87171'],
                                         ];
                                         $s = $statusStyles[$event->status] ?? $statusStyles[0];
                                     @endphp
-                                    <span
-                                        class="px-3 py-1 backdrop-blur-sm rounded-full text-xs font-semibold flex items-center gap-1"
+                                    <span class="px-3 py-1 backdrop-blur-sm rounded-full text-xs font-semibold flex items-center gap-1"
                                         style="background:{{ $s['bg'] }};border:1px solid {{ $s['border'] }};color:{{ $s['color'] }}">
-                                        @if ($event->status === 1)
+                                        @if($event->status === 1)
                                             <span class="relative flex h-2 w-2">
-                                                <span
-                                                    class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                                                    style="background-color:#4ade80"></span>
-                                                <span class="relative inline-flex rounded-full h-2 w-2"
-                                                    style="background-color:#4ade80"></span>
+                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color:#4ade80"></span>
+                                                <span class="relative inline-flex rounded-full h-2 w-2" style="background-color:#4ade80"></span>
                                             </span>
                                         @endif
                                         {{ $event->status_label['label'] }}
@@ -220,22 +177,18 @@
                             </div>
                             <div class="p-6">
                                 <div class="flex items-center gap-2 mb-3">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                                         </path>
                                     </svg>
-                                    <span
-                                        class="text-sm text-gray-400">{{ date('F j, Y', strtotime($event->event_date)) }}
-                                        •
+                                    <span class="text-sm text-gray-400">{{ date('F j, Y', strtotime($event->event_date)) }} •
                                         {{ date('g:i A', strtotime($event->event_time)) }}</span>
                                 </div>
                                 <h3 class="text-xl font-bold text-white mb-2">{{ $event->event_name }}</h3>
                                 <p class="text-gray-400 text-sm mb-4">{{ $event->description }}</p>
                                 <div class="flex items-center gap-2 mb-4">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
                                         </path>
@@ -248,8 +201,7 @@
                                     <div class="flex justify-between text-sm mb-2">
                                         <span class="text-gray-400">{{ $event->tickets_sold }} /
                                             {{ $event->tickets->sum('original_qty') }} sold</span>
-                                        <span
-                                            class="text-blue-400 font-semibold">{{ number_format($event->percentage, 0) }}%</span>
+                                        <span class="text-blue-400 font-semibold">{{ number_format($event->percentage, 0) }}%</span>
                                     </div>
                                     <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
                                         <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all"
@@ -273,30 +225,29 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        @if(is_null($event->approved_at))
+
                                         <button onclick='openEditModal(@json($event))'
-                                            class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all"
-                                            title="Approve Event">
-                                            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor"
+                                            class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
+                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M5 13l4 4L19 7" />
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a      2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
                                             </svg>
                                         </button>
-                                        @endif
 
-                                        <a href="{{ route('admin.events.tickets.tickets', $event->slug) }}"
+                                        <a href="{{ route('merchant.events.tickets.tickets', $event->slug) }}"
                                             class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 -1 17 18">
+                                            <svg class="w-6 h-6 text-white" fill="currentColor"
+                                                viewBox="0 -1 17 18">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                                    d="M4 4.85v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9z">
-                                                </path>
+                                                    d="M4 4.85v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9z"> </path>
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                                    d="M1.5 3A1.5 1.5 0 0 0 0 4.5V6a.5.5 0 0 0 .5.5 1.5 1.5 0 1 1 0 3 .5.5 0 0 0-.5.5v1.5A1.5 1.5 0 0 0 1.5 13h13a1.5 1.5 0 0 0 1.5-1.5V10a.5.5 0 0 0-.5-.5 1.5 1.5 0 0 1 0-3A.5.5 0 0 0 16 6V4.5A1.5 1.5 0 0 0 14.5 3zM1 4.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v1.05a2.5 2.5 0 0 0 0 4.9v1.05a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-1.05a2.5 2.5 0 0 0 0-4.9z">
+                                                   d="M1.5 3A1.5 1.5 0 0 0 0 4.5V6a.5.5 0 0 0 .5.5 1.5 1.5 0 1 1 0 3 .5.5 0 0 0-.5.5v1.5A1.5 1.5 0 0 0 1.5 13h13a1.5 1.5 0 0 0 1.5-1.5V10a.5.5 0 0 0-.5-.5 1.5 1.5 0 0 1 0-3A.5.5 0 0 0 16 6V4.5A1.5 1.5 0 0 0 14.5 3zM1 4.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v1.05a2.5 2.5 0 0 0 0 4.9v1.05a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-1.05a2.5 2.5 0 0 0 0-4.9z">
                                                 </path>
                                             </svg>
                                         </a>
-                                        <form action="{{ route('admin.events.delete', $event->id) }}" method="POST"
+                                        <form action="{{ route('merchant.events.delete', $event->id) }}" method="POST"
                                             onsubmit="return confirm('Are you sure you want to delete this event?')"
                                             class="inline">
                                             @csrf
@@ -324,17 +275,28 @@
         </div>
     </div>
 
-    @include('admin.component.event.modal')
-    @include ('admin.component.event.view')
+    @include('merchant.component.event.modal')
+    @include ('merchant.component.event.view')
 
     <script>
         let currentEventId = null;
         let isEditMode = false;
+        // Helper: set value + label for a custom dropdown
+        function setCustomSelect(id, value) {
+            const hidden = document.getElementById(id);
+            if (!hidden) return;
+            hidden.value = value;
+            const wrapper = hidden.nextElementSibling; // .custom-select-wrapper
+            if (!wrapper) return;
+            const label = wrapper.querySelector('.custom-select-label');
+            const option = wrapper.querySelector(`.custom-select-option[data-value="${value}"]`);
+            if (label && option) label.textContent = option.textContent;
+        }
+
         // Modal management functions
         function openAddModal() {
             isEditMode = false;
             currentEventId = null;
-            console.log("test");
 
             // Reset form
             document.getElementById('eventForm').reset();
@@ -344,23 +306,52 @@
             document.getElementById('formMethod').value = 'POST';
 
             // Hide image preview and current image info
-            document.getElementById('imagePreview').classList.add('hidden');
-            document.getElementById('currentImageInfo').classList.add('hidden');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewImage = document.getElementById('previewImage');
+            const imagePlaceholder = document.getElementById('eventImagePlaceholder');
+            const eventDropZone = document.getElementById('eventDropZone');
+            const currentImageInfo = document.getElementById('currentImageInfo');
+            const seatPlanPreview = document.getElementById('seatPlanPreview');
+            const seatPlanPlaceholder = document.getElementById('seatPlanPlaceholder');
+
+            if (imagePreview) imagePreview.classList.add('hidden');
+            if (previewImage) {
+                previewImage.classList.add('hidden');
+                previewImage.removeAttribute('src');
+            }
+            if (imagePlaceholder) imagePlaceholder.classList.remove('hidden');
+            if (eventDropZone) {
+                eventDropZone.classList.remove('border-blue-500', 'bg-blue-500/10');
+                eventDropZone.classList.add('border-[#a7a7a7]');
+            }
+            if (currentImageInfo) currentImageInfo.classList.add('hidden');
+            if (seatPlanPreview) {
+                seatPlanPreview.classList.add('hidden');
+                seatPlanPreview.removeAttribute('src');
+            }
+            if (seatPlanPlaceholder) seatPlanPlaceholder.classList.remove('hidden');
 
             // Set default values
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('eventDate').value = today;
             document.getElementById('eventTime').value = '19:00';
-            document.getElementById('eventStatus').value = 'upcoming';
-            // document.getElementById('eventTotalTickets').value = '100';
-            // document.getElementById('eventPrice').value = '0.00';
+            document.getElementById('eventStatus').value = '0';
+            const statusLabel = document.querySelector('[data-target="eventStatus"] .custom-select-label');
+            if (statusLabel) statusLabel.textContent = statusLabel.getAttribute('data-default-text') || 'Status';
+            document.getElementById('eventCategory').value = 'Music';
+            const categoryLabel = document.querySelector('[data-target="eventCategory"] .custom-select-label');
+            if (categoryLabel) categoryLabel.textContent = categoryLabel.getAttribute('data-default-text') || 'Category';
 
             // Show modal
-            document.getElementById('eventModal').classList.add('active');
+            const eventModal = document.getElementById('eventModal');
+            eventModal.classList.remove('hidden');
+            eventModal.classList.add('flex');
         }
 
         function closeModal() {
-            document.getElementById('eventModal').classList.remove('active');
+            const eventModal = document.getElementById('eventModal');
+            eventModal.classList.add('hidden');
+            eventModal.classList.remove('flex');
         }
 
         function openViewModal(event) {
@@ -368,14 +359,13 @@
             const totalTickets = event.tickets.reduce((sum, ticket) => {
                 return sum + ticket.original_qty;
             }, 0);
-            const lowestPrice = Math.min(...event.tickets.map(ticket => ticket.price));
+            const lowestPrice = event.tickets.length ? Math.min(...event.tickets.map(t => t.price ?? 0)) : 0;
 
             // console.log(event);
             // Populate view modal with event data
             document.getElementById('viewEventName').textContent = event.event_name;
             document.getElementById('viewEventCategory').textContent = event.category;
-            document.getElementById('viewEventDateTime').textContent =
-                `${formatDate(event.event_date)} • ${formatTime(event.event_time)}`;
+            document.getElementById('viewEventDateTime').textContent = `${formatDate(event.event_date)} • ${formatTime(event.event_time)}`;
             document.getElementById('viewEventLocation').textContent = event.event_venue;
             document.getElementById('viewEventPrice').textContent = '₱ ' + lowestPrice.toFixed(2);
             document.getElementById('viewEventDescription').textContent = event.description;
@@ -395,7 +385,7 @@
             // // Show the view modal
             document.getElementById('viewEventModal').classList.add('active');
 
-            document.getElementById('openEditModalFromView').addEventListener('click', function() {
+            document.getElementById('openEditModalFromView').addEventListener('click', function () {
                 // console.log(event);
                 closeViewModal();
                 setTimeout(() => {
@@ -409,86 +399,40 @@
         }
 
         function openEditModal(event) {
-            const eventIndex = document.getElementById('viewEventModal').dataset.eventId;
             closeViewModal();
 
             // Populate edit form
-            document.getElementById('modalTitle').textContent = 'Event Details';
-            var approveBtn = document.getElementById('approveBtn');
-            if (approveBtn) {
-                approveBtn.textContent = 'Approve Event';
-                // Hide the button if approved_at is not null/empty
-                if (event.approved_at && event.approved_at !== '' && event.approved_at !== null) {
-                    approveBtn.style.display = 'none';
-                } else {
-                    approveBtn.style.display = '';
-                }
-            }
+            document.getElementById('modalTitle').textContent = 'Edit Event';
+            document.getElementById('').textContent = 'Update Event';
             document.getElementById('eventId').value = event.id || '';
-            document.getElementById('approvedAt').value = event.approved_at || '';
-            document.getElementById('imagePreview').classList.add('hidden');
             document.getElementById('formMethod').value = 'PUT';
             document.getElementById('eventName').value = event.event_name || '';
-            document.getElementById('eventCategory').value = event.category || 'Music';
+            setCustomSelect('eventCategory', event.category || 'Music');
             document.getElementById('eventDescription').value = event.description || '';
             document.getElementById('eventDate').value = event.event_date || '';
             document.getElementById('eventTime').value = event.event_time || '';
             document.getElementById('eventLocation').value = event.event_venue || '';
-            // document.getElementById('eventTotalTickets').value = event.event_total_tickets || '';
-            document.getElementById('eventStatus').value = event.status;
-            document.getElementById('eventForm').action = "{{ route('admin.events.update') }}";
-            document.getElementById('eventForm').value = "PUT";
+            setCustomSelect('eventStatus', String(event.status));
+            document.getElementById('eventForm').action = "{{ route('merchant.events.update') }}";
             document.getElementById('currentImageText').style.display = 'block';
-
-            // Set approve form action for this event
-            var approveForm = document.getElementById('approveEventForm');
-            if (approveForm) {
-                approveForm.action = '/admin/events/approve/' + event.id;
-            }
+            document.getElementById('currentImageInfo').classList.remove('hidden');
+            document.getElementById('currentImageName').textContent = event.event_image ? 'Current image selected' : '';
 
             // Show edit modal
             setTimeout(() => {
-                document.getElementById('eventModal').classList.add('active');
+                const eventModal = document.getElementById('eventModal');
+                eventModal.classList.remove('hidden');
+                eventModal.classList.add('flex');
             }, 300);
         }
-
-
-
-        var approveForm = document.getElementById('approveEventForm');
-        if (approveForm) {
-            approveForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                Swal.fire({
-                    background: '#181c2a',
-                    color: '#fff',
-                    customClass: {
-                        confirmButton: 'swal2-confirm-dark',
-                        cancelButton: 'swal2-cancel-dark'
-                    },
-                    title: 'Approve this event?',
-                    text: "Are you sure you want to approve this event?",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, approve it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        document.getElementById('approvedAt').value = new Date().toISOString();
-                        approveForm.submit();
-                    }
-                });
-            });
-        }
-
 
         // Utility functions
         function formatDate(dateString) {
             const date = new Date(dateString);
             return date.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
+                year: 'numeric'
+                , month: 'long'
+                , day: 'numeric'
             });
         }
 
@@ -503,16 +447,16 @@
         function setActiveEvent(eventSlug) {
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            fetch("{{ route('admin.events.set-active') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": token
-                    },
-                    body: JSON.stringify({
-                        slug: eventSlug
-                    })
+            fetch("{{ route('merchant.events.set-active') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": token
+                },
+                body: JSON.stringify({
+                    slug: eventSlug
                 })
+            })
                 .then(response => response.json())
                 .then(data => {
                     // console.log("Active event set:", data);
@@ -522,20 +466,141 @@
                         title: data.message
                     });
 
-                    {{-- window.location.reload(); --}}
-                    // temporary reload but should implement websocket
+                    window.location.reload(); // temporary reload but should implement websocket
                 })
                 .catch(error => {
                     console.error("Error:", error);
                 });
         }
         // Event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tab filtering
+        document.addEventListener('DOMContentLoaded', function () {
+            const eventImageInput = document.getElementById('eventImage');
+            const previewImage = document.getElementById('previewImage');
+            const imagePlaceholder = document.getElementById('eventImagePlaceholder');
+            const eventDropZone = document.getElementById('eventDropZone');
+            const seatPlanInput = document.getElementById('seatPlanImage');
+            const seatPlanPreview = document.getElementById('seatPlanPreview');
+            const seatPlanPlaceholder = document.getElementById('seatPlanPlaceholder');
+
+            function showEventImagePreview(file) {
+                if (!file || !previewImage || !imagePlaceholder) return;
+
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    previewImage.src = evt.target.result;
+                    previewImage.classList.remove('hidden');
+                    imagePlaceholder.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+
+            if (eventImageInput && previewImage && imagePlaceholder) {
+                eventImageInput.addEventListener('change', function (e) {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+                    showEventImagePreview(file);
+                });
+            }
+
+            if (eventDropZone && eventImageInput) {
+                const highlightDropZone = () => {
+                    eventDropZone.classList.add('border-blue-500', 'bg-blue-500/10');
+                    eventDropZone.classList.remove('border-[#a7a7a7]');
+                };
+
+                const unhighlightDropZone = () => {
+                    eventDropZone.classList.remove('border-blue-500', 'bg-blue-500/10');
+                    eventDropZone.classList.add('border-[#a7a7a7]');
+                };
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    eventDropZone.addEventListener(eventName, function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        highlightDropZone();
+                    });
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    eventDropZone.addEventListener(eventName, function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        unhighlightDropZone();
+                    });
+                });
+
+                eventDropZone.addEventListener('drop', function (e) {
+                    const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+                    if (!file) return;
+
+                    const transfer = new DataTransfer();
+                    transfer.items.add(file);
+                    eventImageInput.files = transfer.files;
+                    showEventImagePreview(file);
+                });
+            }
+
+            if (seatPlanInput && seatPlanPreview && seatPlanPlaceholder) {
+                seatPlanInput.addEventListener('change', function (e) {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function (evt) {
+                        seatPlanPreview.src = evt.target.result;
+                        seatPlanPreview.classList.remove('hidden');
+                        seatPlanPlaceholder.classList.add('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // --- Custom select dropdowns ---
+            document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+                wrapper.style.position = 'relative';
+                const btn = wrapper.querySelector('.custom-select-btn');
+                const dropdown = wrapper.querySelector('.custom-select-dropdown');
+                const targetId = wrapper.dataset.target;
+
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    // Close all other open dropdowns first
+                    document.querySelectorAll('.custom-select-dropdown').forEach(d => {
+                        if (d !== dropdown) {
+                            d.classList.add('hidden');
+                            d.previousElementSibling.querySelector('svg').style.transform = '';
+                        }
+                    });
+                    dropdown.classList.toggle('hidden');
+                    btn.querySelector('svg').style.transform = dropdown.classList.contains('hidden') ? '' : 'rotate(180deg)';
+                });
+
+                wrapper.querySelectorAll('.custom-select-option').forEach(option => {
+                    option.addEventListener('click', function () {
+                        const value = this.dataset.value;
+                        const label = this.textContent;
+                        document.getElementById(targetId).value = value;
+                        wrapper.querySelector('.custom-select-label').textContent = label;
+                        dropdown.classList.add('hidden');
+                        btn.querySelector('svg').style.transform = '';
+                    });
+                });
+            });
+
+            // Close custom dropdowns when clicking outside
+            document.addEventListener('click', function () {
+                document.querySelectorAll('.custom-select-dropdown').forEach(d => {
+                    if (!d.classList.contains('hidden')) {
+                        d.classList.add('hidden');
+                        d.previousElementSibling.querySelector('svg').style.transform = '';
+                    }
+                });
+            });
+
+            // Tab functionality
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove(
-                        'active'));
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
 
                     const filter = this.dataset.filter;
@@ -550,7 +615,7 @@
             });
 
             // Close modals when clicking outside
-            document.addEventListener('click', function(event) {
+            document.addEventListener('click', function (event) {
                 const viewModal = document.getElementById('viewEventModal');
                 const eventModal = document.getElementById('eventModal');
 
@@ -559,11 +624,13 @@
                     closeViewModal();
                 }
 
-                if (eventModal && eventModal.classList.contains('active') &&
+                if (eventModal && !eventModal.classList.contains('hidden') &&
                     event.target === eventModal) {
                     closeModal();
                 }
             });
         });
+
     </script>
+
 @endsection

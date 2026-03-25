@@ -63,6 +63,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_active',
         'role_id',
         'password',
+        'binded_merchant_id'
     ];
 
     /**
@@ -119,6 +120,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $query->where('role_id', 2);
     }
+    public function scopeStaffs($query)
+    {
+        return $query->where('role_id', 3);
+    }
     public function getGenderAttribute($value)
     {
         return self::GENDER[$value];
@@ -152,6 +157,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isAdmin(): bool
     {
         return $this->role?->type === 'admin';
+    }
+    public function isNotAdmin(): bool
+    {
+        return !$this->isAdmin();
     }
 
     public function isMerchant(): bool

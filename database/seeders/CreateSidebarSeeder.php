@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\Sidebar;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
 
 class CreateSidebarSeeder extends Seeder
 {
@@ -12,7 +14,10 @@ class CreateSidebarSeeder extends Seeder
      * Run the database seeds.
      */
     public function run(): void
+    
     {
+
+     DB::table('sidebars')->truncate(); 
         $items = [
             'Events',
             'Sales',
@@ -22,6 +27,7 @@ class CreateSidebarSeeder extends Seeder
             'Staffs',
             'Profile',
             'Settings',
+            'Organizer'
         ];
 
         foreach ($items as $item) {

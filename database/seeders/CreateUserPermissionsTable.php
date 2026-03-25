@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\UserPermission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class CreateUserPermissionsTable extends Seeder
 {
@@ -13,6 +14,8 @@ class CreateUserPermissionsTable extends Seeder
      */
     public function run(): void
     {
+        DB::table('user_permissions')->truncate();
+
         $entries = [
             [
                 'role_id' => 1,
@@ -65,6 +68,14 @@ class CreateUserPermissionsTable extends Seeder
             [
                 'role_id' => 1,
                 'sb_id' => 7,
+            ],
+            [
+                'role_id' => 3,
+                'sb_id' => 2,
+            ],
+             [
+                'role_id' => 3,
+                'sb_id' => 9,
             ],
         ];
         foreach ($entries as $entry) {

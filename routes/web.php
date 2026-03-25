@@ -35,4 +35,5 @@ Route::post('/email/verification-notification', function (Request $request) {
 Route::middleware(['auth', 'verified'])->group(function () {
     require base_path('routes/admin/admin.php');
     require base_path('routes/merchants/merchants.php');
+    require base_path('routes/staff/staff.php');
 });

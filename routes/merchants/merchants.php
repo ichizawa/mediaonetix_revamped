@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\MerchantController;
 use App\Http\Controllers\admin\PromoCodesController;
 use App\Http\Controllers\admin\SalesController;
 use App\Http\Controllers\admin\SettingsController;
+use App\Http\Controllers\admin\StaffsController;
 use App\Http\Controllers\admin\TicketsController;
 use App\Http\Controllers\admin\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -51,6 +52,11 @@ Route::prefix('merchant')->name('merchant.')->middleware('role.check:2')->group(
         Route::get('/', [MerchantController::class, 'index'])->name('merchant');
         Route::post('store', [MerchantController::class, 'store'])->name('store');
         Route::get('files/{id}', [MerchantController::class, 'files'])->name('files');
+    });
+
+        Route::prefix('staffs')->name('staffs.')->group(function () {
+        Route::get('/', [StaffsController::class, 'index'])->name('staffs');
+        Route::post('store', [StaffsController::class, 'store'])->name('store');
     });
 
     Route::get('users', [UsersController::class, 'index'])->name('users');

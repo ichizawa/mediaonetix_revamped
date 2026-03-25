@@ -31,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'role.check' => RoleCheck::class,
+            'json.response' => ForceJsonResponse::class,
             // 'check.coming.soon' => CheckComingSoon::class
         ]);
     })

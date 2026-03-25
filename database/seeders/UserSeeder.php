@@ -55,5 +55,49 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('12345678'),
             ]
         );
+        User::firstOrCreate(
+            ['email' => 'staff@gmail.com'],
+            [
+                'name' => 'System Staff',
+                'email' => 'staff@gmail.com',
+                'username' => 'staff',
+                'first_name' => 'System',
+                'last_name' => 'Staff',
+                'phone_number' => 9123456789,
+                'city' => 'Davao City',
+                'country' => 'Philippines',
+                'zip_code' => 8000,
+                'address' => 'Staff Address',
+                'dob' => '1998-01-01',
+                'gender' => 1,
+                'is_active' => true,
+                'is_email_sent' => true,
+                'is_email_resent' => false,
+                'role_id' => Role::where('type', 'staff')->first()->id,
+                'password' => Hash::make('12345678'),
+            ]
+        );
+        User::firstOrCreate(
+            ['email' => 'customer@gmail.com'],
+            [
+                'name' => 'System Customer',
+                'email' => 'customer@gmail.com',
+                'username' => 'customer',
+                'first_name' => 'System',
+                'last_name' => 'Customer',
+                'phone_number' => 9123456789,
+                'city' => 'Davao City',
+                'country' => 'Philippines',
+                'zip_code' => 8000,
+                'address' => 'Customer Address',
+                'dob' => '1998-01-01',
+                'gender' => 1,
+                'is_active' => true,
+                'is_email_sent' => true,
+                'is_email_resent' => false,
+                'role_id' => Role::where('type', 'user')->first()->id,
+                'password' => Hash::make('12345678'),
+            ]
+        );
     }
 }

@@ -53,10 +53,9 @@ class SalesController extends Controller
             $index = array_search($dayMap[$row->day_number], $labels->toArray());
             $values[$index] = $row->total_revenue;
         }
-
         $total_sales = Sales::where('status', 1)->sum('total_amount');
-
-        return view('admin.sales', compact('events', 'sales', 'labels', 'values', 'total_sales'));
+        
+        return view(auth()->user()->routePrefix() . '.sales', compact('events', 'sales', 'labels', 'values', 'total_sales'));
     }
     public function edit($slug)
     {
