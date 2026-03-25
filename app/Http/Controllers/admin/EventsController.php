@@ -53,7 +53,8 @@ class EventsController extends Controller
                 'date' => 'required|date',
                 'time' => 'required|string',
                 'status' => 'required|string',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:15360',
+                'seat_plan' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:15360',
             ]);
 
             $imageName = '';
@@ -64,11 +65,19 @@ class EventsController extends Controller
                 $image->move(public_path('images/events'), $imageName);
             }
 
+            $seatPlanName = null;
+            if ($request->hasFile('seat_plan')) {
+                $seatPlan = $request->file('seat_plan');
+                $seatPlanName = 'sp_' . time() . '.' . $seatPlan->getClientOriginalExtension();
+                $seatPlan->move(public_path('images/events/seat_plan'), $seatPlanName);
+            }
+
             $event = new Events();
             $event->event_name = $request->name;
             $event->category = $request->category;
             $event->description = $request->description;
             $event->event_image = $imageName ?? null;
+            $event->seat_plan = $seatPlanName;
             $event->event_date = $request->date;
             $event->event_time = $request->time;
             $event->event_venue = $request->location;
@@ -105,7 +114,8 @@ class EventsController extends Controller
                 'date' => 'required|date',
                 'time' => 'required|string',
                 'status' => 'required|string',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:15360',
+                'seat_plan' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:15360',
             ]);
 
             $event = Events::find($request->id);
@@ -117,6 +127,12 @@ class EventsController extends Controller
                 $imageName = time() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('images/events'), $imageName);
                 $event->event_image = $imageName;
+            }
+            if ($request->hasFile('seat_plan')) {
+                $seatPlan = $request->file('seat_plan');
+                $seatPlanName = 'sp_' . time() . '.' . $seatPlan->getClientOriginalExtension();
+                $seatPlan->move(public_path('images/events/seat_plan'), $seatPlanName);
+                $event->seat_plan = $seatPlanName;
             }
             $event->event_date = $request->date;
             $event->event_time = $request->time;

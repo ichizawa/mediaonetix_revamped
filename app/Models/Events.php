@@ -37,6 +37,7 @@ class Events extends Model
         'category',
         'description',
         'event_image',
+        'seat_plan',
         'event_date',
         'event_time',
         'event_venue',
@@ -46,7 +47,7 @@ class Events extends Model
         'tickets_sold',
         'slug'
     ];
-    protected $appends = ['status_label', 'percentage', 'total_tickets_left', 'event_image_url'];
+    protected $appends = ['status_label', 'percentage', 'total_tickets_left', 'event_image_url', 'seat_plan_url'];
 
     public function getStatusLabelAttribute()
     {
@@ -117,5 +118,9 @@ class Events extends Model
     public function getEventImageUrlAttribute()
     {
         return asset('images/events/' . $this->event_image);
+    }
+    public function getSeatPlanUrlAttribute()
+    {
+        return $this->seat_plan ? asset('images/events/seat_plan/' . $this->seat_plan) : null;
     }
 }
