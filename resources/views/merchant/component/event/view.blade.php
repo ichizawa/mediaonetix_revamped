@@ -1,5 +1,6 @@
 <!-- View Event Modal -->
-<div id="viewEventModal" class="modal">
+<div id="viewEventModal" class="hidden fixed inset-0 items-center justify-center"
+    style="background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 50;">
     <div
         class="modal-content w-full max-w-3xl mx-4 bg-gradient-to-br from-[#1a2332] to-[#0c1222] border border-white/10 rounded-2xl overflow-hidden">
         <div class="relative h-64 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
@@ -11,9 +12,9 @@
                     </path>
                 </svg>
             </button>
-            <div class="absolute bottom-4 left-6">
-                <span id="viewEventStatus"
-                    class="px-3 py-1 bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-full text-xs font-semibold text-green-400">Active</span>
+
+            <!-- Status badge — bottom left -->
+            <div class="absolute bottom-4 left-6" id="viewEventStatusContainer">
             </div>
         </div>
 
@@ -33,6 +34,18 @@
                 <div class="text-right">
                     <p class="text-sm text-gray-400">Starting from</p>
                     <p id="viewEventPrice" class="text-3xl font-bold text-white">$45</p>
+                    <!-- Seat Plan button — below price, right-aligned -->
+                    <div id="viewSeatPlanBtn" class="hidden justify-end mt-2">
+                        <button onclick="openSeatPlanLightbox()"
+                            class="flex items-center gap-2 px-3 py-2 bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-white/30 rounded-full text-white text-xs font-semibold transition-all group ml-auto">
+                            <svg class="w-3.5 h-3.5 text-blue-400 group-hover:scale-110 transition-transform"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+                            </svg>
+                            Seat Plan
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -76,7 +89,9 @@
 
             <div class="mb-6">
                 <h4 class="text-lg font-semibold text-white mb-2">Description</h4>
-                <p id="viewEventDescription" class="text-gray-400 leading-relaxed">Event description goes here</p>
+                <div id="viewEventDescription" class="text-gray-400 leading-relaxed desc-preview"
+                    style="max-height: 280px; overflow-y: auto; overscroll-behavior: contain;">
+                </div>
             </div>
 
             <div class="mb-6">
@@ -95,9 +110,7 @@
             </div>
 
             <div class="flex gap-3 pt-4 border-t border-white/10">
-                <button 
-                id="openEditModalFromView"
-                {{-- onclick="openEditModalFromView()" --}}
+                <button id="openEditModalFromView"
                     class="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-semibold transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -114,3 +127,284 @@
         </div>
     </div>
 </div>
+
+<!-- Seat Plan Lightbox -->
+<div id="seatPlanLightbox" class="hidden fixed inset-0 items-center justify-center p-4"
+    style="z-index: 99999; background: rgba(0,0,0,0.88); backdrop-filter: blur(16px);">
+    <div class="relative w-full flex flex-col items-center" style="max-width: 28.8rem;">
+        <div class="flex items-center justify-between w-full mb-3 px-1">
+            <span class="text-white font-semibold text-sm tracking-wide">Seat Plan</span>
+            <button onclick="closeSeatPlanLightbox()"
+                class="p-1.5 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div class="rounded-2xl overflow-hidden border border-white/10 shadow-2xl w-full bg-black/40">
+            <img id="seatPlanLightboxImg" src="" alt="Seat Plan" class="w-full h-auto max-h-[42vh] object-contain">
+        </div>
+        <p class="text-gray-500 text-xs mt-3">Click outside or press Esc to close</p>
+    </div>
+</div>
+
+<style>
+    /* ── Modal open/close animations ─────────────────────────────────────── */
+    @keyframes modalIn {
+        from {
+            opacity: 0;
+            transform: scale(0.96);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes modalOut {
+        from {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        to {
+            opacity: 0;
+            transform: scale(0.96);
+        }
+    }
+
+    #viewEventModal.modal-opening {
+        animation: modalIn 0.22s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+    }
+
+    #viewEventModal.modal-closing {
+        animation: modalOut 0.18s ease forwards;
+    }
+
+    /* ── Modal content scrollbar ─────────────────────────────────────────── */
+    #viewEventModal .modal-content::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #viewEventModal .modal-content::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    #viewEventModal .modal-content::-webkit-scrollbar-thumb {
+        background-color: transparent;
+        border-radius: 9999px;
+        transition: background-color 0.3s ease;
+    }
+
+    #viewEventModal .modal-content:hover::-webkit-scrollbar-thumb,
+    #viewEventModal .modal-content.is-scrolling::-webkit-scrollbar-thumb {
+        background-color: rgba(107, 114, 128, 0.5);
+    }
+
+    /* ── Description scrollbar ───────────────────────────────────────────── */
+    #viewEventDescription::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #viewEventDescription::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    #viewEventDescription::-webkit-scrollbar-thumb {
+        background-color: transparent;
+        border-radius: 9999px;
+        transition: background-color 0.3s ease;
+    }
+
+    #viewEventDescription:hover::-webkit-scrollbar-thumb,
+    #viewEventDescription.is-scrolling::-webkit-scrollbar-thumb {
+        background-color: rgba(107, 114, 128, 0.5);
+    }
+
+    /* ── WYSIWYG rendering in view modal ─────────────────────────────────── */
+    #viewEventDescription h1 {
+        font-size: 1.4em;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0.6em 0 0.3em;
+        display: block;
+    }
+
+    #viewEventDescription h2 {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #e2e8f0;
+        margin: 0.5em 0 0.2em;
+        display: block;
+    }
+
+    #viewEventDescription strong,
+    #viewEventDescription b {
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+    #viewEventDescription em,
+    #viewEventDescription i {
+        font-style: italic;
+        color: #cbd5e1;
+    }
+
+    #viewEventDescription u {
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+
+    #viewEventDescription ul {
+        list-style: disc;
+        padding-left: 1.4em;
+        margin: 0.3em 0;
+        display: block;
+    }
+
+    #viewEventDescription ol {
+        list-style: decimal;
+        padding-left: 1.4em;
+        margin: 0.3em 0;
+        display: block;
+    }
+
+    #viewEventDescription li {
+        margin: 0.15em 0;
+        display: list-item;
+    }
+
+    #viewEventDescription blockquote {
+        border-left: 3px solid #3b82f6;
+        padding-left: 0.8em;
+        color: #94a3b8;
+        margin: 0.5em 0;
+        font-style: italic;
+        display: block;
+    }
+
+    #viewEventDescription hr {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 0.8em 0;
+        display: block;
+    }
+
+    #viewEventDescription p {
+        margin: 0.2em 0;
+    }
+
+    /* ── Seat Plan lightbox animations ───────────────────────────────────── */
+    @keyframes seatPlanIn {
+        from {
+            opacity: 0;
+            transform: scale(0.94);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes seatPlanOut {
+        from {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        to {
+            opacity: 0;
+            transform: scale(0.94);
+        }
+    }
+
+    #seatPlanLightbox.sp-opening {
+        animation: seatPlanIn 0.22s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+    }
+
+    #seatPlanLightbox.sp-closing {
+        animation: seatPlanOut 0.18s ease forwards;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ── Scrollbar "is-scrolling" class ────────────────────────────────
+        const scrollables = [
+            document.getElementById('viewEventDescription'),
+            document.querySelector('#viewEventModal .modal-content')
+        ];
+
+        scrollables.forEach(el => {
+            if (!el) return;
+            let timer = null;
+            el.addEventListener('scroll', () => {
+                el.classList.add('is-scrolling');
+                clearTimeout(timer);
+                timer = setTimeout(() => el.classList.remove('is-scrolling'), 1000);
+            });
+        });
+
+        // ── View modal — backdrop click ───────────────────────────────────
+        document.getElementById('viewEventModal')?.addEventListener('click', function (e) {
+            if (e.target === this) closeViewModal();
+        });
+
+        // ── Seat plan lightbox — backdrop click ───────────────────────────
+        document.getElementById('seatPlanLightbox')?.addEventListener('click', function (e) {
+            if (e.target === this) closeSeatPlanLightbox();
+        });
+
+        // ── Escape key ────────────────────────────────────────────────────
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                const lb = document.getElementById('seatPlanLightbox');
+                if (lb && !lb.classList.contains('hidden')) {
+                    closeSeatPlanLightbox();
+                    return;
+                }
+                const vm = document.getElementById('viewEventModal');
+                if (vm && !vm.classList.contains('hidden')) closeViewModal();
+            }
+        });
+    });
+
+    // ── View modal open / close ───────────────────────────────────────────
+    function openViewModal() {
+        const modal = document.getElementById('viewEventModal');
+        modal.classList.remove('hidden', 'modal-closing');
+        modal.classList.add('flex', 'modal-opening');
+        modal.addEventListener('animationend', () => modal.classList.remove('modal-opening'), { once: true });
+    }
+
+    function closeViewModal() {
+        const modal = document.getElementById('viewEventModal');
+        modal.classList.remove('modal-opening');
+        modal.classList.add('modal-closing');
+        modal.addEventListener('animationend', () => {
+            modal.classList.remove('flex', 'modal-closing');
+            modal.classList.add('hidden');
+        }, { once: true });
+    }
+
+    // ── Seat Plan lightbox open / close ───────────────────────────────────
+    function openSeatPlanLightbox() {
+        const lb = document.getElementById('seatPlanLightbox');
+        lb.classList.remove('hidden', 'sp-closing');
+        lb.classList.add('flex', 'sp-opening');
+        lb.addEventListener('animationend', () => lb.classList.remove('sp-opening'), { once: true });
+    }
+
+    function closeSeatPlanLightbox() {
+        const lb = document.getElementById('seatPlanLightbox');
+        lb.classList.remove('sp-opening');
+        lb.classList.add('sp-closing');
+        lb.addEventListener('animationend', () => {
+            lb.classList.remove('flex', 'sp-closing');
+            lb.classList.add('hidden');
+        }, { once: true });
+    }
+</script>
