@@ -33,6 +33,13 @@
                 </div>
 
                 <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Inclusions</label>
+                    <textarea id="ticketInclusions" name="inclusions" rows="2"
+                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all resize-none"
+                        placeholder="e.g., Free 1 Drink, Shirt, etc. (Optional)"></textarea>
+                </div>
+
+                <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Status <span class="text-red-400">*</span></label>
                     <select id="ticketStatus" name="status" required
                         class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-all appearance-none cursor-pointer">
@@ -45,95 +52,95 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Ticket Color</label>
-                    <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 mb-3">
-                        <button type="button" onclick="selectColor('#EF4444')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #EF4444" data-color="#EF4444">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <button type="button" onclick="selectColor('#EF4444')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #EF4444" data-color="#EF4444">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#F97316')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #F97316" data-color="#F97316">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#F97316')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #F97316" data-color="#F97316">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#F59E0B')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #F59E0B" data-color="#F59E0B">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#F59E0B')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #F59E0B" data-color="#F59E0B">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#EAB308')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #EAB308" data-color="#EAB308">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#EAB308')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #EAB308" data-color="#EAB308">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#84CC16')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #84CC16" data-color="#84CC16">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#84CC16')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #84CC16" data-color="#84CC16">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#10B981')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #10B981" data-color="#10B981">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#10B981')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #10B981" data-color="#10B981">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#14B8A6')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #14B8A6" data-color="#14B8A6">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#14B8A6')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #14B8A6" data-color="#14B8A6">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#06B6D4')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #06B6D4" data-color="#06B6D4">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#06B6D4')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #06B6D4" data-color="#06B6D4">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#3B82F6')" class="color-option w-full aspect-square rounded-lg border-2 border-white/40 transition-all" style="background: #3B82F6" data-color="#3B82F6">
-                            <svg class="w-6 h-6 text-white mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#3B82F6')" class="color-option w-8 h-8 rounded-lg border-2 border-white/40 transition-all" style="background: #3B82F6" data-color="#3B82F6">
+                            <svg class="w-4 h-4 text-white mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#6366F1')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #6366F1" data-color="#6366F1">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#6366F1')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #6366F1" data-color="#6366F1">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#8B5CF6')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #8B5CF6" data-color="#8B5CF6">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#8B5CF6')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #8B5CF6" data-color="#8B5CF6">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#A855F7')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #A855F7" data-color="#A855F7">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#A855F7')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #A855F7" data-color="#A855F7">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#D946EF')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #D946EF" data-color="#D946EF">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#D946EF')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #D946EF" data-color="#D946EF">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#EC4899')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #EC4899" data-color="#EC4899">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#EC4899')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #EC4899" data-color="#EC4899">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#F43F5E')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #F43F5E" data-color="#F43F5E">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#F43F5E')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #F43F5E" data-color="#F43F5E">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#FFD700')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #FFD700" data-color="#FFD700">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#FFD700')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #FFD700" data-color="#FFD700">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
-                        <button type="button" onclick="selectColor('#94A3B8')" class="color-option w-full aspect-square rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #94A3B8" data-color="#94A3B8">
-                            <svg class="w-6 h-6 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="selectColor('#94A3B8')" class="color-option w-8 h-8 rounded-lg border-2 border-transparent hover:border-white/40 transition-all" style="background: #94A3B8" data-color="#94A3B8">
+                            <svg class="w-4 h-4 text-white mx-auto hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </button>
                         <!-- Custom Color Button -->
-                        <button type="button" onclick="openCustomColorPicker()" class="color-option w-full aspect-square rounded-lg border-2 border-dashed border-white/20 hover:border-white/40 transition-all flex items-center justify-center bg-white/5">
-                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" onclick="openCustomColorPicker()" class="color-option w-8 h-8 rounded-lg border-2 border-dashed border-white/20 hover:border-white/40 transition-all flex items-center justify-center bg-white/5">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                             </svg>
                         </button>

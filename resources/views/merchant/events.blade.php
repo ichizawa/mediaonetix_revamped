@@ -128,7 +128,7 @@
                 <div class="px-4 sm:px-6 lg:px-8 py-4">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-4">
-                            <button id="openSidebar" class="lg:hidden p-2 hover:bg-white/5 rounded-lg text-white">
+                            <button id="toggleSidebar" class="lg:hidden p-2 hover:bg-white/5 rounded-lg text-white">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 6h16M4 12h16M4 18h16"></path>
@@ -209,7 +209,8 @@
 
                 <div class="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
                     <button data-filter="all"
-                        class="tab-btn active px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">All Events</button>
+                        class="tab-btn active px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">All
+                        Events</button>
                     <button data-filter="1"
                         class="tab-btn px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap">Active</button>
                     <button data-filter="0"
@@ -337,8 +338,7 @@
                                             </svg>
                                         </a>
                                         <form action="{{ route('merchant.events.delete', $event->id) }}" method="POST"
-                                            onsubmit="confirmDelete(event, this)"
-                                            class="inline">
+                                            onsubmit="confirmDelete(event, this)" class="inline">
                                             @csrf
                                             @method('DELETE')
 
@@ -483,19 +483,19 @@
             // Status Badge Formatting (styled like reference dropdown options + translucent pill background)
             const statusContainer = document.getElementById('viewEventStatusContainer');
             let statusHtml = '';
-            
+
             switch (event.status) {
                 case 0: // Upcoming
                     statusHtml = `<span class="px-3 py-1 font-semibold text-sm rounded-full bg-[#c084fc]/15 border border-[#c084fc]/30" style="color:#c084fc">Upcoming</span>`;
                     break;
                 case 1: // Active
                     statusHtml = `<div class="px-3 py-1 font-semibold text-sm rounded-full bg-[#4ade80]/15 border border-[#4ade80]/30 flex items-center gap-2" style="color:#4ade80">
-                                    <span class="relative flex h-2 w-2 shrink-0">
-                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color:#4ade80"></span>
-                                        <span class="relative inline-flex rounded-full h-2 w-2" style="background-color:#4ade80"></span>
-                                    </span>
-                                    <span>Active</span>
-                                  </div>`;
+                                        <span class="relative flex h-2 w-2 shrink-0">
+                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color:#4ade80"></span>
+                                            <span class="relative inline-flex rounded-full h-2 w-2" style="background-color:#4ade80"></span>
+                                        </span>
+                                        <span>Active</span>
+                                      </div>`;
                     break;
                 case 2: // Ongoing
                     statusHtml = `<span class="px-3 py-1 font-semibold text-sm rounded-full bg-[#60a5fa]/15 border border-[#60a5fa]/30" style="color:#60a5fa">Ongoing</span>`;
@@ -539,7 +539,7 @@
             });
         }
 
-    // Removed duplicate closeViewModal
+        // Removed duplicate closeViewModal
 
         function openEditModal(event) {
             closeViewModal();
@@ -619,7 +619,7 @@
                 }
             });
         }
-        
+
         // Utility functions
         function renderMarkdown(raw) {
 

@@ -186,7 +186,7 @@
                         </div>
                         <textarea id="eventDescription" name="description" rows="4"
                             class="h-[60px] sm:h-[76px] w-full resize-none bg-transparent border-0 text-white placeholder-gray-500 focus:outline-none focus:ring-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-500/50 [&::-webkit-scrollbar-thumb]:rounded-full text-sm"
-                            placeholder="Write event details..."></textarea>
+                            placeholder="Write event details..." required></textarea>
                     </div>
 
                     <div class="flex items-center justify-center w-full mb-8">
@@ -275,13 +275,16 @@
             <button type="button" onmousedown="event.preventDefault(); applyFormat('undo')" title="Undo (Ctrl+Z)"
                 class="fmt-btn p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-all">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6" />
                 </svg>
             </button>
-            <button type="button" onmousedown="event.preventDefault(); applyFormat('redo')" title="Redo (Ctrl+Y/Ctrl+Shift+Z)"
+            <button type="button" onmousedown="event.preventDefault(); applyFormat('redo')"
+                title="Redo (Ctrl+Y/Ctrl+Shift+Z)"
                 class="fmt-btn p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-all">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10h-10a8 8 0 0 0 -8 8v2M21 10l-6 6m6-6l-6-6" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 10h-10a8 8 0 0 0 -8 8v2M21 10l-6 6m6-6l-6-6" />
                 </svg>
             </button>
             <div class="w-px h-5 bg-white/10 mx-1"></div>
@@ -644,6 +647,7 @@
                 if (overlay && !overlay.classList.contains('hidden')) closeDescriptionExpand();
             }
         });
+
     });
     // ── Seat Plan Image Preview ──────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function () {
@@ -658,7 +662,7 @@
         eventImageInput?.addEventListener('change', function () {
             const file = this.files[0];
             if (!file) return;
-            
+
             if (file.size > 15 * 1024 * 1024) {
                 Swal.fire({
                     icon: 'error',

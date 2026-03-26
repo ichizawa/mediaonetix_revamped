@@ -22,8 +22,10 @@ class TicketsRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'ticket_id' => 'nullable|exists:tickets,id',
             'name' => 'required|string|max:255',
             'type' => 'required|string|max:155',
+            'inclusions' => 'nullable|string',
             'event_id' => 'required|exists:events,id',
             'status' => 'nullable|integer|in:0,1,2',
             'price' => 'required|numeric',
