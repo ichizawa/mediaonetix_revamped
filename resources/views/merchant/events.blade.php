@@ -3,6 +3,7 @@
     <style>
         .event-card {
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .event-card:hover {
@@ -226,7 +227,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @forelse($events as $event)
                         <div data-status="{{ $event->status }}"
-                            class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm rounded-2xl overflow-hidden {{ $event->latestShowcase ? 'border border-green-400' : '' }}">
+                            class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm rounded-2xl overflow-hidden {{ $event->latestShowcase ? 'border border-green-400' : '' }}"
+                            onclick='openViewModal(@json($event))'>
                             <div class="relative h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
                                 <div
                                     class="absolute inset-0 bg-cover bg-center opacity-40 event-card-media"
@@ -313,19 +315,7 @@
                                         {{-- <p class="text-sm text-gray-400">Starting from</p>
                                         <p class="text-xl font-bold text-white">$45</p> --}}
                                     </div>
-                                    <div class="flex gap-2">
-                                        <button onclick='openViewModal(@json($event))'
-                                            class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                </path>
-                                            </svg>
-                                        </button>
-
+                                    <div class="flex gap-2" onclick="event.stopPropagation()">
                                         <button onclick='openEditModal(@json($event))'
                                             class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
                                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
@@ -380,6 +370,8 @@
     <script>
         let currentEventId = null;
         let isEditMode = false;
+        const deleteRouteTemplate = "{{ route('merchant.events.delete', '__EVENT_ID__') }}";
+        const ticketsRouteTemplate = "{{ route('merchant.events.tickets.tickets', '__EVENT_SLUG__') }}";
         // Helper: set value + label for a custom dropdown
         function setCustomSelect(id, value) {
             const hidden = document.getElementById(id);
@@ -529,6 +521,17 @@
 
             // Store event ID for edit functionality (in real app, use real ID)
             document.getElementById('viewEventModal').dataset.eventId = event.id;
+
+            // Wire delete form action in view modal
+            const viewDeleteForm = document.getElementById('viewDeleteEventForm');
+            if (viewDeleteForm && event.id) {
+                viewDeleteForm.action = deleteRouteTemplate.replace('__EVENT_ID__', String(event.id));
+            }
+
+            const manageTicketsBtn = document.getElementById('viewManageTicketsBtn');
+            if (manageTicketsBtn && event.slug) {
+                manageTicketsBtn.href = ticketsRouteTemplate.replace('__EVENT_SLUG__', String(event.slug));
+            }
 
             // // Show the view modal
             const viewModal = document.getElementById('viewEventModal');
