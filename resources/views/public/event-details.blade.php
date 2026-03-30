@@ -401,7 +401,7 @@
     box-shadow: 0 0 0 1px rgba(var(--tkt-rgb, 56,189,248),.25), 0 8px 40px rgba(0,0,0,.4), inset 0 1px 0 rgba(var(--tkt-rgb, 56,189,248),.1);
   }
   .tkt.selected::before { opacity: 1; }
-  .tkt.sold-out { opacity: .45; cursor: not-allowed; }
+  .tkt.sold-out { opacity: 1; cursor: not-allowed; }
 
   .tkt__top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
   .tkt__name { font-weight: 700; font-size: 1.05rem; color: #fff; letter-spacing: .01em; }
@@ -409,7 +409,18 @@
     font-family: 'Bebas Neue', sans-serif;
     font-size: 2rem; line-height: 1; color: var(--accent); letter-spacing: .04em;
   }
-  .tkt.sold-out .tkt__price { color: var(--muted); }
+  .tkt.sold-out .tkt__name {
+    color: var(--muted) !important;
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+    text-decoration-color: rgba(255,255,255,.28);
+  }
+  .tkt.sold-out .tkt__price {
+    color: var(--muted) !important;
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+    text-decoration-color: rgba(255,255,255,.28);
+  }
   .tkt__currency { font-size: 1.1rem; vertical-align: top; margin-top: .25rem; display: inline-block; }
   .tkt__sub { font-size: .75rem; color: var(--muted); margin-bottom: 10px; }
 
@@ -427,6 +438,11 @@
   .avail--orange { color: var(--orange); }
   .avail--green  { color: var(--green); }
   .avail--gray   { color: var(--muted); }
+  .tkt.sold-out .tkt__avail { color: var(--red) !important; }
+  .tkt.sold-out .avail-dot--gray {
+    background: var(--red);
+    box-shadow: 0 0 7px var(--red);
+  }
 
   .tkt__divider { border: none; border-top: 1px dashed rgba(255,255,255,.07); margin: 14px 0; }
   .tkt__inclusions-label {
@@ -908,7 +924,7 @@
                   @endif
 
                   {{-- Inclusions --}}
-                  @if ($inclusions)
+                  @if ($inclusions && !$sold)
                     <hr class="tkt__divider">
                     <div class="tkt__inclusions-label" style="color: {{ $color['hex'] }};">Inclusions</div>
                     <div class="tkt__perks">
