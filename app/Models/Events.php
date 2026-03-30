@@ -45,7 +45,13 @@ class Events extends Model
         'status',
         'created_by',
         'tickets_sold',
-        'slug'
+        'slug',
+        'crop_x',
+        'crop_y',
+        'crop_width',
+        'crop_height',
+        'crop_natural_width',
+        'crop_natural_height',
     ];
     protected $appends = ['status_label', 'percentage', 'total_tickets_left', 'event_image_url', 'seat_plan_url'];
 

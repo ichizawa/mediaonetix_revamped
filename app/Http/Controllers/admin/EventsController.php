@@ -45,16 +45,22 @@ class EventsController extends Controller
             DB::beginTransaction();
 
             $request->validate([
-                'event_id' => 'nullable|integer|exists:events,id',
-                'name' => 'required|string',
-                'location' => 'required|string',
-                'category' => 'required|string',
-                'description' => 'required|string',
-                'date' => 'required|date',
-                'time' => 'required|string',
-                'status' => 'required|string',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:15360',
-                'seat_plan' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:15360',
+                'event_id'           => 'nullable|integer|exists:events,id',
+                'name'               => 'required|string',
+                'location'           => 'required|string',
+                'category'           => 'required|string',
+                'description'        => 'required|string',
+                'date'               => 'required|date',
+                'time'               => 'required|string',
+                'status'             => 'required|string',
+                'image'              => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:15360',
+                'seat_plan'          => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:15360',
+                'crop_x'             => 'nullable|numeric',
+                'crop_y'             => 'nullable|numeric',
+                'crop_width'         => 'nullable|numeric',
+                'crop_height'        => 'nullable|numeric',
+                'crop_natural_width'  => 'nullable|numeric',
+                'crop_natural_height' => 'nullable|numeric',
             ]);
 
             $imageName = '';
@@ -86,6 +92,12 @@ class EventsController extends Controller
             $event->created_by = Auth::user()->id;
             $event->approved_at = null;
             $event->rejected_at = null;
+            $event->crop_x = $request->crop_x;
+            $event->crop_y = $request->crop_y;
+            $event->crop_width = $request->crop_width;
+            $event->crop_height = $request->crop_height;
+            $event->crop_natural_width = $request->crop_natural_width;
+            $event->crop_natural_height = $request->crop_natural_height;
             // $event->slug = Str::slug($request->name);
             $event->save();
 
@@ -106,16 +118,22 @@ class EventsController extends Controller
             DB::beginTransaction();
 
             $request->validate([
-                'id' => 'required|integer|exists:events,id',
-                'name' => 'required|string',
-                'location' => 'required|string',
-                'category' => 'required|string',
-                'description' => 'required|string',
-                'date' => 'required|date',
-                'time' => 'required|string',
-                'status' => 'required|string',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:15360',
-                'seat_plan' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:15360',
+                'id'                 => 'required|integer|exists:events,id',
+                'name'               => 'required|string',
+                'location'           => 'required|string',
+                'category'           => 'required|string',
+                'description'        => 'required|string',
+                'date'               => 'required|date',
+                'time'               => 'required|string',
+                'status'             => 'required|string',
+                'image'              => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:15360',
+                'seat_plan'          => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:15360',
+                'crop_x'             => 'nullable|numeric',
+                'crop_y'             => 'nullable|numeric',
+                'crop_width'         => 'nullable|numeric',
+                'crop_height'        => 'nullable|numeric',
+                'crop_natural_width'  => 'nullable|numeric',
+                'crop_natural_height' => 'nullable|numeric',
             ]);
 
             $event = Events::find($request->id);
@@ -139,11 +157,17 @@ class EventsController extends Controller
             $event->event_venue = $request->location;
             // $event->event_total_tickets = 0;
             $event->status = $request->status;
+            $event->crop_x = $request->crop_x;
+            $event->crop_y = $request->crop_y;
+            $event->crop_width = $request->crop_width;
+            $event->crop_height = $request->crop_height;
+            $event->crop_natural_width = $request->crop_natural_width;
+            $event->crop_natural_height = $request->crop_natural_height;
 
             if ($request->filled('approved_at')) {
                 $event->approved_at = now();
             }
-            
+
             $event->save();
 
             DB::commit();

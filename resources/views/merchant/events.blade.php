@@ -228,7 +228,17 @@
                         <div data-status="{{ $event->status }}"
                             class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm rounded-2xl overflow-hidden {{ $event->latestShowcase ? 'border border-green-400' : '' }}">
                             <div class="relative h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
-                                <div class="absolute inset-0 bg-cover bg-center opacity-40">
+                                <div
+                                    class="absolute inset-0 bg-cover bg-center opacity-40 event-card-media"
+                                    @if($event->event_image)
+                                        data-image-url="{{ asset('images/events/' . $event->event_image) }}"
+                                    @endif
+                                    data-crop-x="{{ $event->crop_x ?? '' }}"
+                                    data-crop-y="{{ $event->crop_y ?? '' }}"
+                                    data-crop-width="{{ $event->crop_width ?? '' }}"
+                                    data-crop-height="{{ $event->crop_height ?? '' }}"
+                                    data-crop-natural-width="{{ $event->crop_natural_width ?? '' }}"
+                                    data-crop-natural-height="{{ $event->crop_natural_height ?? '' }}">
                                     @if($event->event_image)
                                         <img src="{{ asset('images/events/' . $event->event_image) }}" alt="Event Image"
                                             class="w-full h-full object-cover">
@@ -394,30 +404,10 @@
             document.getElementById('eventId').value = '';
             document.getElementById('formMethod').value = 'POST';
 
-            // Hide image preview
-            const eventPreviewContainer = document.getElementById('eventPreviewContainer');
-            const previewImage = document.getElementById('previewImage');
-            const imagePlaceholder = document.getElementById('eventImagePlaceholder');
-            const eventDropZone = document.getElementById('eventDropZone');
-            const seatPlanPreview = document.getElementById('seatPlanPreview');
-            const seatPlanPlaceholder = document.getElementById('seatPlanPlaceholder');
+            // Fully reset image state (clears crop fields, background, src, etc.)
+            clearImageState();
 
-            if (eventPreviewContainer) eventPreviewContainer.classList.add('hidden');
-            if (previewImage) {
-                // previewImage.classList.add('hidden'); // Not needed if parent is hidden
-                previewImage.src = '';
-            }
-            if (imagePlaceholder) imagePlaceholder.classList.remove('hidden');
-            if (eventDropZone) {
-                eventDropZone.classList.remove('border-blue-500', 'bg-blue-500/10');
-                eventDropZone.classList.add('border-[#a7a7a7]');
-            }
 
-            if (seatPlanPreview) {
-                seatPlanPreview.classList.add('hidden');
-                seatPlanPreview.removeAttribute('src');
-            }
-            if (seatPlanPlaceholder) seatPlanPlaceholder.classList.remove('hidden');
 
             // Set default values
             const today = new Date().toISOString().split('T')[0];
@@ -514,9 +504,27 @@
             // Set background image
             const imageEl = document.getElementById('viewEventImage');
             if (event.event_image) {
-                imageEl.style.backgroundImage = `url('{{ asset('images/events') }}/${event.event_image}')`;
+                const imageUrl = `{{ asset('images/events') }}/${event.event_image}`;
+                imageEl.style.backgroundImage = `url('${imageUrl}')`;
+                imageEl.style.backgroundSize = '';
+                imageEl.style.backgroundPosition = '';
+                imageEl.style.backgroundRepeat = '';
+
+                applyFocalImageToBox(
+                    imageEl,
+                    imageUrl,
+                    Number(event.crop_x),
+                    Number(event.crop_y),
+                    Number(event.crop_width),
+                    Number(event.crop_height),
+                    Number(event.crop_natural_width),
+                    Number(event.crop_natural_height)
+                );
             } else {
                 imageEl.style.backgroundImage = 'none';
+                imageEl.style.backgroundSize = '';
+                imageEl.style.backgroundPosition = '';
+                imageEl.style.backgroundRepeat = '';
             }
 
             // Store event ID for edit functionality (in real app, use real ID)
@@ -558,20 +566,17 @@
             setCustomSelect('eventStatus', String(event.status));
             document.getElementById('eventForm').action = "{{ route('merchant.events.update') }}";
 
-            // Event Image Preview
-            const eventPreviewContainer = document.getElementById('eventPreviewContainer');
-            const previewImage = document.getElementById('previewImage');
-            const imagePlaceholder = document.getElementById('eventImagePlaceholder');
+            // Event Image Preview — use editEventSetPreview so crop focal point is applied
+            const imageUrl = event.event_image
+                ? "{{ asset('images/events') }}/" + event.event_image
+                : null;
+            editEventSetPreview(
+                imageUrl,
+                event.crop_x, event.crop_y,
+                event.crop_width, event.crop_height,
+                event.crop_natural_width, event.crop_natural_height
+            );
 
-            if (event.event_image) {
-                previewImage.src = "{{ asset('images/events') }}/" + event.event_image;
-                if (eventPreviewContainer) eventPreviewContainer.classList.remove('hidden');
-                previewImage.classList.remove('hidden');
-                if (imagePlaceholder) imagePlaceholder.classList.add('hidden');
-            } else {
-                if (eventPreviewContainer) eventPreviewContainer.classList.add('hidden');
-                if (imagePlaceholder) imagePlaceholder.classList.remove('hidden');
-            }
 
             // Seat Plan Preview
             const seatPlanPreviewContainer = document.getElementById('seatPlanPreviewContainer');
@@ -690,6 +695,48 @@
                     console.error("Error:", error);
                 });
         }
+
+        function hasValidCropData(cropX, cropY, cropW, cropH, natW, natH) {
+            return Number.isFinite(cropX) && Number.isFinite(cropY) && Number.isFinite(cropW) &&
+                Number.isFinite(cropH) && Number.isFinite(natW) && Number.isFinite(natH) &&
+                cropW > 0 && cropH > 0 && natW > 0 && natH > 0;
+        }
+
+        function buildFocalStyles(cropX, cropY, cropW, cropH, natW, natH, containerW, containerH) {
+            const scaleX = containerW / cropW;
+            const scaleY = containerH / cropH;
+            const scale = Math.max(scaleX, scaleY);
+
+            return {
+                sizeX: natW * scale,
+                sizeY: natH * scale,
+                posX: -(cropX * scale),
+                posY: -(cropY * scale),
+            };
+        }
+
+        function applyFocalImageToBox(boxEl, imageUrl, cropX, cropY, cropW, cropH, natW, natH) {
+            if (!boxEl || !imageUrl || !hasValidCropData(cropX, cropY, cropW, cropH, natW, natH)) return;
+
+            const containerW = boxEl.offsetWidth;
+            const containerH = boxEl.offsetHeight;
+            if (!containerW || !containerH) {
+                requestAnimationFrame(() => {
+                    applyFocalImageToBox(boxEl, imageUrl, cropX, cropY, cropW, cropH, natW, natH);
+                });
+                return;
+            }
+
+            const focal = buildFocalStyles(cropX, cropY, cropW, cropH, natW, natH, containerW, containerH);
+            boxEl.style.backgroundImage = `url('${imageUrl}')`;
+            boxEl.style.backgroundSize = `${focal.sizeX}px ${focal.sizeY}px`;
+            boxEl.style.backgroundPosition = `${focal.posX}px ${focal.posY}px`;
+            boxEl.style.backgroundRepeat = 'no-repeat';
+
+            const fallbackImg = boxEl.querySelector('img');
+            if (fallbackImg) fallbackImg.style.display = 'none';
+        }
+
         // Event listeners
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.event-card-desc').forEach(el => {
@@ -698,6 +745,19 @@
                 tempDiv.innerHTML = isHtml(raw) ? raw : renderMarkdown(raw);
                 el.textContent = tempDiv.textContent || tempDiv.innerText || '';
             });
+
+            document.querySelectorAll('.event-card-media').forEach(mediaEl => {
+                const imageUrl = mediaEl.dataset.imageUrl || '';
+                const cropX = Number(mediaEl.dataset.cropX);
+                const cropY = Number(mediaEl.dataset.cropY);
+                const cropW = Number(mediaEl.dataset.cropWidth);
+                const cropH = Number(mediaEl.dataset.cropHeight);
+                const natW = Number(mediaEl.dataset.cropNaturalWidth);
+                const natH = Number(mediaEl.dataset.cropNaturalHeight);
+
+                applyFocalImageToBox(mediaEl, imageUrl, cropX, cropY, cropW, cropH, natW, natH);
+            });
+
             const eventImageInput = document.getElementById('eventImage');
             const previewImage = document.getElementById('previewImage');
             const imagePlaceholder = document.getElementById('eventImagePlaceholder');
