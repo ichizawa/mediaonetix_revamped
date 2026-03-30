@@ -1,12 +1,16 @@
 <?php
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PublicController;
+use App\Models\Sales;
+use App\Models\Tickets;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 Route::get('/', [PublicController::class, 'index'])->name('public');
 Route::get('show-case/events', [PublicController::class, 'events'])->name('public.events');
 Route::get('coming-soon', [PublicController::class, 'coming_soon'])->name('public.coming.soon');
+Route::get('event/{id}', [PublicController::class, 'event_details'])->name('public.event.details');
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'post'])->name('login.post');
@@ -37,3 +41,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
     require base_path('routes/merchants/merchants.php');
     require base_path('routes/staff/staff.php');
 });
+
+Route::get('/ticket-view', function () {
+            $tickets = Tickets::find(7);
+
+            $my_ticket = Sales::with(['ticket', 'customer_tickets'])
+                ->where('customer_email', auth()->user()->email)
+                ->first(); // 👈 single record, not collection
+
+            if ($my_ticket && $my_ticket->customer_tickets) {
+                $qrcode = QrCode::size(250)->generate($my_ticket->customer_tickets->reference_num);
+
+                // attach QR code dynamically (not saved in DB, just passed to view)
+                $my_ticket->customer_tickets->qrcode = $qrcode;
+            }
+
+            return view('mail.ticket', [
+                'tick' => $tickets,
+                'sales' => $my_ticket
+            ]);
+        })->name('ticket.view');
+

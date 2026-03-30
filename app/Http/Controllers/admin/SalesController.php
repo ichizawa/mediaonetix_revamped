@@ -2,17 +2,23 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Events\MerchantSales;
 use App\Helper\UniqueRefNum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SalesRequest;
+use App\Jobs\SendTicketEmail;
+use App\Models\CustomerTicket;
 use App\Models\Events;
 use App\Models\Sales;
 use App\Models\Tickets;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class SalesController extends Controller
 {
@@ -54,7 +60,7 @@ class SalesController extends Controller
             $values[$index] = $row->total_revenue;
         }
         $total_sales = Sales::where('status', 1)->sum('total_amount');
-        
+
         return view(auth()->user()->routePrefix() . '.sales', compact('events', 'sales', 'labels', 'values', 'total_sales'));
     }
     public function edit($slug)
@@ -93,9 +99,19 @@ class SalesController extends Controller
                 return back()->with('error', 'Reference Number Already Exists');
             }
 
+            $latest_id = Sales::max('id');
+            if (is_null($latest_id)) {
+                $nextId = 1;
+            } else {
+                $nextId = $latest_id + 1;
+            }
+
             $ticket = Tickets::find($request->ticket);
             $ticket->decrement('quantity', $request->quantity);
             $ticket->save();
+            $currentDate = date('y-m-d');
+
+            $sales = [];
 
             $total_price = $request->quantity * $ticket->price;
 
@@ -120,6 +136,52 @@ class SalesController extends Controller
             $sale->purchase_type = 1;
             $sale->reference_number = $uid;
             $sale->save();
+
+            $createdSale = $sale->load(['ticket', 'event', 'customer_tickets']);
+
+            event(new MerchantSales($createdSale));
+
+
+            for ($i = 0; $i < $request->quantity; $i++) {
+                $reference_number = 'M1-' . $currentDate . '-' . rand(1000, 9999) . rand(1000, 9999) . '-' . $nextId;
+                $qrcode = QrCode::size(250)->generate($reference_number);
+
+                CustomerTicket::create([
+                    'sale_id' => $sale->id,
+                    'reference_num' => $reference_number,
+                    'is_redeemed' => 0,
+                ]);
+
+                $sales[] = [
+                    'reference_num' => $reference_number,
+                    'customer_name' => $request->customer_name,
+                    'customer_quantity' => $request->quantity, // or $request->customer_quantity if that's the correct field
+                    'customer_email' => $request->customer_email,
+                    'customer_contact' => $request->customer_phone,
+                    'ticket_price' => $ticket->price,
+                    'ticket_color' => $ticket->color,
+                    'ticket_type' => $ticket->type,
+                    'event_date' => $createdSale->event->event_date,
+                    'qrcode' => $qrcode,
+                    'created_at' => $sale->created_at->format('d/m/Y h:i A'),
+                ];
+            }
+
+            if (!empty($request->customer_email)) {
+                if ($sale->is_email_sent == 0) {
+                    try {
+                        Log::info('Sales array before email: ' . json_encode($sales));
+                        SendTicketEmail::dispatch($createdSale, $ticket, $sales, $password = "");
+                        $sale->update([
+                            'is_email_sent' => 1
+                        ]);
+                    } catch (Exception $e) {
+                        Log::error("Error sending email: " . $e->getMessage());
+                    }
+                }
+            }
+
+
 
             DB::commit();
             return back()->with('success', 'Sale Generated Successfully');

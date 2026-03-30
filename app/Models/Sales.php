@@ -103,6 +103,11 @@ class Sales extends Model
         return $this->belongsTo(Events::class, 'event_id');
     }
 
+      public function customer_tickets()
+    {
+        return $this->hasMany(CustomerTicket::class, 'sale_id', 'id');
+    }
+
     public static function getAllSalesByMerchant($merchantId)
     {
         return self::whereHas('event', function ($query) use ($merchantId) {

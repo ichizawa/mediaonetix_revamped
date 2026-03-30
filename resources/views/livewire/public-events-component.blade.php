@@ -1,5 +1,5 @@
 <div>
-    @if($events->count() > 0)
+    @if ($events->count() > 0)
         <section class="relative py-16 sm:py-20 md:py-24 lg:py-32 bg-[#111827]">
             <div class="container mx-auto px-4 sm:px-6 lg:px-12">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-12 sm:mb-16">
@@ -17,7 +17,8 @@
                         View All Events
                         <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
                         </svg>
                     </button>
                 </div>
@@ -81,14 +82,14 @@
                                             ₱{{ number_format($event->tickets_min_price, 2) }}</div>
                                     </div>
                                     <button
-                                        class="px-5 py-2.5 bg-{{ $event->statuslabel['color'] }}-600 hover:bg-{{ $event->statuslabel['color'] }}-500 rounded-lg font-semibold text-sm transition-colors text-white">
+                                        class="purchase-btn px-5 py-2.5 bg-{{ $event->statuslabel['color'] }}-600 hover:bg-{{ $event->statuslabel['color'] }}-500 rounded-lg font-semibold text-sm transition-colors text-white"
+                                        data-event-id="{{ $event->id }}">
                                         Buy Tickets
                                     </button>
                                 </div>
                             </div>
                         </div>
                     @empty
-
                     @endforelse
 
                 </div>

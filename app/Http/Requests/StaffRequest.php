@@ -11,7 +11,7 @@ class StaffRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -28,7 +28,10 @@ class StaffRequest extends FormRequest
             'last_name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username',
             'event_id' => 'required|exists:events,id',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8|',
+            'security_pin' => 'required|string|min:4|max:6',
+            'permission_name' => 'required|array',
+            'permission_name.*' => 'string|max:255',
         ];
     }
 
@@ -36,7 +39,9 @@ class StaffRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'password.confirmed' => 'Password confirmation does not match.',
+            'security_pin.min' => 'The security pin must be at least 4 characters.',
+            'security_pin.max' => 'The security pin may not be greater than 6 characters.',
+            'permission_name.required' => 'The permission name is required.',
         ];
     }
 }

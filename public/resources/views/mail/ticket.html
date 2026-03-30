@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{{ config('app.name') }}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="color-scheme" content="light" />
+        <meta name="supported-color-schemes" content="light" />
+
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: sans-serif;
+            }
+
+            .container {
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            .image {
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                width: 100%;
+                height: 438px;
+                position: relative;
+            }
+
+            .left {
+                position: absolute;
+                left: 500px;
+                bottom: 250px;
+                color: black;
+            }
+
+            .right {
+                position: absolute;
+                right: 55px;
+                bottom: 250px;
+                text-align: center;
+            }
+
+            .barcode {
+                height: 200px;
+                margin: 10px 0;
+            }
+
+            .barcode img {
+                height: 100%;
+                width: auto;
+            }
+
+            .image-container img {
+                width: 100%;
+                height: auto;
+            }
+
+            .left h1 {
+                font-weight: bold;
+                font-size: 14px;
+            }
+
+            .right h1 {
+                font-size: 20px;
+            }
+        </style>
+    </head>
+
+    <body>
+        @foreach ($sales as $sale) @php $imagePath =
+        public_path('assets/img/ticket_template.png'); $base64Image =
+        base64_encode(file_get_contents($imagePath)); @endphp
+        <div class="container">
+            <div
+                class="image-container"
+                style="background-color: {{ $sale['ticket_color'] }};"
+            >
+                <img src="data:image/png;base64,{{ $base64Image }}" alt="" />
+                <div class="left">
+                    <h1>Entrance Code: {{ $sale['reference_num'] }}</h1>
+                </div>
+                <div class="right">
+                    <h1>{{ $sale['ticket_type'] }}</h1>
+                    <div class="barcode">
+                        <img
+                            src="data:image/png;base64,{!! base64_encode($sale['qrcode']) !!}"
+                            alt="QR Code"
+                        />
+                    </div>
+                    <h1>{{ $sale['ticket_price'] }} PHP</h1>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </body>
+</html>
