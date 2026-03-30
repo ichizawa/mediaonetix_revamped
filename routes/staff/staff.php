@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\SalesController;
 use App\Http\Controllers\admin\EventsController;
-
+use App\Http\Controllers\admin\TicketsController;
 
 Route::prefix('staff')->name('staff.')->middleware('role.check:3')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -32,4 +32,6 @@ Route::prefix('staff')->name('staff.')->middleware('role.check:3')->group(functi
             Route::delete('{ticket}', [TicketsController::class, 'destroy'])->name('destroy');
         });
     });
+
+    
 });

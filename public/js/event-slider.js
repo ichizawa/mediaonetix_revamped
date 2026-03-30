@@ -134,10 +134,21 @@ class EventTicketSlider {
         this.currentIndex = index;
 
         // Add active class to new slide
-        this.slides[this.currentIndex].classList.add("active");
+        const activeSlide = this.slides[this.currentIndex];
+        activeSlide.classList.add("active");
+
+        const eventId = activeSlide.dataset.eventId || '';
+        const mainBtn = document.getElementById('main-purchase-btn');
+        const mobileBtn = document.getElementById('mobile-purchase-btn');
+
+        if (mainBtn) mainBtn.setAttribute('data-event-id', eventId);
+        if (mobileBtn) mobileBtn.setAttribute('data-event-id', eventId);
+        
+        // Update the global window variable so tickets.js can grab it
+        window.currentEventId = eventId;
 
         // Update orb colors based on new slide
-        this.updateOrbColors(this.slides[this.currentIndex]);
+        this.updateOrbColors(activeSlide);
 
         // Animate ticket shape
         this.animateTicketShape(direction);
@@ -208,8 +219,9 @@ class EventTicketSlider {
     }
 
     createEventSlide(event) {
+        // Added data-event-id property so the logic can track it
         return `
-            <div class="event-slide floating" data-theme-color="${event.themeColor || '#3B82F6'}">
+            <div class="event-slide floating" data-theme-color="${event.themeColor || '#3B82F6'}" data-event-id="${event.id || ''}">
                 <div class="ticket-shape relative bg-gradient-to-br from-blue-600/20 to-blue-400/10 backdrop-blur-xl border border-blue-500/30 p-8 glow-effect">
                     <div class="space-y-6">
                         <div class="flex items-start justify-between">
@@ -241,13 +253,13 @@ class EventTicketSlider {
                             </div>
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-400">Price</span>
-                                <span class="text-2xl font-bold text-blue-400">$${
+                                <span class="text-xl font-bold text-blue-400">₱${
                                     event.price
                                 }</span>
                             </div>
                         </div>
 
-                        <button class="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all text-white">
+                        <button class="purchase-btn w-full py-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all text-white" data-event-id="${event.id || ''}">
                             Get Tickets
                         </button>
                     </div>
@@ -266,22 +278,3 @@ class EventTicketSlider {
 }
 
 // Initialize when DOM is ready
-document.addEventListener("DOMContentLoaded", function () {
-    const eventSlider = new EventTicketSlider(".event-slider-container");
-
-    // Example: Add events dynamically in the future
-    window.eventSlider = eventSlider; // Make it globally accessible
-
-    // Example of adding a new event with custom color
-    eventSlider.addEvent({
-        category: "MUSIC FESTIVAL",
-        title: "Rock The Night",
-        date: "Sep 20, 2024",
-        location: "Stadium Arena",
-        price: 125,
-        themeColor: "#EF4444", // Red theme
-        icon: `<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-              </svg>`
-    });
-});

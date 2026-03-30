@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Events extends Model
+/**
+ * Scope a query to only include upcoming events with non-trashed showcases.
+ */
+
 {
     use SoftDeletes;
 
@@ -63,10 +67,7 @@ class Events extends Model
             'color' => 'secondary'
         ];
     }
-    public function scopeGetUpcoming()
-    {
-        return $this->where('event_date', '>=', date('Y-m-d'));
-    }
+
     public function scopeGetThisWeek()
     {
         return $this->where('event_date', '>=', date('Y-m-d'))->orderByDesc('id');
@@ -82,6 +83,19 @@ class Events extends Model
     public function tickets()
     {
         return $this->hasMany(Tickets::class, 'event_id');
+    }
+
+    public function scopeGetUpcoming()
+    {
+        return $this->where('event_date', '>=', date('Y-m-d'));
+    }
+
+    public function scopeUpcomingWithShowcases($query)
+    {
+        return $query->where('event_date', '>=', date('Y-m-d'))
+            ->whereHas('showcases', function ($q) {
+                $q->whereNull('deleted_at');
+            });
     }
     public function showcases()
     {

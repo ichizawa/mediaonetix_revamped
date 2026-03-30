@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         return {
+            id: event.id,
             category: event.category,
             title1: title1,
             title2: title2,
@@ -291,6 +292,23 @@ document.addEventListener('DOMContentLoaded', async function () {
             document.getElementById('event-venue').textContent = event.venue;
             document.getElementById('event-price').textContent = event.price;
 
+            const mainBtn = document.getElementById('main-purchase-btn');
+            const mobileBtn = document.getElementById('mobile-purchase-btn');
+
+            // Update Desktop Button
+            if (mainBtn && event.id) {
+                mainBtn.setAttribute('data-event-id', event.id);
+                const hiddenInput = mainBtn.querySelector('.event-id-holder');
+                if (hiddenInput) hiddenInput.value = event.id;
+            }
+
+            // Update Mobile Button
+            if (mobileBtn && event.id) {
+                mobileBtn.setAttribute('data-event-id', event.id);
+                const hiddenInputMobile = mobileBtn.querySelector('#mobile-event-id-holder');
+                if (hiddenInputMobile) hiddenInputMobile.value = event.id;
+            }
+
             // Update poster content
             document.getElementById('poster-category').textContent = event.category;
             document.querySelector('.poster-title-1').textContent = event.title1.toUpperCase();
@@ -298,6 +316,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             document.getElementById('poster-date').textContent = event.date;
             document.getElementById('poster-venue').textContent = event.venue;
             document.getElementById('poster-price').textContent = event.price;
+            document.getElementById('poster-category').textContent = event.category;
 
             // Update colors and gradients
             const posterBg = document.getElementById('poster-bg');

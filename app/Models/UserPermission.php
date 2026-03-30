@@ -8,7 +8,9 @@ class UserPermission extends Model
 {
     protected $fillable = [
         'role_id',
-        'sb_id'
+        'sb_id',
+        'user_id',
+        'permission_name',
     ];
     public function sidebar()
     {
@@ -18,5 +20,10 @@ class UserPermission extends Model
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

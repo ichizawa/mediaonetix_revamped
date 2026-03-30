@@ -146,7 +146,7 @@
                                 </div>
                                 <button
                                     class="group w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl font-bold text-base sm:text-lg hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 inline-flex items-center justify-center gap-2 text-white">
-                                    Get Tickets Now
+                                    Get Tickets Now 
                                     <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

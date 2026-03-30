@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\ControlPanelController;
 use App\Http\Controllers\admin\DashboardController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\admin\SettingsController;
 use App\Http\Controllers\admin\StaffsController;
 use App\Http\Controllers\admin\TicketsController;
 use App\Http\Controllers\admin\UsersController;
+use App\Http\Controllers\OrganizerController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('merchant')->name('merchant.')->middleware('role.check:2')->group(function () {
@@ -54,10 +56,10 @@ Route::prefix('merchant')->name('merchant.')->middleware('role.check:2')->group(
         Route::get('files/{id}', [MerchantController::class, 'files'])->name('files');
     });
 
-        Route::prefix('staffs')->name('staffs.')->group(function () {
-        Route::get('/', [StaffsController::class, 'index'])->name('staffs');
-        Route::post('store', [StaffsController::class, 'store'])->name('store');
-    });
+    // Route::prefix('staffs')->name('staffs.')->group(function () {
+    //     Route::get('/', [StaffsController::class, 'index'])->name('staffs');
+    //     Route::post('store', [StaffsController::class, 'store'])->name('store');
+    // });
 
     Route::get('users', [UsersController::class, 'index'])->name('users');
     Route::prefix('users')->name('users.')->group(function () {
@@ -80,5 +82,11 @@ Route::prefix('merchant')->name('merchant.')->middleware('role.check:2')->group(
     Route::get('settings', [SettingsController::class, 'index'])->name('settings');
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::post('store', [SettingsController::class, 'store'])->name('store');
+    });
+
+    Route::get('organizers', [OrganizerController::class, 'index'])->name('organizers');
+    Route::prefix('organizers')->name('organizers.')->group(function () {
+
+        Route::post('store', [OrganizerController::class, 'store'])->name('store');
     });
 });
