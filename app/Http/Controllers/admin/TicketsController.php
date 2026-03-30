@@ -24,18 +24,36 @@ class TicketsController extends Controller
             'available_tickets' => Tickets::where('event_id', $event->id)->sum('quantity'),
         ]);
     }
+
+
     public function store(TicketsRequest $ticket)
     {
         try {
             DB::beginTransaction();
 
             $data = $ticket->validated();
-            $data['original_qty'] = $data['quantity'];
 
-            Tickets::create($data);
+            if (!empty($data['ticket_id'])) {
+                $existingTicket = Tickets::findOrFail($data['ticket_id']);
+                $updateData = $data;
+                unset($updateData['ticket_id']);
+                // Note: we don't update original_qty on edit, depending on requirements, or we can just ignore it for now.
+                $existingTicket->update($updateData);
+                $msg = 'Ticket Updated Successfully';
+            } else {
+                $data['original_qty'] = $data['quantity'];
+                // don't try to insert empty ticket_id
+                unset($data['ticket_id']);
+                Tickets::create($data);
+                $msg = 'Ticket Created Successfully';
+            }
+
+            $event = Events::findOrFail($data['event_id']);
+            $event->event_total_tickets = Tickets::where('event_id', $data['event_id'])->sum('quantity');
+            $event->save();
 
             DB::commit();
-            return back()->with('success', 'Ticket Created Successfully');
+            return back()->with('success', $msg);
         } catch (ValidationException $e) {
             DB::rollBack();
             return back()->withErrors($e->errors())->withInput();

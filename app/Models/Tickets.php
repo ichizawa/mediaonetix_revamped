@@ -16,7 +16,8 @@ class Tickets extends Model
         'color',
         'price',
         'quantity',
-        'original_qty'
+        'original_qty',
+        'inclusions'
     ];
 
     public function event()

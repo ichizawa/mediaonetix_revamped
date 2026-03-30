@@ -231,7 +231,7 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        <form action="{{ route('admin.events.tickets.destroy', [$event->slug, $ticket->id]) }}"
+                                        <form action="{{ route(auth()->user()->routePrefix() . '.events.tickets.destroy', [$event->slug, $ticket->id]) }}"
                                             method="POST"
                                             onsubmit="return confirm('Are you sure you want to delete this ticket type?')"
                                             class="inline">
@@ -302,12 +302,20 @@
             document.getElementById('ticketModalTitle').textContent = 'Edit Ticket Type';
             document.getElementById('ticketSubmitBtn').textContent = 'Update Ticket Type';
             document.getElementById('ticketId').value = ticket.id;
-            document.getElementById('ticketFormMethod').value = 'PUT';
-            document.getElementById('ticketTypeName').value = ticket.ticket_type;
-            document.getElementById('ticketDescription').value = ticket.description || '';
-            document.getElementById('ticketPrice').value = ticket.price;
-            document.getElementById('ticketQuantity').value = ticket.quantity;
-            document.getElementById('ticketForm').action = "#";
+            document.getElementById('ticketFormMethod').value = 'POST';
+            
+            document.getElementById('ticketName').value = ticket.name || '';
+            document.getElementById('ticketType').value = ticket.type || '';
+            document.getElementById('ticketInclusions').value = ticket.inclusions || '';
+            document.getElementById('ticketStatus').value = ticket.status !== undefined ? ticket.status : '';
+            document.getElementById('ticketPrice').value = ticket.price || '';
+            document.getElementById('ticketQuantity').value = ticket.quantity || '';
+            
+            if (typeof setTicketColorForEdit === 'function' && ticket.color) {
+                setTicketColorForEdit(ticket.color);
+            }
+            
+            document.getElementById('ticketForm').action = "{{ route(auth()->user()->routePrefix() . '.events.tickets.store', $event->slug) }}";
             document.getElementById('ticketModal').classList.add('active');
         }
 

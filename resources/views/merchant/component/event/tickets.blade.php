@@ -172,12 +172,14 @@
                                             <h3 class="text-xl font-bold text-white">{{ $ticket->name }}</h3>
                                             <div class="w-4 h-4 rounded-full border-2 border-white/20"
                                                 style="background: {{ $ticket->color }}"></div>
+                                            <p class="text-gray-400 text-sm">{{ $ticket->type }}</p>
                                         </div>
                                         <p
                                             class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
                                             ₱{{ number_format($ticket->price, 2) }}
                                         </p>
                                     </div>
+
                                     <div
                                         class="px-3 py-1 bg-blue-500/20 backdrop-blur-sm border border-blue-500/30 rounded-full">
                                         <span class="text-xs font-semibold text-blue-400">
@@ -186,7 +188,10 @@
                                     </div>
                                 </div>
 
-                                <p class="text-gray-400 text-sm mb-4">{{ $ticket->type }}</p>
+                                <p class="text-gray-400 text-sm mb-4">
+                                    <span class="font-semibold text-gray-300">Inclusions:</span><br>
+                                    {!! nl2br(e($ticket->inclusions)) !!}
+                                </p>
 
                                 @php
                                     $totalQty = $ticket->original_qty;
@@ -205,12 +210,11 @@
                                     </div>
 
                                     <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
-                                        <div
-                                            class="h-full transition-all"
+                                        <div class="h-full transition-all"
                                             style="
-                                                width: {{ min(100, $percentage) }}%;
-                                                background: {{ $ticket->color }};
-                                            ">
+                                                                                                                                                                                                                                                                                        width: {{ min(100, $percentage) }}%;
+                                                                                                                                                                                                                                                                                        background: {{ $ticket->color }};
+                                                                                                                                                                                                                                                                                    ">
                                         </div>
                                     </div>
                                 </div>
@@ -218,8 +222,9 @@
 
                                 <div class="flex items-center justify-between pt-4 border-t border-white/10">
                                     <div class="text-sm text-gray-400">
-                                        Revenue: 
-                                        {{-- <span class="text-white font-semibold">₱{{ number_format($ticket->price * $ticket->quantity, 2) }}</span> --}}
+                                        Revenue:
+                                        {{-- <span class="text-white font-semibold">₱{{ number_format($ticket->price *
+                                            $ticket->quantity, 2) }}</span> --}}
                                     </div>
                                     <div class="flex gap-2">
                                         <button onclick='openEditTicketModal(@json($ticket))'
@@ -231,21 +236,18 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        <form action="{{ route('admin.events.tickets.destroy', [$event->slug, $ticket->id]) }}"
-                                            method="POST"
-                                            onsubmit="return confirm('Are you sure you want to delete this ticket type?')"
-                                            class="inline">
+                                        <form id="delete-ticket-form-{{ $ticket->id }}"
+                                            action="{{ route(auth()->user()->routePrefix() . '.events.tickets.destroy', [$event->slug, $ticket->id]) }}"
+                                            method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
-
-                                            <button type="submit"
+                                            <button type="button" onclick="confirmDelete({{ $ticket->id }})"
                                                 class="p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-all">
                                                 <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                                     </path>
-                                                </svg>
                                             </button>
                                         </form>
 
@@ -284,6 +286,22 @@
     @include('admin.component.event.tickets.add-ticket')
 
     <script>
+        function confirmDelete(ticketId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this ticket deletion!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Find the form by ID and submit it
+                    document.getElementById('delete-ticket-form-' + ticketId).submit();
+                }
+            })
+        }
         function openAddTicketModal() {
             document.getElementById('ticketForm').reset();
             document.getElementById('ticketModalTitle').textContent = 'Add Ticket Type';
@@ -302,12 +320,20 @@
             document.getElementById('ticketModalTitle').textContent = 'Edit Ticket Type';
             document.getElementById('ticketSubmitBtn').textContent = 'Update Ticket Type';
             document.getElementById('ticketId').value = ticket.id;
-            document.getElementById('ticketFormMethod').value = 'PUT';
-            document.getElementById('ticketTypeName').value = ticket.ticket_type;
-            document.getElementById('ticketDescription').value = ticket.description || '';
-            document.getElementById('ticketPrice').value = ticket.price;
-            document.getElementById('ticketQuantity').value = ticket.quantity;
-            document.getElementById('ticketForm').action = "#";
+            document.getElementById('ticketFormMethod').value = 'POST'; // Keep POST because store method handles creation/updating, but if it requires PUT, the backend should be checked. The form in add-ticket uses POST.
+
+            document.getElementById('ticketName').value = ticket.name || '';
+            document.getElementById('ticketType').value = ticket.type || '';
+            document.getElementById('ticketInclusions').value = ticket.inclusions || '';
+            document.getElementById('ticketStatus').value = ticket.status !== undefined ? ticket.status : '';
+            document.getElementById('ticketPrice').value = ticket.price || '';
+            document.getElementById('ticketQuantity').value = ticket.quantity || '';
+
+            if (typeof setTicketColorForEdit === 'function' && ticket.color) {
+                setTicketColorForEdit(ticket.color);
+            }
+
+            document.getElementById('ticketForm').action = "{{ route(auth()->user()->routePrefix() . '.events.tickets.store', $event->slug) }}";
             document.getElementById('ticketModal').classList.add('active');
         }
 

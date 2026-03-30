@@ -211,7 +211,7 @@
                             @forelse($events as $event)
                                 <a href="{{ route('merchant.sales.edit', $event->slug) }}"
                                     class="flex items-center justify-between p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer group">
-                                      <div class="flex items-center gap-3">
+                                    <div class="flex items-center gap-3">
                                         <div
                                             class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform">
                                             {{ substr($event->event_name, 0, 1) }}
@@ -221,7 +221,8 @@
                                                 class="text-white font-semibold text-sm group-hover:text-blue-400 transition-colors">
                                                 {{ $event->event_name }}
                                             </p>
-                                            {{-- <p class="text-gray-400 text-xs">{{ 450 - ($event->id * 50) }} tickets sold</p> --}}
+                                            {{-- <p class="text-gray-400 text-xs">{{ 450 - ($event->id * 50) }} tickets sold</p>
+                                            --}}
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-3">
@@ -291,7 +292,8 @@
                                             <span class="text-white text-sm">{{ $sale->event->event_name }}</span>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <span class="text-gray-400 text-sm">{{ $sale->created_at->format('M d, Y - h:i A') }}</span>
+                                            <span
+                                                class="text-gray-400 text-sm">{{ $sale->created_at->format('M d, Y - h:i A') }}</span>
                                         </td>
                                         <td class="py-4 px-4">
                                             <div>
@@ -310,7 +312,7 @@
                                         </td>
                                         <td class="py-4 px-4">
                                             <div class="flex gap-2">
-                                                <button class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
+                                                <button class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all" onclick="openSalesModal({{ $sale->id }})">
                                                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -443,6 +445,7 @@
         // Sales Modal Functions - Main page specific
         function openSalesModal() {
             document.getElementById('salesModal').classList.add('active');
+            
         }
 
         function closeSalesModal() {

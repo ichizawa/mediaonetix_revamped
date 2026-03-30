@@ -12,6 +12,7 @@ class TicketListsController extends Controller
     {
         try {
             $tickets = Tickets::all();
+            
 
             return response()->json([
                 'success' => true,

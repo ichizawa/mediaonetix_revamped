@@ -1,8 +1,8 @@
 @extends('layouts')
 @section('content')
 
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4/dist/maplibre-gl.css" />
-<script src="https://unpkg.com/maplibre-gl@4/dist/maplibre-gl.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4/dist/maplibre-gl.css" />
+    <script src="https://unpkg.com/maplibre-gl@4/dist/maplibre-gl.js"></script>
 
     <div class="min-h-screen bg-[#0c1222] py-12">
         <div class="container mx-auto px-4 sm:px-6 lg:px-12">
@@ -83,7 +83,7 @@
                                             <td class="px-4 py-4 text-right">
                                                 <button
                                                     class="purchase-btn group px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-bold shadow-lg hover:shadow-blue-500/50 transition-all hover:scale-105 inline-flex items-center justify-center gap-2 text-white"
-                                                    id="main-purchase-btn">
+                                                    id="main-purchase-btn" onclick="openBuyModal()">
                                                     Buy Now
                                                     <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform"
                                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,4 +113,40 @@
             @endif
         </div>
     </div>
+
+    @include('public.component.ticket.modal')
+
+
+
+    <script>
+        function openBuyModal(ticket) {
+            isEditMode = false;
+            currentTicketId = null;
+
+            // Reset form
+            document.getElementById('ticketForm').reset();
+            document.getElementById('modalTitle').textContent = 'Guest Details';
+            document.getElementById('submitBtn').textContent = 'Confirm Purchase';
+            document.getElementById('ticketId').value = '';
+            document.getElementById('formMethod').value = 'POST';
+
+            // Set default values
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('ticketDate').value = today;
+            document.getElementById('ticketTime').value = '19:00';
+            const statusLabel = document.querySelector('[data-target="ticket    Status"] .custom-select-label');
+            if (statusLabel) statusLabel.textContent = statusLabel.getAttribute('data-default-text') || 'Status';
+            const categoryLabel = document.querySelector('[data-target="eventCategory"] .custom-select-label');
+            if (categoryLabel) categoryLabel.textContent = categoryLabel.getAttribute('data-default-text') || 'Category';
+
+            // Show modal using 'active' class
+            const eventModal = document.getElementById('ticketModal');
+            eventModal.classList.add('active');
+        }
+
+        function closeModal() {
+            const eventModal = document.getElementById('ticketModal');
+            eventModal.classList.remove('active');
+        }
+    </script>
 @endsection
