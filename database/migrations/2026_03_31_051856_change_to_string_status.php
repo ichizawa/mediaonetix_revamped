@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('events', function (Blueprint $table) {
-            $table->timestamp('rejected_at')->nullable()->after('approved_at');
+        Schema::table('sales', function (Blueprint $table) {
+            $table->string('status')->nullable()->change();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('events', function (Blueprint $table) {
-            $table->dropColumn('rejected_at');
+        Schema::table('sales', function (Blueprint $table) {
+            //
         });
     }
 };

@@ -226,26 +226,23 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @forelse($events as $event)
-                        <div data-status="{{ $event->status }}"
-                            class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm rounded-2xl overflow-hidden {{ $event->latestShowcase ? 'border border-green-400' : '' }}"
-                            onclick='openViewModal(@json($event))'>
-                            <div class="relative h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
-                                <div
-                                    class="absolute inset-0 bg-cover bg-center opacity-40 event-card-media"
-                                    @if($event->event_image)
-                                        data-image-url="{{ asset('images/events/' . $event->event_image) }}"
-                                    @endif
-                                    data-crop-x="{{ $event->crop_x ?? '' }}"
-                                    data-crop-y="{{ $event->crop_y ?? '' }}"
-                                    data-crop-width="{{ $event->crop_width ?? '' }}"
-                                    data-crop-height="{{ $event->crop_height ?? '' }}"
-                                    data-crop-natural-width="{{ $event->crop_natural_width ?? '' }}"
-                                    data-crop-natural-height="{{ $event->crop_natural_height ?? '' }}">
-                                    @if($event->event_image)
-                                        <img src="{{ asset('images/events/' . $event->event_image) }}" alt="Event Image"
-                                            class="w-full h-full object-cover">
-                                    @endif
-                                </div>
+                       
+                            <div data-status="{{ $event->status }}"
+                                class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm rounded-2xl overflow-hidden {{ $event->latestShowcase ? 'border border-green-400' : '' }}"
+                                onclick='openViewModal(@json($event))'>
+                                <div class="relative h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
+                                    <div class="absolute inset-0 bg-cover bg-center opacity-40 event-card-media"
+                                        @if ($event->event_image) data-image-url="{{ asset('images/events/' . $event->event_image) }}" @endif
+                                        data-crop-x="{{ $event->crop_x ?? '' }}" data-crop-y="{{ $event->crop_y ?? '' }}"
+                                        data-crop-width="{{ $event->crop_width ?? '' }}"
+                                        data-crop-height="{{ $event->crop_height ?? '' }}"
+                                        data-crop-natural-width="{{ $event->crop_natural_width ?? '' }}"
+                                        data-crop-natural-height="{{ $event->crop_natural_height ?? '' }}">
+                                        @if ($event->event_image)
+                                            <img src="{{ asset('images/events/' . $event->event_image) }}"
+                                                alt="Event Image" class="w-full h-full object-cover">
+                                        @endif
+                                    </div>
 
                                 <div class="absolute top-4 right-4">
                                     @php
@@ -322,38 +319,40 @@
                                             </svg>
                                         </button>
 
-                                        <a href="{{ route('merchant.events.tickets.tickets', $event->slug) }}"
-                                            class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 -1 17 18">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                                    d="M4 4.85v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9z">
-                                                </path>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                                    d="M1.5 3A1.5 1.5 0 0 0 0 4.5V6a.5.5 0 0 0 .5.5 1.5 1.5 0 1 1 0 3 .5.5 0 0 0-.5.5v1.5A1.5 1.5 0 0 0 1.5 13h13a1.5 1.5 0 0 0 1.5-1.5V10a.5.5 0 0 0-.5-.5 1.5 1.5 0 0 1 0-3A.5.5 0 0 0 16 6V4.5A1.5 1.5 0 0 0 14.5 3zM1 4.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v1.05a2.5 2.5 0 0 0 0 4.9v1.05a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-1.05a2.5 2.5 0 0 0 0-4.9z">
-                                                </path>
-                                            </svg>
-                                        </a>
-                                        <form action="{{ route('merchant.events.delete', $event->id) }}" method="POST"
-                                            onsubmit="confirmDelete(event, this)" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-
-                                            <button type="submit"
-                                                class="p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-all">
-                                                <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                            <a href="{{ route('merchant.events.tickets.tickets', $event->slug) }}"
+                                                class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
+                                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 -1 17 18">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                                        d="M4 4.85v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9z">
+                                                    </path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                                        d="M1.5 3A1.5 1.5 0 0 0 0 4.5V6a.5.5 0 0 0 .5.5 1.5 1.5 0 1 1 0 3 .5.5 0 0 0-.5.5v1.5A1.5 1.5 0 0 0 1.5 13h13a1.5 1.5 0 0 0 1.5-1.5V10a.5.5 0 0 0-.5-.5 1.5 1.5 0 0 1 0-3A.5.5 0 0 0 16 6V4.5A1.5 1.5 0 0 0 14.5 3zM1 4.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v1.05a2.5 2.5 0 0 0 0 4.9v1.05a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-1.05a2.5 2.5 0 0 0 0-4.9z">
                                                     </path>
                                                 </svg>
-                                            </button>
-                                        </form>
+                                            </a>
+                                            <form action="{{ route('merchant.events.delete', $event->id) }}"
+                                                method="POST" onsubmit="confirmDelete(event, this)" class="inline">
+                                                @csrf
+                                                @method('DELETE')
 
+                                                <button type="submit"
+                                                    class="p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-all">
+                                                    <svg class="w-5 h-5 text-red-400" fill="none"
+                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </form>
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @empty
+                        @empty
+                        
                     @endforelse
                 </div>
             </div>
@@ -414,8 +413,11 @@
             eventModal.classList.add('flex', 'modal-opening');
             eventModal.addEventListener('animationend', () => {
                 eventModal.classList.remove('modal-opening');
-            }, { once: true });
+            }, {
+                once: true
+            });
         }
+
         function closeModal() {
             const eventModal = document.getElementById('eventModal');
             eventModal.classList.remove('modal-opening');
@@ -423,7 +425,9 @@
             eventModal.addEventListener('animationend', () => {
                 eventModal.classList.add('hidden');
                 eventModal.classList.remove('flex', 'modal-closing');
-            }, { once: true });
+            }, {
+                once: true
+            });
         }
 
         function openViewModal(event) {
@@ -450,7 +454,8 @@
             // Populate view modal with event data
             document.getElementById('viewEventName').textContent = event.event_name;
             document.getElementById('viewEventCategory').textContent = event.category;
-            document.getElementById('viewEventDateTime').textContent = `${formatDate(event.event_date)} • ${formatTime(event.event_time)}`;
+            document.getElementById('viewEventDateTime').textContent =
+                `${formatDate(event.event_date)} • ${formatTime(event.event_time)}`;
             document.getElementById('viewEventLocation').textContent = event.event_venue;
             document.getElementById('viewEventPrice').textContent = '₱ ' + lowestPrice.toFixed(2);
             document.getElementById('viewEventDescription').innerHTML = isHtml(event.description)
@@ -467,7 +472,8 @@
 
             switch (event.status) {
                 case 0: // Upcoming
-                    statusHtml = `<span class="px-3 py-1 font-semibold text-sm rounded-full bg-[#c084fc]/15 border border-[#c084fc]/30" style="color:#c084fc">Upcoming</span>`;
+                    statusHtml =
+                        `<span class="px-3 py-1 font-semibold text-sm rounded-full bg-[#c084fc]/15 border border-[#c084fc]/30" style="color:#c084fc">Upcoming</span>`;
                     break;
                 case 1: // Active
                     statusHtml = `<div class="px-3 py-1 font-semibold text-sm rounded-full bg-[#4ade80]/15 border border-[#4ade80]/30 flex items-center gap-2" style="color:#4ade80">
@@ -479,16 +485,20 @@
                                       </div>`;
                     break;
                 case 2: // Ongoing
-                    statusHtml = `<span class="px-3 py-1 font-semibold text-sm rounded-full bg-[#60a5fa]/15 border border-[#60a5fa]/30" style="color:#60a5fa">Ongoing</span>`;
+                    statusHtml =
+                        `<span class="px-3 py-1 font-semibold text-sm rounded-full bg-[#60a5fa]/15 border border-[#60a5fa]/30" style="color:#60a5fa">Ongoing</span>`;
                     break;
                 case 3: // Completed
-                    statusHtml = `<span class="px-3 py-1 font-semibold text-sm rounded-full bg-[#9ca3af]/15 border border-[#9ca3af]/30" style="color:#9ca3af">Completed</span>`;
+                    statusHtml =
+                        `<span class="px-3 py-1 font-semibold text-sm rounded-full bg-[#9ca3af]/15 border border-[#9ca3af]/30" style="color:#9ca3af">Completed</span>`;
                     break;
                 case 4: // Cancelled
-                    statusHtml = `<span class="px-3 py-1 font-semibold text-sm rounded-full bg-[#f87171]/15 border border-[#f87171]/30" style="color:#f87171">Cancelled</span>`;
+                    statusHtml =
+                        `<span class="px-3 py-1 font-semibold text-sm rounded-full bg-[#f87171]/15 border border-[#f87171]/30" style="color:#f87171">Cancelled</span>`;
                     break;
                 default:
-                    statusHtml = `<span class="px-3 py-1 font-semibold text-sm rounded-full bg-gray-500/15 border border-gray-500/30 text-gray-400">${event.status_label?.label || 'Unknown'}</span>`;
+                    statusHtml =
+                        `<span class="px-3 py-1 font-semibold text-sm rounded-full bg-gray-500/15 border border-gray-500/30 text-gray-400">${event.status_label?.label || 'Unknown'}</span>`;
             }
             statusContainer.innerHTML = statusHtml;
 
@@ -541,7 +551,9 @@
             }
             viewModal.addEventListener('animationend', () => {
                 viewModal.classList.remove('modal-opening');
-            }, { once: true });
+            }, {
+                once: true
+            });
 
             document.getElementById('openEditModalFromView').onclick = function () {
                 // console.log(event);
@@ -572,9 +584,9 @@
             document.getElementById('eventForm').action = "{{ route('merchant.events.update') }}";
 
             // Event Image Preview — use editEventSetPreview so crop focal point is applied
-            const imageUrl = event.event_image
-                ? "{{ asset('images/events') }}/" + event.event_image
-                : null;
+            const imageUrl = event.event_image ?
+                "{{ asset('images/events') }}/" + event.event_image :
+                null;
             editEventSetPreview(
                 imageUrl,
                 event.crop_x, event.crop_y,
@@ -604,9 +616,12 @@
                 eventModal.classList.add('flex', 'modal-opening');
                 eventModal.addEventListener('animationend', () => {
                     eventModal.classList.remove('modal-opening');
-                }, { once: true });
+                }, {
+                    once: true
+                });
             }, 300);
         }
+
         function isHtml(str) {
             return str && /<[a-z][\s\S]*>/i.test(str);
         }
@@ -642,7 +657,8 @@
                 .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
                 .replace(/__(.*?)__/g, '<u>$1</u>')
                 .replace(/_(.*?)_/g, '<em>$1</em>')
-                .replace(/^&gt; (.+)$/gm, '<blockquote class="border-l-2 border-gray-500 pl-3 italic text-gray-300">$1</blockquote>')
+                .replace(/^&gt; (.+)$/gm,
+                    '<blockquote class="border-l-2 border-gray-500 pl-3 italic text-gray-300">$1</blockquote>')
                 .replace(/^---$/gm, '<hr class="border-gray-600 my-2">')
                 .replace(/((?:^• .+\n?)+)/gm, (block) => {
                     const items = block.trim().split('\n').map(l => `<li>${l.replace(/^• /, '')}</li>`).join('');
@@ -655,12 +671,13 @@
                 .replace(/(<\/h[12]>|<\/blockquote>|<\/ul>|<\/ol>|<hr[^>]*>)<br>/g, '$1')
                 .replace(/\n/g, '<br>');
         }
+
         function formatDate(dateString) {
             const date = new Date(dateString);
             return date.toLocaleDateString('en-US', {
-                year: 'numeric'
-                , month: 'long'
-                , day: 'numeric'
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             });
         }
 
@@ -676,15 +693,15 @@
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
             fetch("{{ route('merchant.events.set-active') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": token
-                },
-                body: JSON.stringify({
-                    slug: eventSlug
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": token
+                    },
+                    body: JSON.stringify({
+                        slug: eventSlug
+                    })
                 })
-            })
                 .then(response => response.json())
                 .then(data => {
                     // console.log("Active event set:", data);
@@ -743,7 +760,7 @@
         }
 
         // Event listeners
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.event-card-desc').forEach(el => {
                 const raw = el.getAttribute('data-raw');
                 const tempDiv = document.createElement('div');
@@ -775,7 +792,7 @@
                 if (!file || !previewImage || !imagePlaceholder) return;
 
                 const reader = new FileReader();
-                reader.onload = function (evt) {
+                reader.onload = function(evt) {
                     previewImage.src = evt.target.result;
                     previewImage.classList.remove('hidden');
 
@@ -788,7 +805,7 @@
             }
 
             if (eventImageInput && previewImage && imagePlaceholder) {
-                eventImageInput.addEventListener('change', function (e) {
+                eventImageInput.addEventListener('change', function(e) {
                     const file = e.target.files && e.target.files[0];
                     if (!file) return;
                     showEventImagePreview(file);
@@ -801,7 +818,7 @@
             // Remove Image Button Handler
             const removeEventImageBtn = document.getElementById('removeEventImageBtn');
             if (removeEventImageBtn) {
-                removeEventImageBtn.addEventListener('click', function () {
+                removeEventImageBtn.addEventListener('click', function() {
                     if (eventImageInput) eventImageInput.value = '';
                     if (previewImage) {
                         previewImage.src = '';
@@ -831,7 +848,7 @@
                 };
 
                 ['dragenter', 'dragover'].forEach(eventName => {
-                    eventDropZone.addEventListener(eventName, function (e) {
+                    eventDropZone.addEventListener(eventName, function(e) {
                         e.preventDefault();
                         e.stopPropagation();
                         highlightDropZone();
@@ -839,14 +856,14 @@
                 });
 
                 ['dragleave', 'drop'].forEach(eventName => {
-                    eventDropZone.addEventListener(eventName, function (e) {
+                    eventDropZone.addEventListener(eventName, function(e) {
                         e.preventDefault();
                         e.stopPropagation();
                         unhighlightDropZone();
                     });
                 });
 
-                eventDropZone.addEventListener('drop', function (e) {
+                eventDropZone.addEventListener('drop', function(e) {
                     const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
                     if (!file) return;
 
@@ -858,12 +875,12 @@
             }
 
             if (seatPlanInput && seatPlanPreview && seatPlanPlaceholder) {
-                seatPlanInput.addEventListener('change', function (e) {
+                seatPlanInput.addEventListener('change', function(e) {
                     const file = e.target.files && e.target.files[0];
                     if (!file) return;
 
                     const reader = new FileReader();
-                    reader.onload = function (evt) {
+                    reader.onload = function(evt) {
                         seatPlanPreview.src = evt.target.result;
                         seatPlanPreview.classList.remove('hidden');
                         seatPlanPlaceholder.classList.add('hidden');
@@ -879,21 +896,23 @@
                 const dropdown = wrapper.querySelector('.custom-select-dropdown');
                 const targetId = wrapper.dataset.target;
 
-                btn.addEventListener('click', function (e) {
+                btn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     // Close all other open dropdowns first
                     document.querySelectorAll('.custom-select-dropdown').forEach(d => {
                         if (d !== dropdown) {
                             d.classList.add('hidden');
-                            d.previousElementSibling.querySelector('svg').style.transform = '';
+                            d.previousElementSibling.querySelector('svg').style.transform =
+                                '';
                         }
                     });
                     dropdown.classList.toggle('hidden');
-                    btn.querySelector('svg').style.transform = dropdown.classList.contains('hidden') ? '' : 'rotate(180deg)';
+                    btn.querySelector('svg').style.transform = dropdown.classList.contains(
+                        'hidden') ? '' : 'rotate(180deg)';
                 });
 
                 wrapper.querySelectorAll('.custom-select-option').forEach(option => {
-                    option.addEventListener('click', function () {
+                    option.addEventListener('click', function() {
                         const value = this.dataset.value;
                         const label = this.textContent;
                         document.getElementById(targetId).value = value;
@@ -905,7 +924,7 @@
             });
 
             // Close custom dropdowns when clicking outside
-            document.addEventListener('click', function () {
+            document.addEventListener('click', function() {
                 document.querySelectorAll('.custom-select-dropdown').forEach(d => {
                     if (!d.classList.contains('hidden')) {
                         d.classList.add('hidden');
@@ -916,8 +935,9 @@
 
             // Tab functionality
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove(
+                    'active'));
                     this.classList.add('active');
 
                     const filter = this.dataset.filter;
@@ -932,7 +952,7 @@
             });
 
             // Close modals when clicking outside
-            document.addEventListener('click', function (event) {
+            document.addEventListener('click', function(event) {
                 const viewModal = document.getElementById('viewEventModal');
 
                 if (viewModal && !viewModal.classList.contains('hidden') &&
@@ -941,7 +961,5 @@
                 }
             });
         });
-
     </script>
-
 @endsection

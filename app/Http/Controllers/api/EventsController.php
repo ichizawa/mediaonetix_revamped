@@ -19,7 +19,7 @@ class EventsController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $events,
-                'message' => 'EX`vents retrieved successfully'
+                'message' => 'Events retrieved successfully'
             ], 200);
         } catch (\Exception $e) {
             Log::error('Error fetching upcoming events: ' . $e->getMessage());

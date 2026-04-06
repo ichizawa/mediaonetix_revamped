@@ -56,7 +56,11 @@ class Sales extends Model
         'is_email_resent',
         'is_sms_sent',
         'is_sms_resent',
-    ];
+        'paymongo_payment_id',
+        'paymongo_fee',
+        'net_amount',
+        'paid_at',
+        ];
 
     public function getStatusLabelAttribute()
     {
@@ -103,7 +107,7 @@ class Sales extends Model
         return $this->belongsTo(Events::class, 'event_id');
     }
 
-      public function customer_tickets()
+    public function customer_tickets()
     {
         return $this->hasMany(CustomerTicket::class, 'sale_id', 'id');
     }

@@ -27,7 +27,8 @@ class CreateSidebarSeeder extends Seeder
             'Staffs',
             'Profile',
             'Settings',
-            'Organizer'
+            'Organizer',
+            'Purchase History',
         ];
 
         foreach ($items as $item) {

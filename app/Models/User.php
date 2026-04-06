@@ -168,6 +168,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->role?->type === 'merchant';
     }
 
+    public function isOrganizer(): bool
+    {
+        return $this->role?->type === 'staff';
+    }
+
     public function isUser(): bool
     {
         return $this->role?->type === 'user';
@@ -176,6 +181,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function RoleName(): string
     {
         return $this->role?->name ?? 'user';
+    }
+
+        public function scopeUser($query)
+    {
+        return $query->where('role_id', 4);
     }
 
     public function routePrefix(): string

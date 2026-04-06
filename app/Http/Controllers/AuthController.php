@@ -28,6 +28,12 @@ class AuthController extends Controller
             $validated = $user->validated();
 
             if (Auth::attempt(['email' => $validated['email'], 'password' => $user['password']])) {
+                // dd(auth()->user()->routePrefix() . '.dashboard');
+                // dd([
+                //     'email' => $validated['email'],
+                //     'user_found' => \App\Models\User::where('email', $validated['email'])->first(),
+                //     'role' => auth()->user()->role?->type,
+                // ]);
                 return redirect()->route(auth()->user()->routePrefix() . '.dashboard');
             }
 
@@ -77,7 +83,6 @@ class AuthController extends Controller
 
                     return redirect()->route('verification.notice')
                         ->with('success', 'Registration restored. Please activate your account via email.');
-
                 } else {
                     return back()
                         ->withInput()
@@ -104,7 +109,6 @@ class AuthController extends Controller
 
             return redirect()->route('verification.notice')
                 ->with('success', 'Registration successful. Please activate your account via email.');
-
         } catch (\Throwable $e) {
             DB::rollBack();
 

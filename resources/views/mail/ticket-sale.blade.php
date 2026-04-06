@@ -6,7 +6,7 @@
         <strong>Admission Type:</strong> {{ $sale->ticket->ticket_type }}<br>
         <strong>Event Name:</strong> {{ $sale->event->event_name }}<br>
         <strong>Event Date:</strong> {{ $sale->event->event_date }} at {{ $sale->event->event_time }}<br>
-        <strong>Event Venue:</strong> {{ $sale->event->event_loc }}
+        <strong>Event Venue:</strong> {{ $sale->event->event_venue }}
     </p>
 
     <p>This is your login details:</p>

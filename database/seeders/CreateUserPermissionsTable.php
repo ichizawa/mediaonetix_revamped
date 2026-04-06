@@ -77,6 +77,10 @@ class CreateUserPermissionsTable extends Seeder
                 'role_id' => 3,
                 'sb_id' => 9,
             ],
+            [
+                'role_id' => 4,
+                'sb_id' => 10,
+            ],
         ];
         foreach ($entries as $entry) {
             UserPermission::create($entry);

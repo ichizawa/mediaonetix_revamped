@@ -569,6 +569,7 @@
         // --- "New Sale" Modal Functions ---
         function openSalesModal() {
             document.getElementById('salesModal').classList.add('active');
+            
         }
 
         function closeSalesModal() {

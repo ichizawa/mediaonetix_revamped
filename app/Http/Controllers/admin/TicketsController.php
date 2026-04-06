@@ -24,6 +24,8 @@ class TicketsController extends Controller
             'available_tickets' => Tickets::where('event_id', $event->id)->sum('quantity'),
         ]);
     }
+
+
     public function store(TicketsRequest $ticket)
     {
         try {
@@ -45,6 +47,10 @@ class TicketsController extends Controller
                 Tickets::create($data);
                 $msg = 'Ticket Created Successfully';
             }
+
+            $event = Events::findOrFail($data['event_id']);
+            $event->event_total_tickets = Tickets::where('event_id', $data['event_id'])->sum('quantity');
+            $event->save();
 
             DB::commit();
             return back()->with('success', $msg);
