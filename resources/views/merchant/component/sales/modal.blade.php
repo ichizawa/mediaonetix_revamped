@@ -38,10 +38,14 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Ticket Quantity</label>
-                    <input type="number" onchange="updateTotalPrice(this)" name="quantity" id="quantityInput" min="1"
-                        value="1"
-                        class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500"
-                        required>
+                    <div class="relative">
+                        <input type="number" onchange="updateTotalPrice(this)" oninput="updateTotalPrice(this)" name="quantity" id="quantityInput" min="1"
+                            value="1"
+                            class="w-full pr-24 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                            required>
+                        <span id="ticketAvailability"
+                            class="absolute inset-y-0 right-3 flex items-center text-xs text-gray-400 pointer-events-none">- left</span>
+                    </div>
                 </div>
             </div>
 
@@ -148,28 +152,116 @@
     </div>
 </div>
 <script>
-    function updateTickets(selectEl) {
-        const selectedOption = selectEl.options[selectEl.selectedIndex];
-        const eventData = JSON.parse(selectedOption.dataset.event);
-        // $('#ticket_selection').empty();
+    function resetTicketSelection(message = 'Select Ticket Type') {
+        const ticketSelection = document.getElementById('ticket_selection');
+        const quantityInput = document.getElementById('quantityInput');
+        const ticketAvailability = document.getElementById('ticketAvailability');
 
-        eventData.tickets.forEach((ticket, index) => {
-            $('#ticket_selection').append(`<option value="${ticket.id}" class="text-black" data-ticket='${JSON.stringify(ticket)}'>${ticket.name}</option>`);
-        });
+        ticketSelection.innerHTML = `<option value="" class="text-black" selected disabled>${message}</option>`;
+        document.getElementById('ticketPrice').textContent = '0.00';
+        document.getElementById('totalPrice').textContent = '0.00';
+        quantityInput.value = 1;
+        quantityInput.removeAttribute('max');
+        quantityInput.disabled = true;
+        ticketAvailability.textContent = '- left';
     }
+
+    function setQuantityLimit(availableQty) {
+        const quantityInput = document.getElementById('quantityInput');
+        const ticketAvailability = document.getElementById('ticketAvailability');
+        const available = Math.max(parseInt(availableQty, 10) || 0, 0);
+
+        ticketAvailability.textContent = `${available} left`;
+
+        if (available === 0) {
+            quantityInput.value = 0;
+            quantityInput.min = 0;
+            quantityInput.max = 0;
+            quantityInput.disabled = true;
+            return;
+        }
+
+        quantityInput.disabled = false;
+        quantityInput.min = 1;
+        quantityInput.max = available;
+
+        if ((parseInt(quantityInput.value, 10) || 1) > available) {
+            quantityInput.value = available;
+        } else if ((parseInt(quantityInput.value, 10) || 0) < 1) {
+            quantityInput.value = 1;
+        }
+    }
+
+    function updateTickets(selectEl) {
+        resetTicketSelection();
+
+        const selectedOption = selectEl.options[selectEl.selectedIndex];
+        if (!selectedOption || !selectedOption.dataset.event) {
+            return;
+        }
+
+        let eventData;
+        try {
+            eventData = JSON.parse(selectedOption.dataset.event);
+        } catch (error) {
+            resetTicketSelection('Unable to load ticket types');
+            return;
+        }
+
+        const tickets = Array.isArray(eventData.tickets) ? eventData.tickets : [];
+
+        if (!tickets.length) {
+            resetTicketSelection('No ticket type available');
+            return;
+        }
+
+        const ticketSelection = document.getElementById('ticket_selection');
+        tickets.forEach((ticket) => {
+            const option = document.createElement('option');
+            option.value = ticket.id;
+            option.className = 'text-black';
+            option.dataset.ticket = JSON.stringify(ticket);
+            option.textContent = ticket.name;
+            ticketSelection.appendChild(option);
+        });
+
+        ticketSelection.selectedIndex = 1;
+        updateTicketPrice(ticketSelection);
+    }
+
     function updateTicketPrice(selectEl) {
         const selectedOption = selectEl.options[selectEl.selectedIndex];
+        if (!selectedOption || !selectedOption.dataset.ticket) {
+            document.getElementById('ticketPrice').textContent = '0.00';
+            document.getElementById('totalPrice').textContent = '0.00';
+            setQuantityLimit(0);
+            return;
+        }
+
         const ticket = JSON.parse(selectedOption.dataset.ticket);
-        // console.log(ticket);
-        $('#ticketPrice').text(ticket.price);
-        $('#totalPrice').text(ticket.price);
+        const ticketPrice = Number(ticket.price || 0).toFixed(2);
+        document.getElementById('ticketPrice').textContent = ticketPrice;
+        setQuantityLimit(ticket.quantity);
+        updateTotalPrice(document.getElementById('quantityInput'));
     }
     function updateTotalPrice(sel) {
-        const ticketPrice = parseFloat($('#ticketPrice').text()) || 0;
-        const quantity = parseInt($(sel).val()) || 0;
+        const maxQuantity = parseInt(sel.max, 10) || Number.MAX_SAFE_INTEGER;
+        let quantity = parseInt(sel.value, 10) || 0;
+
+        if (quantity > maxQuantity) {
+            quantity = maxQuantity;
+            sel.value = maxQuantity;
+        }
+
+        if (quantity < 0) {
+            quantity = 0;
+            sel.value = 0;
+        }
+
+        const ticketPrice = parseFloat(document.getElementById('ticketPrice').textContent) || 0;
 
         const total = ticketPrice * quantity;
-        $('#totalPrice').text(total.toFixed(2));
+        document.getElementById('totalPrice').textContent = total.toFixed(2);
     }
 
 </script>

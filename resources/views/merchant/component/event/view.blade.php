@@ -1,9 +1,9 @@
 <!-- View Event Modal -->
-<div id="viewEventModal" class="hidden fixed inset-0 items-center justify-center"
+<div id="viewEventModal" class="hidden fixed inset-0 items-end sm:items-center justify-center p-0 sm:p-4"
     style="background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 50;">
     <div
-        class="modal-content w-full max-w-3xl mx-4 bg-gradient-to-br from-[#1a2332] to-[#0c1222] border border-white/10 rounded-2xl overflow-hidden">
-        <div class="relative h-64 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
+        class="modal-content w-full h-[96dvh] sm:h-auto max-w-4xl lg:max-w-3xl bg-gradient-to-br from-[#1a2332] to-[#0c1222] border border-white/10 rounded-none sm:rounded-2xl overflow-hidden max-h-[96dvh] sm:max-h-[86vh] lg:max-h-[80vh] overflow-y-auto">
+        <div class="relative h-48 sm:h-64 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
             <div id="viewEventImage" class="absolute inset-0 bg-cover bg-center opacity-40"></div>
             <button onclick="closeViewModal()"
                 class="absolute top-4 right-4 p-2 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-lg transition-all">
@@ -14,14 +14,14 @@
             </button>
 
             <!-- Status badge — bottom left -->
-            <div class="absolute bottom-4 left-6" id="viewEventStatusContainer">
+            <div class="absolute bottom-4 left-4 sm:left-6" id="viewEventStatusContainer">
             </div>
         </div>
 
-        <div class="p-6">
-            <div class="flex items-start justify-between mb-6">
+        <div class="p-4 sm:p-6">
+            <div class="flex items-start justify-between gap-3 sm:gap-4 mb-6">
                 <div class="flex-1">
-                    <h3 id="viewEventName" class="text-3xl font-bold text-white mb-2">Event Name</h3>
+                    <h3 id="viewEventName" class="text-2xl sm:text-3xl font-bold text-white mb-2 break-words">Event Name</h3>
                     <div class="flex items-center gap-2 text-gray-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -33,11 +33,11 @@
                 </div>
                 <div class="text-right">
                     <p class="text-sm text-gray-400">Starting from</p>
-                    <p id="viewEventPrice" class="text-3xl font-bold text-white">$45</p>
+                    <p id="viewEventPrice" class="text-2xl sm:text-3xl font-bold text-white">$45</p>
                     <!-- Seat Plan button — below price, right-aligned -->
                     <div id="viewSeatPlanBtn" class="hidden justify-end mt-2">
                         <button onclick="openSeatPlanLightbox()"
-                            class="flex items-center gap-2 px-3 py-2 bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-white/30 rounded-full text-white text-xs font-semibold transition-all group ml-auto">
+                            class="flex items-center gap-2 px-3 py-2 bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-white/30 rounded-full text-white text-xs font-semibold transition-all group sm:ml-auto">
                             <svg class="w-3.5 h-3.5 text-blue-400 group-hover:scale-110 transition-transform"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -95,67 +95,72 @@
             </div>
 
             <div class="mb-6">
-                <div class="flex justify-between items-center mb-3">
+                <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
                     <h4 class="text-lg font-semibold text-white">Ticket Sales</h4>
-                    <span id="viewEventPercentage" class="text-blue-400 font-semibold">68%</span>
+                    <span id="viewEventPercentage" class="text-blue-400 font-semibold"></span>
                 </div>
                 <div class="w-full h-3 bg-gray-700 rounded-full overflow-hidden mb-2">
                     <div id="viewEventProgress" class="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all"
                         style="width: 68%"></div>
                 </div>
-                <div class="flex justify-between text-sm text-gray-400">
-                    <span id="viewEventSold">342 sold</span>
-                    <span id="viewEventTotal">of 500 tickets</span>
+                <div class="flex flex-wrap justify-between gap-2 text-xs sm:text-sm text-gray-400">
+                    <span id="viewEventSold" class="font-medium"></span>
+                    <span id="viewEventTotal"></span>
                 </div>
             </div>
 
-<div class="flex flex-wrap justify-end gap-3 pt-4 border-t border-white/10">
-    <button id="openEditModalFromView"
-        class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-semibold transition-all">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-            </path>
-        </svg>
-        Edit Event
-    </button>
-    <a id="viewManageTicketsBtn" href="#"
-        class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg font-semibold transition-all">
-        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 -1 17 18">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                d="M4 4.85v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9z">
-            </path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                d="M1.5 3A1.5 1.5 0 0 0 0 4.5V6a.5.5 0 0 0 .5.5 1.5 1.5 0 1 1 0 3 .5.5 0 0 0-.5.5v1.5A1.5 1.5 0 0 0 1.5 13h13a1.5 1.5 0 0 0 1.5-1.5V10a.5.5 0 0 0-.5-.5 1.5 1.5 0 0 1 0-3A.5.5 0 0 0 16 6V4.5A1.5 1.5 0 0 0 14.5 3zM1 4.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v1.05a2.5 2.5 0 0 0 0 4.9v1.05a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-1.05a2.5 2.5 0 0 0 0-4.9z">
-            </path>
-        </svg>
-        Manage Tickets
-    </a>
-    <form id="viewDeleteEventForm" method="POST" onsubmit="confirmDelete(event, this)"
-        class="w-full sm:w-auto">
-        @csrf
-        @method('DELETE')
-        <button type="submit"
-            class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-300 rounded-lg font-semibold transition-all">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                </path>
-            </svg>
-            Delete
-        </button>
-    </form>
-    <button onclick="closeViewModal()"
-        class="w-full sm:w-auto px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg font-semibold transition-all">
-        Close
-    </button>
-</div>
+            <div
+                class="z-10 -mx-4 sm:mx-0 px-4 sm:px-0 pt-4 pb-[calc(env(safe-area-inset-bottom)+0.5rem)] sm:pb-0 border-t border-white/10 bg-gradient-to-t from-[#0c1222] via-[#0c1222]/95 to-transparent">
+                <div class="flex flex-wrap justify-end gap-3">
+                    <button id="openEditModalFromView"
+                        class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-semibold transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                            </path>
+                        </svg>
+                        Edit Event
+                    </button>
+                    <a id="viewManageTicketsBtn" href="#"
+                        class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg font-semibold transition-all">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 -1 17 18">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                d="M4 4.85v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9z">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                d="M1.5 3A1.5 1.5 0 0 0 0 4.5V6a.5.5 0 0 0 .5.5 1.5 1.5 0 1 1 0 3 .5.5 0 0 0-.5.5v1.5A1.5 1.5 0 0 0 1.5 13h13a1.5 1.5 0 0 0 1.5-1.5V10a.5.5 0 0 0-.5-.5 1.5 1.5 0 0 1 0-3A.5.5 0 0 0 16 6V4.5A1.5 1.5 0 0 0 14.5 3zM1 4.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v1.05a2.5 2.5 0 0 0 0 4.9v1.05a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-1.05a2.5 2.5 0 0 0 0-4.9z">
+                            </path>
+                        </svg>
+                        Manage Tickets
+                    </a>
+                    <form id="viewDeleteEventForm" method="POST" onsubmit="confirmDelete(event, this)"
+                        class="w-full sm:w-auto">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                            class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-300 rounded-lg font-semibold transition-all">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                </path>
+                            </svg>
+                            Delete
+                        </button>
+                    </form>
+                    <button onclick="closeViewModal()"
+                        class="w-full sm:w-auto px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg font-semibold transition-all">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Seat Plan Lightbox -->
-<div id="seatPlanLightbox" class="hidden fixed inset-0 items-center justify-center p-4"
+<div id="seatPlanLightbox" class="hidden fixed inset-0 items-center justify-center p-3 sm:p-4"
     style="z-index: 99999; background: rgba(0,0,0,0.88); backdrop-filter: blur(16px);">
-    <div class="relative w-full flex flex-col items-center" style="max-width: 28.8rem;">
+    <div id="seatPlanLightboxPanel" class="relative w-full flex flex-col items-center" style="max-width: min(94vw, 64rem);">
         <div class="flex items-center justify-between w-full mb-3 px-1">
             <span class="text-white font-semibold text-sm tracking-wide">Seat Plan</span>
             <button onclick="closeSeatPlanLightbox()"
@@ -166,7 +171,7 @@
             </button>
         </div>
         <div class="rounded-2xl overflow-hidden border border-white/10 shadow-2xl w-full bg-black/40">
-            <img id="seatPlanLightboxImg" src="" alt="Seat Plan" class="w-full h-auto max-h-[42vh] object-contain">
+            <img id="seatPlanLightboxImg" src="" alt="Seat Plan" class="w-full h-auto max-h-[82vh] object-contain">
         </div>
         <p class="text-gray-500 text-xs mt-3">Click outside or press Esc to close</p>
     </div>
@@ -204,6 +209,36 @@
 
     #viewEventModal.modal-closing {
         animation: modalOut 0.18s ease forwards;
+    }
+
+    #viewEventModal {
+        overscroll-behavior: contain;
+    }
+
+    #viewEventModal .modal-content {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body.view-overlay-locked {
+        position: fixed;
+        left: 0;
+        right: 0;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    @media (max-width: 640px) {
+        #viewEventModal {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        #viewEventDescription {
+            max-height: 34vh !important;
+        }
+
+        #viewEventModal.modal-opening {
+            animation: modalIn 0.22s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
     }
 
     /* ── Modal content scrollbar ─────────────────────────────────────────── */
@@ -394,13 +429,51 @@
                 if (vm && !vm.classList.contains('hidden')) closeViewModal();
             }
         });
+
+        syncViewOverlayScrollLock();
     });
+
+    let viewOverlayScrollY = 0;
+
+    function sizeSeatPlanLightboxToImage() {
+        const panel = document.getElementById('seatPlanLightboxPanel');
+        const img = document.getElementById('seatPlanLightboxImg');
+        if (!panel || !img) return;
+
+        const viewportMaxWidth = Math.floor(window.innerWidth * 0.94);
+        const naturalWidth = Number(img.naturalWidth || 0);
+        const targetWidth = naturalWidth > 0 ? Math.min(naturalWidth, viewportMaxWidth) : viewportMaxWidth;
+
+        panel.style.width = `${targetWidth}px`;
+    }
+
+    function syncViewOverlayScrollLock() {
+        const viewModal = document.getElementById('viewEventModal');
+        const seatPlanLightbox = document.getElementById('seatPlanLightbox');
+        const isViewModalOpen = viewModal && !viewModal.classList.contains('hidden');
+        const isLightboxOpen = seatPlanLightbox && !seatPlanLightbox.classList.contains('hidden');
+        const shouldLock = isViewModalOpen || isLightboxOpen;
+
+        if (shouldLock && !document.body.classList.contains('view-overlay-locked')) {
+            viewOverlayScrollY = window.scrollY || window.pageYOffset || 0;
+            document.body.classList.add('view-overlay-locked');
+            document.body.style.top = `-${viewOverlayScrollY}px`;
+            return;
+        }
+
+        if (!shouldLock && document.body.classList.contains('view-overlay-locked')) {
+            document.body.classList.remove('view-overlay-locked');
+            document.body.style.top = '';
+            window.scrollTo(0, viewOverlayScrollY);
+        }
+    }
 
     // ── View modal open / close ───────────────────────────────────────────
     function openViewModal() {
         const modal = document.getElementById('viewEventModal');
         modal.classList.remove('hidden', 'modal-closing');
         modal.classList.add('flex', 'modal-opening');
+        syncViewOverlayScrollLock();
         modal.addEventListener('animationend', () => modal.classList.remove('modal-opening'), { once: true });
     }
 
@@ -411,24 +484,46 @@
         modal.addEventListener('animationend', () => {
             modal.classList.remove('flex', 'modal-closing');
             modal.classList.add('hidden');
+            syncViewOverlayScrollLock();
         }, { once: true });
     }
 
     // ── Seat Plan lightbox open / close ───────────────────────────────────
     function openSeatPlanLightbox() {
         const lb = document.getElementById('seatPlanLightbox');
+        const img = document.getElementById('seatPlanLightboxImg');
         lb.classList.remove('hidden', 'sp-closing');
         lb.classList.add('flex', 'sp-opening');
+        syncViewOverlayScrollLock();
+
+        if (img) {
+            if (img.complete && img.naturalWidth > 0) {
+                sizeSeatPlanLightboxToImage();
+            } else {
+                img.addEventListener('load', sizeSeatPlanLightboxToImage, { once: true });
+            }
+        }
+
         lb.addEventListener('animationend', () => lb.classList.remove('sp-opening'), { once: true });
     }
 
     function closeSeatPlanLightbox() {
         const lb = document.getElementById('seatPlanLightbox');
+        const panel = document.getElementById('seatPlanLightboxPanel');
         lb.classList.remove('sp-opening');
         lb.classList.add('sp-closing');
         lb.addEventListener('animationend', () => {
             lb.classList.remove('flex', 'sp-closing');
             lb.classList.add('hidden');
+            syncViewOverlayScrollLock();
+            if (panel) panel.style.width = '';
         }, { once: true });
     }
+
+    window.addEventListener('resize', () => {
+        const lb = document.getElementById('seatPlanLightbox');
+        if (lb && !lb.classList.contains('hidden')) {
+            sizeSeatPlanLightboxToImage();
+        }
+    });
 </script>

@@ -27,18 +27,57 @@
                 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                     @forelse($events as $event)
                         <div
-                            class="group relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-{{ $event->statuslabel['color'] }}-500/50 transition-all duration-500 hover:shadow-xl hover:shadow-{{ $event->statuslabel['color'] }}-500/10">
+                            class="purchase-btn group relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-{{ $event->statuslabel['color'] }}-500/50 transition-all duration-500 hover:shadow-xl hover:shadow-{{ $event->statuslabel['color'] }}-500/10 cursor-pointer"
+                            data-event-id="{{ $event->id }}">
                             <!-- Image -->
                             <div
                                 class="relative aspect-[16/10] bg-gradient-to-br from-{{ $event->statuslabel['color'] }}-600 to-{{ $event->statuslabel['color'] }}-400 overflow-hidden">
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                            d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3">
-                                        </path>
-                                    </svg>
-                                </div>
+                                @if (!empty($event->event_image))
+                                    @php
+                                        $hasCrop =
+                                            !is_null($event->crop_x) &&
+                                            !is_null($event->crop_y) &&
+                                            !is_null($event->crop_width) &&
+                                            !is_null($event->crop_height) &&
+                                            !empty($event->crop_natural_width) &&
+                                            !empty($event->crop_natural_height) &&
+                                            $event->crop_width > 0 &&
+                                            $event->crop_height > 0;
+
+                                        $cropImageStyle = 'width: 100%; height: 100%; object-fit: cover;';
+
+                                        if ($hasCrop) {
+                                            $widthPercent = ($event->crop_natural_width / $event->crop_width) * 100;
+                                            $heightPercent = ($event->crop_natural_height / $event->crop_height) * 100;
+
+                                            $leftPercent = -($event->crop_x / $event->crop_width) * 100;
+                                            $topPercent = -($event->crop_y / $event->crop_height) * 100;
+
+                                            $cropImageStyle = sprintf(
+                                                'width: %.6f%%; height: %.6f%%; max-width: none; max-height: none; left: %.6f%%; top: %.6f%%;',
+                                                $widthPercent,
+                                                $heightPercent,
+                                                $leftPercent,
+                                                $topPercent
+                                            );
+                                        }
+                                    @endphp
+                                    <img src="{{ asset('images/events/' . $event->event_image) }}"
+                                        alt="{{ $event->event_name }}"
+                                        class="absolute"
+                                        style="{{ $cropImageStyle }}"
+                                        loading="lazy">
+                                    <div class="absolute inset-0 bg-black/20"></div>
+                                @else
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                @endif
                                 <div
                                     class="absolute top-3 left-3 px-2.5 py-1 bg-{{ $event->statuslabel['color'] }}-500 rounded-lg text-white text-xs font-bold">
                                     {{ date('M d', strtotime($event->event_date)) }}
@@ -60,7 +99,7 @@
                                         {{ $event->event_name }}
                                     </h3>
                                     <p class="text-sm text-gray-400 line-clamp-2">
-                                        {{ $event->description }}
+                                        {{ \Illuminate\Support\Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($event->description ?? ''))), 120) }}
                                     </p>
                                 </div>
 
@@ -81,8 +120,19 @@
                                         <div class="text-2xl font-bold text-white">
                                             ₱{{ number_format($event->tickets_min_price, 2) }}</div>
                                     </div>
+                                    @php
+                                        $statusColor = data_get($event, 'status_label.color', data_get($event, 'statuslabel.color', 'blue'));
+                                        $statusColorHex = [
+                                            'yellow' => '#ca8a04',
+                                            'green' => '#16a34a',
+                                            'blue' => '#2563eb',
+                                            'grey' => '#6b7280',
+                                            'red' => '#dc2626',
+                                        ][$statusColor] ?? '#2563eb';
+                                    @endphp
                                     <button
-                                        class="purchase-btn px-5 py-2.5 bg-{{ $event->statuslabel['color'] }}-600 hover:bg-{{ $event->statuslabel['color'] }}-500 rounded-lg font-semibold text-sm transition-colors text-white"
+                                        class="purchase-btn px-5 py-2.5 rounded-lg font-semibold text-sm transition-colors text-white"
+                                        style="background-color: {{ $statusColorHex }};"
                                         data-event-id="{{ $event->id }}">
                                         Buy Tickets
                                     </button>
