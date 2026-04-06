@@ -42,7 +42,7 @@ Route::group(['middleware' => ['json.response']], function () {
 
         Route::prefix('staff')->group(function () {
 
-            Route::get('events', [\App\Http\Controllers\PublicController::class, 'index']);
+            Route::get('events', [\App\Http\Controllers\PublicController::class, 'events']);
             Route::get('tickets', [TicketListsController::class, 'getTickets']);
 
             Route::prefix('scan')->group(function () {
@@ -51,6 +51,8 @@ Route::group(['middleware' => ['json.response']], function () {
             });
         });
 
-
+        Route::prefix('users')->group(function () {
+            Route::get('events', [EventsController::class, 'events']);
+        });
     });
 });

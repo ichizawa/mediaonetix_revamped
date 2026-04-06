@@ -44,7 +44,7 @@ class ScannerController extends Controller
     {
         try {
 
-            if (!$reference_num) {
+            if ($reference_num) {
                 $ticket = CustomerTicket::where('reference_num', $reference_num)->first();
                 $sale = $ticket->sale;
 
@@ -52,7 +52,7 @@ class ScannerController extends Controller
                     return response()->json(['message' => 'Ticket not found'], 404);
                 }
 
-                if ($ticket->sale->status !== 'paid') {
+                if ($ticket->sale->is_paid == false) {
                     return response([
                         'status' => 403,
                         'message' => 'This ticket is not yet paid and cannot be scanned'
@@ -75,10 +75,18 @@ class ScannerController extends Controller
 
                     event(new MerchantSales($sale));
 
-                    UserScanner::where('user_id', Auth::user()->id)->update([
-                        'scanning_count' => UserScanner::where('user_id', Auth::user()->id)->first()->scanning_count + 1,
-                        'last_scanned' => now()
-                    ]);
+                    $userScanner = UserScanner::where('user_id', Auth::user()->id)->first();
+                    if ($userScanner) {
+                        $userScanner->scanning_count = $userScanner->scanning_count + 1;
+                        $userScanner->last_scanned = now();
+                        $userScanner->save();
+                    } else {
+                        UserScanner::create([
+                            'user_id' => Auth::user()->id,
+                            'scanning_count' => 1,
+                            'last_scanned' => now()
+                        ]);
+                    }
 
                 } catch (\Exception $e) {
                     Log::error('Error redeeming ticket: ' . $e->getMessage());

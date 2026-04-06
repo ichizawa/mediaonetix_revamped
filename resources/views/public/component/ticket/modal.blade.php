@@ -1,10 +1,17 @@
+</script>
+<script>
+    function closeTicketModal() {
+        const eventModal = document.getElementById('ticketModal');
+        if (eventModal) eventModal.classList.remove('active');
+    }
+</script>
 <!-- Combined Add/Edit Event Modal -->
 <div id="ticketModal" class="modal">
     <div
         class="modal-content w-full max-w-2xl mx-4 bg-gradient-to-br from-[#1a2332] to-[#0c1222] border border-white/10 rounded-2xl p-6">
         <div class="flex items-center justify-between mb-6">
             <h3 id="modalTitle" class="text-2xl font-bold text-white">Add New Event</h3>
-            <button onclick="closeModal()" class="p-2 hover:bg-white/5 rounded-lg transition-all">
+            <button onclick="closeTicketModal()" class="p-2 hover:bg-white/5 rounded-lg transition-all">
                 <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
                     </path>

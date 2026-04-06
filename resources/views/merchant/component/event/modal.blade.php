@@ -72,16 +72,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M7 17V7h10M7 7l10 10" />
                                         </svg>
-                                        Re-crop
-                                    </button>
-
-                                    <button type="button" id="removeEventImageBtn"
-                                        class="flex items-center gap-2 px-4 py-2 rounded-full bg-red-600/80 hover:bg-red-500 text-white text-sm font-semibold shadow-lg transition-all">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 448 512">
-                                            <path fill="currentColor"
-                                                d="M136.7 5.9C141.1-7.2 153.3-16 167.1-16l113.9 0c13.8 0 26 8.8 30.4 21.9L320 32 416 32c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 8.7-26.1zM32 144l384 0 0 304c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-304zm88 64c-13.3 0-24 10.7-24 24l0 192c0 13.3 10.7 24 24 24s24-10.7 24-24l0-192c0-13.3-10.7-24-24-24zm104 0c-13.3 0-24 10.7-24 24l0 192c0 13.3 10.7 24 24 24s24-10.7 24-24l0-192c0-13.3-10.7-24-24-24zm104 0c-13.3 0-24 10.7-24 24l0 192c0 13.3 10.7 24 24 24s24-10.7 24-24l0-192c0-13.3-10.7-24-24-24z" />
-                                        </svg>
-                                        Remove Photo
+                                        Edit Image
                                     </button>
                                 </div>
                             </div>
@@ -268,6 +259,7 @@
         class="w-full max-w-2xl bg-gradient-to-br from-[#1a2332] to-[#0c1222] border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
         style="max-height:calc(100vh - 2rem);">
 
+        {{-- Header --}}
         <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 shrink-0">
             <div class="flex items-center gap-3">
                 <div
@@ -291,6 +283,7 @@
             </button>
         </div>
 
+        {{-- Toolbar --}}
         <div class="flex items-center gap-1 px-4 py-2.5 border-b border-white/10 bg-white/[0.02] flex-wrap shrink-0">
             <span class="text-xs text-gray-500 mr-1">Ratio</span>
             <button type="button" onclick="setCropAspect(16/9)" id="cropBtn-16-9"
@@ -348,6 +341,7 @@
             </button>
         </div>
 
+        {{-- ✅ Cropper canvas (was missing!) --}}
         <div class="flex-1 overflow-hidden min-h-0 flex items-center justify-center bg-black/40"
             style="max-height:420px;">
             <div style="width:100%;height:100%;max-height:420px;overflow:hidden;position:relative;">
@@ -356,16 +350,37 @@
             </div>
         </div>
 
-        <div class="flex items-center justify-between gap-3 px-5 py-4 border-t border-white/10 shrink-0">
-            <span class="text-xs text-gray-600 hidden sm:block">The full original photo is uploaded — only the display
-                region changes</span>
-            <div class="flex gap-3 ml-auto">
+        {{-- Footer --}}
+        <div
+            class="flex flex-col gap-3 px-5 py-4 border-t border-white/10 shrink-0 sm:flex-row sm:items-center sm:justify-between">
+
+            <div class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+                <button type="button" onclick="document.getElementById('eventImage').click(); closeCropper();"
+                    class="cropper-footer-secondary-btn flex w-full items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2 text-sm font-medium text-gray-300 transition-all hover:bg-white/10 hover:text-white">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                    Replace
+                </button>
+
+                <button type="button" onclick="closeCropper(); clearImageState();"
+                    class="cropper-footer-secondary-btn flex w-full items-center justify-center gap-1.5 rounded-lg border border-red-500/20 bg-red-600/10 px-3.5 py-2 text-sm font-medium text-red-400 transition-all hover:bg-red-600/25 hover:text-red-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Delete
+                </button>
+            </div>
+
+            <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
                 <button type="button" onclick="closeCropper()"
-                    class="px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white rounded-lg text-sm font-medium transition-all">
+                    class="w-full rounded-lg bg-white/5 px-4 py-2 text-sm font-medium text-gray-300 transition-all hover:bg-white/10 hover:text-white sm:w-auto">
                     Cancel
                 </button>
                 <button type="button" onclick="applyCrop()"
-                    class="px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg text-sm font-semibold transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2">
+                    class="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition-all hover:from-blue-500 hover:to-blue-400 sm:w-auto">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
@@ -373,9 +388,9 @@
                 </button>
             </div>
         </div>
+
     </div>
 </div>
-
 
 <div id="descriptionExpandOverlay" class="hidden fixed inset-0 items-center justify-center p-4"
     style="z-index:9999; background:rgba(0,0,0,0.75); backdrop-filter:blur(12px);">
@@ -421,7 +436,8 @@
                 class="fmt-btn h-11 w-11 flex items-center justify-center rounded-lg text-gray-300 hover:bg-white/10"
                 onclick="applyFormat('italic')">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 4h-4m4 16h-4M10 4l4 16" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M14 4h-4m4 16h-4M10 4l4 16" />
                 </svg>
             </button>
 
@@ -429,7 +445,8 @@
                 class="fmt-btn h-11 w-11 flex items-center justify-center rounded-lg text-gray-300 hover:bg-white/10"
                 onclick="applyFormat('underline')">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v6a5 5 0 0010 0V4M5 20h14" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 4v6a5 5 0 0010 0V4M5 20h14" />
                 </svg>
             </button>
 
@@ -439,7 +456,8 @@
                 class="fmt-btn h-11 w-11 flex items-center justify-center rounded-lg text-gray-300 hover:bg-white/10"
                 onclick="applyFormat('h1')">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5v14M12 5v14M4 12h8M17 9l2-1v10" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 5v14M12 5v14M4 12h8M17 9l2-1v10" />
                 </svg>
             </button>
 
@@ -447,7 +465,8 @@
                 class="fmt-btn h-11 w-11 flex items-center justify-center rounded-lg text-gray-300 hover:bg-white/10"
                 onclick="applyFormat('h2')">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5v14M12 5v14M4 12h8M16 10a2 2 0 114 0c0 1.5-1.2 2.2-2.1 2.8-.9.6-1.9 1.3-1.9 2.7V16h4" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 5v14M12 5v14M4 12h8M16 10a2 2 0 114 0c0 1.5-1.2 2.2-2.1 2.8-.9.6-1.9 1.3-1.9 2.7V16h4" />
                 </svg>
             </button>
 
@@ -455,7 +474,8 @@
                 class="fmt-btn h-11 w-11 flex items-center justify-center rounded-lg text-gray-300 hover:bg-white/10"
                 onclick="applyFormat('insertUnorderedList')">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
                 </svg>
             </button>
 
@@ -463,7 +483,8 @@
                 class="fmt-btn h-11 w-11 flex items-center justify-center rounded-lg text-gray-300 hover:bg-white/10"
                 onclick="applyFormat('insertOrderedList')">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h10M10 12h10M10 18h10M4 6h2v4M4 14h2v4M4 18h2" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 6h10M10 12h10M10 18h10M4 6h2v4M4 14h2v4M4 18h2" />
                 </svg>
             </button>
 
@@ -471,7 +492,8 @@
                 class="fmt-btn h-11 w-11 flex items-center justify-center rounded-lg text-gray-300 hover:bg-white/10"
                 onclick="applyFormat('blockquote')">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10h4v4H7v4H3v-4a4 4 0 014-4zm10 0h4v4h-4v4h-4v-4a4 4 0 014-4z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 10h4v4H7v4H3v-4a4 4 0 014-4zm10 0h4v4h-4v4h-4v-4a4 4 0 014-4z" />
                 </svg>
             </button>
 
@@ -506,63 +528,233 @@
 
 <style>
     @keyframes cropperIn {
-        from { opacity: 0; transform: scale(0.92) translateY(20px); }
-        to { opacity: 1; transform: scale(1) translateY(0); }
+        from {
+            opacity: 0;
+            transform: scale(0.92) translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
     }
+
     @keyframes cropperOut {
-        from { opacity: 1; transform: scale(1) translateY(0); }
-        to { opacity: 0; transform: scale(0.92) translateY(20px); }
+        from {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        to {
+            opacity: 0;
+            transform: scale(0.92) translateY(20px);
+        }
     }
+
     @keyframes backdropIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
     }
+
     @keyframes backdropOut {
-        from { opacity: 1; }
-        to { opacity: 0; }
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
     }
-    #imageCropperModal.cropper-opening { animation: backdropIn 0.2s ease forwards; }
-    #imageCropperModal.cropper-closing { animation: backdropOut 0.2s ease forwards; }
-    #imageCropperModal.cropper-opening #imageCropperPanel { animation: cropperIn 0.28s cubic-bezier(0.34, 1.2, 0.64, 1) forwards; }
-    #imageCropperModal.cropper-closing #imageCropperPanel { animation: cropperOut 0.2s ease forwards; }
-    .crop-ratio-btn.active { background: rgba(37, 99, 235, 0.3); border-color: rgba(59, 130, 246, 0.6); color: #93c5fd; }
-    .cropper-view-box { outline-color: #3b82f6; }
-    .cropper-point { background-color: #3b82f6; }
-    .cropper-line { background-color: rgba(59, 130, 246, 0.6); }
-    .cropper-face { background-color: rgba(59, 130, 246, 0.05); }
+
+    #imageCropperModal.cropper-opening {
+        animation: backdropIn 0.2s ease forwards;
+    }
+
+    #imageCropperModal.cropper-closing {
+        animation: backdropOut 0.2s ease forwards;
+    }
+
+    #imageCropperModal.cropper-opening #imageCropperPanel {
+        animation: cropperIn 0.28s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+    }
+
+    #imageCropperModal.cropper-closing #imageCropperPanel {
+        animation: cropperOut 0.2s ease forwards;
+    }
+
+    .crop-ratio-btn.active {
+        background: rgba(37, 99, 235, 0.3);
+        border-color: rgba(59, 130, 246, 0.6);
+        color: #93c5fd;
+    }
+
+    .cropper-view-box {
+        outline-color: #3b82f6;
+    }
+
+    .cropper-point {
+        background-color: #3b82f6;
+    }
+
+    .cropper-line {
+        background-color: rgba(59, 130, 246, 0.6);
+    }
+
+    .cropper-face {
+        background-color: rgba(59, 130, 246, 0.05);
+    }
+
+    .cropper-footer-secondary-btn {
+        width: 100%;
+    }
+
+    @media (min-width: 640px) {
+        .cropper-footer-secondary-btn {
+            width: 190px !important;
+            min-width: 190px;
+        }
+    }
+
     @keyframes descBackdropIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
     }
+
     @keyframes descBackdropOut {
-        from { opacity: 1; }
-        to { opacity: 0; }
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
     }
+
     @keyframes descPanelIn {
-        from { opacity: 0; transform: scale(0.92) translateY(20px); }
-        to { opacity: 1; transform: scale(1) translateY(0); }
+        from {
+            opacity: 0;
+            transform: scale(0.92) translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
     }
+
     @keyframes descPanelOut {
-        from { opacity: 1; transform: scale(1) translateY(0); }
-        to { opacity: 0; transform: scale(0.92) translateY(20px); }
+        from {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        to {
+            opacity: 0;
+            transform: scale(0.92) translateY(20px);
+        }
     }
-    #descriptionExpandOverlay.desc-opening { animation: descBackdropIn 0.22s ease forwards; }
-    #descriptionExpandOverlay.desc-closing { animation: descBackdropOut 0.22s ease forwards; }
-    #descriptionExpandOverlay.desc-opening #descriptionExpandPanel { animation: descPanelIn 0.28s cubic-bezier(0.34, 1.2, 0.64, 1) forwards; }
-    #descriptionExpandOverlay.desc-closing #descriptionExpandPanel { animation: descPanelOut 0.2s ease forwards; }
-    .fmt-btn:active { transform: scale(0.9); }
-    .wysiwyg-editor:empty:before { content: attr(data-placeholder); color: #6b7280; pointer-events: none; display: block; }
-    .wysiwyg-editor h1 { font-size: 1.4em; font-weight: 700; color: #fff; margin: .6em 0 .3em; }
-    .wysiwyg-editor h2 { font-size: 1.1em; font-weight: 600; color: #e2e8f0; margin: .5em 0 .2em; }
-    .wysiwyg-editor strong, .wysiwyg-editor b { font-weight: 700; color: #fff; }
-    .wysiwyg-editor em, .wysiwyg-editor i { font-style: italic; color: #cbd5e1; }
-    .wysiwyg-editor u { text-decoration: underline; text-underline-offset: 2px; }
-    .wysiwyg-editor ul { list-style: disc; padding-left: 1.4em; margin: .3em 0; }
-    .wysiwyg-editor ol { list-style: decimal; padding-left: 1.4em; margin: .3em 0; }
-    .wysiwyg-editor li { margin: .15em 0; }
-    .wysiwyg-editor blockquote { border-left: 3px solid #3b82f6; padding-left: .8em; color: #94a3b8; margin: .5em 0; font-style: italic; }
-    .wysiwyg-editor hr { border: none; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: .8em 0; }
-    .wysiwyg-editor p { margin: .2em 0; }
+
+    #descriptionExpandOverlay.desc-opening {
+        animation: descBackdropIn 0.22s ease forwards;
+    }
+
+    #descriptionExpandOverlay.desc-closing {
+        animation: descBackdropOut 0.22s ease forwards;
+    }
+
+    #descriptionExpandOverlay.desc-opening #descriptionExpandPanel {
+        animation: descPanelIn 0.28s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+    }
+
+    #descriptionExpandOverlay.desc-closing #descriptionExpandPanel {
+        animation: descPanelOut 0.2s ease forwards;
+    }
+
+    .fmt-btn:active {
+        transform: scale(0.9);
+    }
+
+    .wysiwyg-editor:empty:before {
+        content: attr(data-placeholder);
+        color: #6b7280;
+        pointer-events: none;
+        display: block;
+    }
+
+    .wysiwyg-editor h1 {
+        font-size: 1.4em;
+        font-weight: 700;
+        color: #fff;
+        margin: .6em 0 .3em;
+    }
+
+    .wysiwyg-editor h2 {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #e2e8f0;
+        margin: .5em 0 .2em;
+    }
+
+    .wysiwyg-editor strong,
+    .wysiwyg-editor b {
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .wysiwyg-editor em,
+    .wysiwyg-editor i {
+        font-style: italic;
+        color: #cbd5e1;
+    }
+
+    .wysiwyg-editor u {
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+
+    .wysiwyg-editor ul {
+        list-style: disc;
+        padding-left: 1.4em;
+        margin: .3em 0;
+    }
+
+    .wysiwyg-editor ol {
+        list-style: decimal;
+        padding-left: 1.4em;
+        margin: .3em 0;
+    }
+
+    .wysiwyg-editor li {
+        margin: .15em 0;
+    }
+
+    .wysiwyg-editor blockquote {
+        border-left: 3px solid #3b82f6;
+        padding-left: .8em;
+        color: #94a3b8;
+        margin: .5em 0;
+        font-style: italic;
+    }
+
+    .wysiwyg-editor hr {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin: .8em 0;
+    }
+
+    .wysiwyg-editor p {
+        margin: .2em 0;
+    }
 </style>
 
 
@@ -628,18 +820,18 @@
     function applyCrop() {
         if (!cropperInstance) return;
 
-        const crop    = cropperInstance.getData(true);
+        const crop = cropperInstance.getData(true);
         const imgData = cropperInstance.getImageData();
-        const natW    = imgData.naturalWidth;
-        const natH    = imgData.naturalHeight;
+        const natW = imgData.naturalWidth;
+        const natH = imgData.naturalHeight;
 
         appliedCropData = cropperInstance.getData();
 
-        document.getElementById('cropX').value             = crop.x;
-        document.getElementById('cropY').value             = crop.y;
-        document.getElementById('cropWidth').value         = crop.width;
-        document.getElementById('cropHeight').value        = crop.height;
-        document.getElementById('cropNaturalWidth').value  = natW;
+        document.getElementById('cropX').value = crop.x;
+        document.getElementById('cropY').value = crop.y;
+        document.getElementById('cropWidth').value = crop.width;
+        document.getElementById('cropHeight').value = crop.height;
+        document.getElementById('cropNaturalWidth').value = natW;
         document.getElementById('cropNaturalHeight').value = natH;
 
         // Show container FIRST so offsetWidth/offsetHeight are non-zero
@@ -657,7 +849,7 @@
 
     function applyFocalPreview(crop, natW, natH) {
         const container = document.getElementById('eventPreviewContainer');
-        const img       = document.getElementById('previewImage');
+        const img = document.getElementById('previewImage');
 
         img.style.display = 'none';
 
@@ -673,7 +865,7 @@
 
         const scaleX = containerW / crop.width;
         const scaleY = containerH / crop.height;
-        const scale  = Math.max(scaleX, scaleY);
+        const scale = Math.max(scaleX, scaleY);
 
         const scaledW = natW * scale;
         const scaledH = natH * scale;
@@ -683,26 +875,26 @@
 
         const src = img.dataset.originalSrc || img.src;
 
-        container.style.backgroundImage    = `url('${src}')`;
-        container.style.backgroundSize     = `${scaledW}px ${scaledH}px`;
+        container.style.backgroundImage = `url('${src}')`;
+        container.style.backgroundSize = `${scaledW}px ${scaledH}px`;
         container.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
-        container.style.backgroundRepeat   = 'no-repeat';
+        container.style.backgroundRepeat = 'no-repeat';
     }
 
     function resetPreviewStyles() {
         const container = document.getElementById('eventPreviewContainer');
-        const img       = document.getElementById('previewImage');
+        const img = document.getElementById('previewImage');
 
-        img.style.display         = '';
-        img.style.objectFit       = 'cover';
-        img.style.objectPosition  = '50% 50%';
-        img.style.transform       = 'scale(1)';
+        img.style.display = '';
+        img.style.objectFit = 'cover';
+        img.style.objectPosition = '50% 50%';
+        img.style.transform = 'scale(1)';
         img.style.transformOrigin = '50% 50%';
 
-        container.style.backgroundImage    = '';
-        container.style.backgroundSize     = '';
+        container.style.backgroundImage = '';
+        container.style.backgroundSize = '';
         container.style.backgroundPosition = '';
-        container.style.backgroundRepeat   = '';
+        container.style.backgroundRepeat = '';
     }
 
     function clearImageState() {
@@ -724,7 +916,7 @@
         if (!serverImageUrl) return;
 
         const container = document.getElementById('eventPreviewContainer');
-        const img       = document.getElementById('previewImage');
+        const img = document.getElementById('previewImage');
 
         container.classList.remove('hidden');
         document.getElementById('eventImagePlaceholder').classList.add('hidden');
@@ -736,11 +928,11 @@
             const crop = { x: +cropX, y: +cropY, width: +cropW, height: +cropH };
             appliedCropData = crop;
 
-            document.getElementById('cropX').value             = cropX;
-            document.getElementById('cropY').value             = cropY;
-            document.getElementById('cropWidth').value         = cropW;
-            document.getElementById('cropHeight').value        = cropH;
-            document.getElementById('cropNaturalWidth').value  = natW;
+            document.getElementById('cropX').value = cropX;
+            document.getElementById('cropY').value = cropY;
+            document.getElementById('cropWidth').value = cropW;
+            document.getElementById('cropHeight').value = cropH;
+            document.getElementById('cropNaturalWidth').value = natW;
             document.getElementById('cropNaturalHeight').value = natH;
 
             img.onload = () => requestAnimationFrame(() => applyFocalPreview(crop, +natW, +natH));
@@ -827,11 +1019,11 @@
             if (dm && !dm.classList.contains('hidden')) closeDescriptionExpand();
         });
 
-        const seatPlanInput            = document.getElementById('seatPlanImage');
-        const seatPlanPreview          = document.getElementById('seatPlanPreview');
+        const seatPlanInput = document.getElementById('seatPlanImage');
+        const seatPlanPreview = document.getElementById('seatPlanPreview');
         const seatPlanPreviewContainer = document.getElementById('seatPlanPreviewContainer');
-        const seatPlanPlaceholder      = document.getElementById('seatPlanPlaceholder');
-        const removeSeatPlanBtn        = document.getElementById('removeSeatPlanBtn');
+        const seatPlanPlaceholder = document.getElementById('seatPlanPlaceholder');
+        const removeSeatPlanBtn = document.getElementById('removeSeatPlanBtn');
 
         seatPlanInput?.addEventListener('change', function () {
             const file = this.files[0];
@@ -891,8 +1083,8 @@
     }
 
     function openDescriptionExpand() {
-        const main    = document.getElementById('eventDescription');
-        const editor  = document.getElementById('descriptionWysiwyg');
+        const main = document.getElementById('eventDescription');
+        const editor = document.getElementById('descriptionWysiwyg');
         const overlay = document.getElementById('descriptionExpandOverlay');
         if (!main || !editor || !overlay) return;
         const existing = main.value.trim();
