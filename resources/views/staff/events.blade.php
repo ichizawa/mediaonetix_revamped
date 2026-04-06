@@ -371,7 +371,7 @@
             document.getElementById('viewEventDescription').textContent = event.description;
             document.getElementById('viewEventSold').textContent = `${event.tickets_sold} sold`;
             document.getElementById('viewEventTotal').textContent = `of ${totalTickets} tickets`;
-            document.getElementById('viewEventPercentage').textContent = `${event.percentage}%`;
+            document.getElementById('viewEventPercentage').textContent = `${Number(event.percentage || 0).toFixed(2)}%`;
             document.getElementById('viewEventProgress').style.width = `${event.percentage}%`;
             document.getElementById('viewEventStatus').textContent = event.status_label.label;
 

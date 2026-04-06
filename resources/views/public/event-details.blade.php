@@ -166,6 +166,35 @@
             max-width: 680px;
         }
 
+        .hero__back {
+            position: fixed;
+            top: 22px;
+            left: 22px;
+            z-index: 110;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--rim2);
+            background: rgba(8, 7, 15, .45);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            font-size: .66rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            transition: border-color .2s, background .2s, transform .2s;
+        }
+
+        .hero__back:hover {
+            border-color: rgba(56, 189, 248, .45);
+            background: rgba(56, 189, 248, .15);
+            transform: translateY(-1px);
+        }
+
         .hero__badge-row {
             display: flex;
             gap: 8px;
@@ -1495,6 +1524,11 @@
 
         /* ─── RESPONSIVE (mobile overrides) ─── */
         @media (max-width: 480px) {
+            .hero__back {
+                top: 16px;
+                left: 16px;
+            }
+
             .hero__content {
                 padding: 28px 20px;
             }
@@ -1568,6 +1602,14 @@
 
         {{-- ─── HERO ─── --}}
         <div class="hero">
+            <a class="hero__back" href="{{ url()->previous() }}" aria-label="Go back">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                <span>Back</span>
+            </a>
+
             @if ($event->event_image)
                 <img class="hero__img" src="{{ asset('images/events/' . $event->event_image) }}"
                     alt="{{ $event->event_name }}">
@@ -1582,10 +1624,24 @@
             <div class="hero__grad"></div>
 
             <div class="hero__content">
+                @php
+                    $ticketCollection = collect($event->tickets ?? []);
+                    $hasTickets = $ticketCollection->count() > 0;
+                    $hasAvailableTickets = $ticketCollection->contains(function ($ticket) {
+                        return (int) ($ticket->quantity ?? 0) > 0;
+                    });
+                    $saleBadgeText = $hasAvailableTickets
+                        ? 'On Sale Now'
+                        : ($hasTickets
+                            ? 'Sold Out'
+                            : 'No Available Tickets');
+                @endphp
                 <div class="hero__badge-row">
                     <div class="hero__badge">
-                        <div class="hero__badge-live"></div>
-                        On Sale Now
+                        @if ($hasAvailableTickets)
+                            <div class="hero__badge-live"></div>
+                        @endif
+                        {{ $saleBadgeText }}
                     </div>
                     @if ($event->event_date)
                         <div class="hero__badge-date">
@@ -1748,42 +1804,44 @@
                             <div class="sec-line"></div>
                         </div>
 
-                        @php
-                            $tktPalette = [
-                                ['hex' => '#38bdf8', 'rgb' => '56,189,248'] /* sky     */,
-                                ['hex' => '#a78bfa', 'rgb' => '167,139,250'] /* violet  */,
-                                ['hex' => '#34d399', 'rgb' => '52,211,153'] /* emerald */,
-                                ['hex' => '#fb923c', 'rgb' => '251,146,60'] /* orange  */,
-                                ['hex' => '#f472b6', 'rgb' => '244,114,182'] /* pink    */,
-                                ['hex' => '#facc15', 'rgb' => '250,204,21'] /* amber   */,
-                            ];
-                        @endphp
-
                         <div class="ticket-cards" id="ticketList">
                             @foreach ($event->tickets as $i => $ticket)
                                 @php
                                     $qty = $ticket->quantity ?? 0;
                                     $sold = $qty <= 0;
-                                    $color = $tktPalette[$i % count($tktPalette)];
                                     $tktName = $ticket->name ?? ($ticket->type ?? 'General');
                                     $tktType = $ticket->type ?? ($ticket->category ?? 'General Admission');
                                     $inclusions = $ticket->inclusions ?? ($ticket->perks ?? null);
+
+                                    $rawColor = ltrim(trim((string) ($ticket->color ?? '')), '#');
+                                    if (preg_match('/^[A-Fa-f0-9]{3}$/', $rawColor)) {
+                                        $rawColor = preg_replace('/(.)/', '$1$1', $rawColor);
+                                    }
+                                    $isValidHex = preg_match('/^[A-Fa-f0-9]{6}$/', $rawColor) === 1;
+                                    $hexColor = $isValidHex ? '#' . strtoupper($rawColor) : '#38BDF8';
+                                    $rgbColor = $isValidHex
+                                        ? hexdec(substr($rawColor, 0, 2)) .
+                                            ',' .
+                                            hexdec(substr($rawColor, 2, 2)) .
+                                            ',' .
+                                            hexdec(substr($rawColor, 4, 2))
+                                        : '56,189,248';
                                 @endphp
 
                                 <div class="tkt fade-up {{ $i === 0 && !$sold ? 'selected' : '' }} {{ $sold ? 'sold-out' : '' }}"
                                     data-id="{{ $ticket->id }}" data-price="{{ $ticket->price ?? 0 }}"
                                     data-name="{{ $tktName }}" data-sold="{{ $sold ? '1' : '0' }}"
-                                    data-max="{{ max(0, (int) $qty) }}" data-color="{{ $color['hex'] }}"
-                                    style="--tkt-color: {{ $color['hex'] }}; --tkt-rgb: {{ $color['rgb'] }};"
+                                    data-max="{{ max(0, (int) $qty) }}" data-color="{{ $hexColor }}"
+                                    style="--tkt-color: {{ $hexColor }}; --tkt-rgb: {{ $rgbColor }};"
                                     onclick="selectTicket(this)">
                                     {{-- Top row: name + price --}}
                                     <div class="tkt__top">
                                         <div>
-                                            <div class="tkt__name" style="color: {{ $color['hex'] }};">
+                                            <div class="tkt__name" style="color: {{ $hexColor }};">
                                                 {{ $tktName }}</div>
                                             <div class="tkt__sub">{{ $tktType }}</div>
                                         </div>
-                                        <div class="tkt__price" style="color: {{ $color['hex'] }};">
+                                        <div class="tkt__price" style="color: {{ $hexColor }};">
                                             <span
                                                 class="tkt__currency">₱</span>{{ number_format($ticket->price ?? 0, 0) }}
                                         </div>
@@ -1796,9 +1854,9 @@
                                             Sold Out
                                         </div>
                                     @else
-                                        <div class="tkt__avail" style="color: {{ $color['hex'] }};">
+                                        <div class="tkt__avail" style="color: {{ $hexColor }};">
                                             <div class="avail-dot"
-                                                style="background: {{ $color['hex'] }}; box-shadow: 0 0 7px {{ $color['hex'] }};">
+                                                style="background: {{ $hexColor }}; box-shadow: 0 0 7px {{ $hexColor }};">
                                             </div>
                                             Available
                                         </div>
@@ -1807,7 +1865,7 @@
                                     {{-- Inclusions --}}
                                     @if ($inclusions && !$sold)
                                         <hr class="tkt__divider">
-                                        <div class="tkt__inclusions-label" style="color: {{ $color['hex'] }};">Inclusions
+                                        <div class="tkt__inclusions-label" style="color: {{ $hexColor }};">Inclusions
                                         </div>
                                         <div class="tkt__perks">
                                             @foreach (preg_split('/\r\n|\r|\n/', $inclusions) as $item)
@@ -1820,14 +1878,14 @@
                                     @endif
 
                                     {{-- Quantity stepper --}}
-                                    <div class="tkt__stepper-row" style="--tkt-rgb: {{ $color['rgb'] }};">
+                                    <div class="tkt__stepper-row" style="--tkt-rgb: {{ $rgbColor }};">
                                         <div class="stepper-label">Quantity</div>
                                         <div class="stepper-controls">
                                             <button type="button" class="stepper-btn stepper-btn--minus"
                                                 onclick="changeQty(event, this, -1)">−</button>
                                             <span class="stepper-num" data-qty="1">1</span>
                                             <button type="button" class="stepper-btn stepper-btn--plus"
-                                                style="background: {{ $color['hex'] }}; color: #000;"
+                                                style="background: {{ $hexColor }}; color: #000;"
                                                 onmouseover="this.style.filter='brightness(1.15)'"
                                                 onmouseout="this.style.filter=''"
                                                 onclick="changeQty(event, this, 1)">+</button>
@@ -1835,6 +1893,14 @@
                                     </div>
                                 </div>
                             @endforeach
+                        </div>
+                    @else
+                        <div class="sec-head fade-up">
+                            <div class="sec-label">Tickets</div>
+                            <div class="sec-line"></div>
+                        </div>
+                        <div class="about-card fade-up">
+                            <div class="about-text">Tickets are still not available. Stay tuned.</div>
                         </div>
                     @endif
 
@@ -1863,22 +1929,23 @@
                             d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                 </a>
-            <script>
-                // ...existing code...
-                // Redirect to purchase page with ticket and quantity
-                document.getElementById('buyTicketsBtn')?.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const selectedTicket = document.querySelector('.tkt.selected');
-                    if (!selectedTicket) return;
-                    const ticketId = selectedTicket.getAttribute('data-id') || selectedTicket.getAttribute('data-ticket-id') || selectedTicket.dataset.ticketId || selectedTicket.dataset.id;
-                    const qty = selQty;
-                    const url = `{{ url('purchase') }}?event={{ $event->id }}&ticket=${ticketId}&quantity=${qty}`;
-                    window.location.href = url;
-                });
-            </script>
+                <script>
+                    // ...existing code...
+                    // Redirect to purchase page with ticket and quantity
+                    document.getElementById('buyTicketsBtn')?.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const selectedTicket = document.querySelector('.tkt.selected');
+                        if (!selectedTicket) return;
+                        const ticketId = selectedTicket.getAttribute('data-id') || selectedTicket.getAttribute(
+                            'data-ticket-id') || selectedTicket.dataset.ticketId || selectedTicket.dataset.id;
+                        const qty = selQty;
+                        const url = `{{ url('purchase') }}?event={{ $event->id }}&ticket=${ticketId}&quantity=${qty}`;
+                        window.location.href = url;
+                    });
+                </script>
         </div>
 
-    
+
 
         {{-- ─── LIGHTBOX ─── --}}
         @if ($event->seat_plan)

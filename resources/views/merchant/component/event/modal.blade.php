@@ -5,8 +5,8 @@
 
     <div
         class="modal-content w-full max-w-4xl bg-gradient-to-br from-[#1a2332] to-[#0c1222] border border-white/10 rounded-2xl p-5 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-500/50 [&::-webkit-scrollbar-thumb]:rounded-full">
-        <div class="flex items-center justify-between mb-4">
-            <h3 id="modalTitle" class="text-2xl font-bold text-white">Add New Event</h3>
+        <div class="flex items-center justify-between mb-4 gap-3">
+            <h3 id="modalTitle" class="text-xl sm:text-2xl font-bold text-white pr-2">Add New Event</h3>
             <button onclick="closeModal()" class="p-2 hover:bg-white/5 rounded-lg transition-all">
                 <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
@@ -34,7 +34,7 @@
                     <div class="relative rounded-2xl border border-white/10 bg-white/5 p-3"
                         style="z-index: 30; overflow: visible;">
                         <div class="relative rounded-xl overflow-hidden group"
-                            style="height: 280px; border: 1px solid rgba(199,199,199,0.7); background: #e5e5e5; isolation: isolate;">
+                            style="height: clamp(220px, 42vw, 280px); border: 1px solid rgba(199,199,199,0.7); background: #e5e5e5; isolation: isolate;">
 
                             <div id="eventImagePlaceholder"
                                 class="absolute inset-0 flex items-center justify-center w-full p-4 sm:p-5"
@@ -78,76 +78,76 @@
                             </div>
                         </div>
 
-                        <div class="absolute flex gap-2"
-                            style="pointer-events:auto; right:26px; bottom:26px; top:auto; left:auto; z-index:100;">
+                        <div class="absolute right-3 bottom-3 sm:right-4 sm:bottom-4 flex items-center justify-end gap-1.5"
+                            style="pointer-events:auto; z-index:100;">
 
                             <input type="hidden" id="eventCategory" name="category" value="Music">
-                            <div class="custom-select-wrapper flex-none w-[160px] min-w-[160px]"
+                            <div class="custom-select-wrapper w-[118px] sm:w-[162px] sm:min-w-[162px]"
                                 data-target="eventCategory" style="position:relative">
                                 <button type="button"
-                                    class="custom-select-btn w-full px-4 py-2 bg-gradient-to-br from-[#1a2332] to-[#0c1222] border border-white/20 rounded-full text-white text-sm flex justify-between items-center focus:outline-none focus:border-blue-500 shadow-md">
-                                    <span class="custom-select-label flex-1 text-left truncate mr-2"
+                                    class="custom-select-btn w-full px-3 py-1.5 bg-gradient-to-br from-[#1a2332] to-[#0c1222] border border-white/20 rounded-full text-white text-xs flex justify-between items-center focus:outline-none focus:border-blue-500 shadow-md">
+                                    <span class="custom-select-label flex-1 text-left truncate mr-1.5 text-xs"
                                         data-default-text="Select Category">Category</span>
-                                    <svg class="w-4 h-4 flex-none text-gray-300 transition-transform duration-200"
+                                    <svg class="w-3.5 h-3.5 flex-none text-gray-300 transition-transform duration-200"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </button>
-                                <div class="custom-select-dropdown hidden border border-white/10 rounded-lg overflow-y-auto overflow-x-hidden shadow-2xl max-h-32 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-500/50 [&::-webkit-scrollbar-thumb]:rounded-full"
-                                    style="position:absolute;top:100%;margin-top:6px;width:100%;z-index:1100;background-color:#1a2332;">
-                                    <div class="custom-select-option px-3 py-1.5 text-sm text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
+                                <div class="custom-select-dropdown hidden border border-white/10 rounded-lg overflow-y-auto overflow-x-hidden shadow-2xl max-h-28 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-500/50 [&::-webkit-scrollbar-thumb]:rounded-full"
+                                    style="position:absolute;top:100%;margin-top:4px;width:100%;z-index:1100;background-color:#1a2332;">
+                                    <div class="custom-select-option px-2.5 py-1 text-xs text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
                                         data-value="Music">Music</div>
-                                    <div class="custom-select-option px-3 py-1.5 text-sm text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
+                                    <div class="custom-select-option px-2.5 py-1 text-xs text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
                                         data-value="Sports">Sports</div>
-                                    <div class="custom-select-option px-3 py-1.5 text-sm text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
+                                    <div class="custom-select-option px-2.5 py-1 text-xs text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
                                         data-value="Arts">Arts</div>
-                                    <div class="custom-select-option px-3 py-1.5 text-sm text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
+                                    <div class="custom-select-option px-2.5 py-1 text-xs text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
                                         data-value="Festival">Festival</div>
-                                    <div class="custom-select-option px-3 py-1.5 text-sm text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
+                                    <div class="custom-select-option px-2.5 py-1 text-xs text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
                                         data-value="Conference">Conference</div>
-                                    <div class="custom-select-option px-3 py-1.5 text-sm text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
+                                    <div class="custom-select-option px-2.5 py-1 text-xs text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
                                         data-value="Workshop">Workshop</div>
-                                    <div class="custom-select-option px-3 py-1.5 text-sm text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
+                                    <div class="custom-select-option px-2.5 py-1 text-xs text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
                                         data-value="Networking">Networking</div>
-                                    <div class="custom-select-option px-3 py-1.5 text-sm text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
+                                    <div class="custom-select-option px-2.5 py-1 text-xs text-white hover:bg-blue-600/50 cursor-pointer transition-colors"
                                         data-value="Other">Other</div>
                                 </div>
                             </div>
 
                             <input type="hidden" id="eventStatus" name="status" value="0">
-                            <div class="custom-select-wrapper w-[140px] shrink-0" data-target="eventStatus"
+                            <div class="custom-select-wrapper w-[98px] sm:w-[132px] sm:shrink-0" data-target="eventStatus"
                                 style="position:relative">
                                 <button type="button"
-                                    class="custom-select-btn w-full px-4 py-2 bg-gradient-to-br from-[#1a2332] to-[#0c1222] border border-white/20 rounded-full text-white text-left text-sm flex justify-between items-center focus:outline-none focus:border-blue-500 shadow-md">
-                                    <span class="custom-select-label truncate mr-2"
+                                    class="custom-select-btn w-full px-3 py-1.5 bg-gradient-to-br from-[#1a2332] to-[#0c1222] border border-white/20 rounded-full text-white text-left text-xs flex justify-between items-center focus:outline-none focus:border-blue-500 shadow-md">
+                                    <span class="custom-select-label truncate mr-1.5 text-xs"
                                         data-default-text="Status">Status</span>
-                                    <svg class="w-4 h-4 shrink-0 text-gray-300 transition-transform duration-200"
+                                    <svg class="w-3.5 h-3.5 shrink-0 text-gray-300 transition-transform duration-200"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </button>
-                                <div class="custom-select-dropdown hidden border border-white/10 rounded-lg overflow-y-auto overflow-x-hidden shadow-2xl max-h-32 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-500/50 [&::-webkit-scrollbar-thumb]:rounded-full"
-                                    style="position:absolute;top:100%;margin-top:6px;width:100%;z-index:1100;background-color:#1a2332;">
-                                    <div class="custom-select-option px-3 py-1.5 text-sm hover:bg-white/10 cursor-pointer font-medium transition-colors"
+                                <div class="custom-select-dropdown hidden border border-white/10 rounded-lg overflow-y-auto overflow-x-hidden shadow-2xl max-h-28 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-500/50 [&::-webkit-scrollbar-thumb]:rounded-full"
+                                    style="position:absolute;top:100%;margin-top:4px;width:100%;z-index:1100;background-color:#1a2332;">
+                                    <div class="custom-select-option px-2.5 py-1 text-xs hover:bg-white/10 cursor-pointer font-medium transition-colors"
                                         data-value="0" style="color:#c084fc">Upcoming</div>
-                                    <div class="custom-select-option px-3 py-1.5 text-sm hover:bg-white/10 cursor-pointer font-medium flex items-center gap-2 transition-colors"
+                                    <div class="custom-select-option px-2.5 py-1 text-xs hover:bg-white/10 cursor-pointer font-medium flex items-center gap-1.5 transition-colors"
                                         data-value="1" style="color:#4ade80">
-                                        <span class="relative flex h-2 w-2 shrink-0">
+                                        <span class="relative flex h-1.5 w-1.5 shrink-0">
                                             <span
                                                 class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
                                                 style="background-color:#4ade80"></span>
-                                            <span class="relative inline-flex rounded-full h-2 w-2"
+                                            <span class="relative inline-flex rounded-full h-1.5 w-1.5"
                                                 style="background-color:#4ade80"></span>
                                         </span>
                                         <span class="truncate">Active</span>
                                     </div>
-                                    <div class="custom-select-option px-3 py-1.5 text-sm hover:bg-white/10 cursor-pointer font-medium transition-colors"
+                                    <div class="custom-select-option px-2.5 py-1 text-xs hover:bg-white/10 cursor-pointer font-medium transition-colors"
                                         data-value="2" style="color:#60a5fa">Ongoing</div>
-                                    <div class="custom-select-option px-3 py-1.5 text-sm hover:bg-white/10 cursor-pointer font-medium transition-colors"
+                                    <div class="custom-select-option px-2.5 py-1 text-xs hover:bg-white/10 cursor-pointer font-medium transition-colors"
                                         data-value="3" style="color:#9ca3af">Completed</div>
-                                    <div class="custom-select-option px-3 py-1.5 text-sm hover:bg-white/10 cursor-pointer font-medium transition-colors"
+                                    <div class="custom-select-option px-2.5 py-1 text-xs hover:bg-white/10 cursor-pointer font-medium transition-colors"
                                         data-value="4" style="color:#f87171">Cancelled</div>
                                 </div>
                             </div>
@@ -166,7 +166,7 @@
                         <div class="rounded-xl border border-white/10 bg-white/5 p-3">
                             <label class="inline-flex px-2.5 py-1 text-xs rounded-lg bg-white/10 text-gray-300">Date
                                 &amp; Time</label>
-                            <div class="mt-2 grid grid-cols-2 gap-2">
+                            <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 <input type="date" id="eventDate" name="date"
                                     class="w-full px-0 py-1.5 bg-transparent border-0 text-white focus:outline-none focus:ring-0"
                                     required style="color-scheme:dark;">
@@ -204,8 +204,8 @@
                             placeholder="Write event details..." required></textarea>
                     </div>
 
-                    <div class="flex items-center justify-center w-full mb-8">
-                        <div class="relative w-full h-64">
+                    <div class="flex items-center justify-center w-full">
+                        <div class="relative w-full h-52 sm:h-64">
                             <label for="seatPlanImage"
                                 class="flex flex-col items-center justify-center w-full h-full bg-white/5 border border-dashed border-white/20 rounded-xl cursor-pointer hover:bg-white/10 transition-colors overflow-hidden">
                                 <div id="seatPlanPlaceholder"
@@ -241,10 +241,17 @@
                         </div>
                     </div>
 
-                    <button type="submit" id="submitBtn"
-                        class="mt-auto w-full px-4 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-blue-500/25">
-                        Create Event
-                    </button>
+                    <div class="mt-1 grid grid-cols-1 gap-2">
+                        <button type="submit" id="submitBtn"
+                            class="w-full h-12 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-blue-500/25">
+                            Create Event
+                        </button>
+
+                        <button type="button" onclick="closeModal()"
+                            class="w-full h-10 px-4 bg-white/[0.04] hover:bg-white/10 text-gray-300 hover:text-white rounded-xl font-medium transition-all border border-white/10">
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             </div>
         </form>
@@ -399,7 +406,15 @@
         style="max-height:calc(100vh - 2rem);">
         <div class="flex items-center justify-between px-5 py-4 border-b border-white/10">
             <h4 class="text-white font-semibold">Edit Description</h4>
-            <div id="descCharCount" class="text-xs text-gray-400">0 characters</div>
+            <div class="flex items-center gap-2">
+                <div id="descCharCount" class="text-xs text-gray-400">0 characters</div>
+                <button type="button" onclick="closeDescriptionExpand()" aria-label="Close description editor"
+                    class="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
         </div>
 
         <div class="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-white/[0.02] flex-wrap">
@@ -512,13 +527,13 @@
                 data-placeholder="Write event details..."></div>
         </div>
 
-        <div class="flex items-center justify-end gap-3 px-5 py-4 border-t border-white/10">
+        <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 px-4 sm:px-5 py-4 border-t border-white/10">
             <button type="button" onclick="closeDescriptionExpand()"
-                class="px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white rounded-lg text-sm font-medium transition-all">
+                class="w-full sm:w-auto px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white rounded-lg text-sm font-medium transition-all">
                 Cancel
             </button>
             <button type="button" onclick="applyDescriptionExpand()"
-                class="px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg text-sm font-semibold transition-all">
+                class="w-full sm:w-auto px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg text-sm font-semibold transition-all">
                 Apply
             </button>
         </div>
@@ -1135,7 +1150,5 @@
                 }
             });
         }
-        const overlay = document.getElementById('descriptionExpandOverlay');
-        overlay?.addEventListener('click', e => { if (e.target === overlay) closeDescriptionExpand(); });
     });
 </script>

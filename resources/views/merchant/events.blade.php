@@ -127,7 +127,7 @@
         <div class="lg:ml-64">
             <header class="sticky top-0 z-40 bg-[#0c1222]/80 backdrop-blur-xl border-b border-white/10">
                 <div class="px-4 sm:px-6 lg:px-8 py-4">
-                    <div class="flex items-center justify-between">
+                    <div class="flex flex-wrap items-start sm:items-center justify-between gap-3">
                         <div class="flex items-center gap-4">
                             <button id="toggleSidebar" class="lg:hidden p-2 hover:bg-white/5 rounded-lg text-white">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,11 +136,11 @@
                                 </svg>
                             </button>
                             <div>
-                                <h2 class="text-2xl font-bold text-white">Events Management</h2>
+                                <h2 class="text-xl sm:text-2xl font-bold text-white">Events Management</h2>
                                 <p class="text-sm text-gray-400">Manage and create your events</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-4 shrink-0">
                             <button onclick="openAddModal()"
                                 class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-semibold transition-all">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -157,7 +157,7 @@
             <div class="p-4 sm:p-6 lg:p-8">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
                     <div
-                        class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+                        class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
                         <div
                             class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl flex items-center justify-center mb-4">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,10 +167,10 @@
                             </svg>
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Total Events</p>
-                        <h3 class="text-3xl font-bold text-white">{{ $total_events }}</h3>
+                        <h3 class="text-2xl sm:text-3xl font-bold text-white">{{ $total_events }}</h3>
                     </div>
                     <div
-                        class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+                        class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
                         <div
                             class="w-12 h-12 bg-gradient-to-br from-green-600 to-green-400 rounded-xl flex items-center justify-center mb-4">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -179,10 +179,10 @@
                             </svg>
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Active Events</p>
-                        <h3 class="text-3xl font-bold text-white">{{ $active_events }}</h3>
+                        <h3 class="text-2xl sm:text-3xl font-bold text-white">{{ $active_events }}</h3>
                     </div>
                     <div
-                        class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+                        class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
                         <div
                             class="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-400 rounded-xl flex items-center justify-center mb-4">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -192,10 +192,10 @@
                             </svg>
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Tickets Sold</p>
-                        <h3 class="text-3xl font-bold text-white">{{ $tickets_sold }}</h3>
+                        <h3 class="text-2xl sm:text-3xl font-bold text-white">{{ $tickets_sold }}</h3>
                     </div>
                     <div
-                        class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+                        class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
                         <div
                             class="w-12 h-12 bg-gradient-to-br from-orange-600 to-orange-400 rounded-xl flex items-center justify-center mb-4">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -204,7 +204,7 @@
                             </svg>
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Upcoming</p>
-                        <h3 class="text-3xl font-bold text-white">{{ $upcoming_events }}</h3>
+                        <h3 class="text-2xl sm:text-3xl font-bold text-white">{{ $upcoming_events }}</h3>
                     </div>
                 </div>
 
@@ -244,108 +244,80 @@
                                         @endif
                                     </div>
 
-                                    <div class="absolute top-4 right-4">
-                                        @php
-                                            $statusStyles = [
-                                                0 => [
-                                                    'bg' => 'rgba(147,51,234,0.2)',
-                                                    'border' => 'rgba(147,51,234,0.4)',
-                                                    'color' => '#c084fc',
-                                                ],
-                                                1 => [
-                                                    'bg' => 'rgba(34,197,94,0.2)',
-                                                    'border' => 'rgba(34,197,94,0.4)',
-                                                    'color' => '#4ade80',
-                                                ],
-                                                2 => [
-                                                    'bg' => 'rgba(59,130,246,0.2)',
-                                                    'border' => 'rgba(59,130,246,0.4)',
-                                                    'color' => '#60a5fa',
-                                                ],
-                                                3 => [
-                                                    'bg' => 'rgba(107,114,128,0.2)',
-                                                    'border' => 'rgba(107,114,128,0.4)',
-                                                    'color' => '#9ca3af',
-                                                ],
-                                                4 => [
-                                                    'bg' => 'rgba(239,68,68,0.2)',
-                                                    'border' => 'rgba(239,68,68,0.4)',
-                                                    'color' => '#f87171',
-                                                ],
-                                            ];
-                                            $s = $statusStyles[$event->status] ?? $statusStyles[0];
-                                        @endphp
+                                <div class="absolute top-4 right-4">
+                                    @php
+                                        $statusStyles = [
+                                            0 => ['bg' => 'rgba(147,51,234,0.2)', 'border' => 'rgba(147,51,234,0.4)', 'color' => '#c084fc'],
+                                            1 => ['bg' => 'rgba(34,197,94,0.2)', 'border' => 'rgba(34,197,94,0.4)', 'color' => '#4ade80'],
+                                            2 => ['bg' => 'rgba(59,130,246,0.2)', 'border' => 'rgba(59,130,246,0.4)', 'color' => '#60a5fa'],
+                                            3 => ['bg' => 'rgba(107,114,128,0.2)', 'border' => 'rgba(107,114,128,0.4)', 'color' => '#9ca3af'],
+                                            4 => ['bg' => 'rgba(239,68,68,0.2)', 'border' => 'rgba(239,68,68,0.4)', 'color' => '#f87171'],
+                                        ];
+                                        $s = $statusStyles[$event->status] ?? $statusStyles[0];
+                                    @endphp
+                                    <span
+                                        class="px-3 py-1 backdrop-blur-sm rounded-full text-xs font-semibold flex items-center gap-1"
+                                        style="background:{{ $s['bg'] }};border:1px solid {{ $s['border'] }};color:{{ $s['color'] }}">
+                                        @if($event->status === 1)
+                                            <span class="relative flex h-2 w-2">
+                                                <span
+                                                    class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                                                    style="background-color:#4ade80"></span>
+                                                <span class="relative inline-flex rounded-full h-2 w-2"
+                                                    style="background-color:#4ade80"></span>
+                                            </span>
+                                        @endif
+                                        {{ $event->status_label['label'] }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="p-5 sm:p-6">
+                                <div class="flex items-center gap-2 mb-3 min-w-0">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                    <span class="text-sm text-gray-400 leading-snug">{{ date('F j, Y', strtotime($event->event_date)) }} •
+                                        {{ date('g:i A', strtotime($event->event_time)) }}</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-2 break-words">{{ $event->event_name }}</h3>
+                                <p class="event-card-desc text-gray-400 text-sm mb-4 overflow-hidden"
+                                    style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;"
+                                    data-raw="{{ $event->description }}"></p>
+                                <div class="flex items-center gap-2 mb-4 min-w-0">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                        </path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    <span class="text-sm text-gray-400 truncate">{{ $event->event_venue }}</span>
+                                </div>
+                                <div class="mb-4">
+                                    <div class="flex justify-between gap-2 text-xs sm:text-sm mb-2">
+                                        <span class="text-gray-400 truncate">{{ $event->tickets_sold }} /
+                                            {{ $event->tickets->sum('original_qty') }} sold</span>
                                         <span
-                                            class="px-3 py-1 backdrop-blur-sm rounded-full text-xs font-semibold flex items-center gap-1"
-                                            style="background:{{ $s['bg'] }};border:1px solid {{ $s['border'] }};color:{{ $s['color'] }}">
-                                            @if ($event->status === 1)
-                                                <span class="relative flex h-2 w-2">
-                                                    <span
-                                                        class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                                                        style="background-color:#4ade80"></span>
-                                                    <span class="relative inline-flex rounded-full h-2 w-2"
-                                                        style="background-color:#4ade80"></span>
-                                                </span>
-                                            @endif
-                                            {{ $event->status_label['label'] }}
-                                        </span>
+                                            class="text-blue-400 font-semibold">{{ number_format($event->percentage, 2) }}%</span>
+                                    </div>
+                                    <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+                                        <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all"
+                                            style="width: {{ $event->percentage }}%"></div>
                                     </div>
                                 </div>
-                                <div class="p-6">
-                                    <div class="flex items-center gap-2 mb-3">
-                                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                            </path>
-                                        </svg>
-                                        <span
-                                            class="text-sm text-gray-400">{{ date('F j, Y', strtotime($event->event_date)) }}
-                                            •
-                                            {{ date('g:i A', strtotime($event->event_time)) }}</span>
-                                    </div>
-                                    <h3 class="text-xl font-bold text-white mb-2">{{ $event->event_name }}</h3>
-                                    <p class="event-card-desc text-gray-400 text-sm mb-4 overflow-hidden"
-                                        style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;"
-                                        data-raw="{{ $event->description }}"></p>
-                                    <div class="flex items-center gap-2 mb-4">
-                                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                            </path>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        </svg>
-                                        <span class="text-sm text-gray-400">{{ $event->event_venue }}</span>
-                                    </div>
-                                    <div class="mb-4">
-                                        <div class="flex justify-between text-sm mb-2">
-                                            <span class="text-gray-400">{{ $event->tickets_sold }} /
-                                                {{ $event->tickets->sum('original_qty') }} sold</span>
-                                            <span
-                                                class="text-blue-400 font-semibold">{{ number_format($event->percentage, 0) }}%</span>
-                                        </div>
-                                        <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all"
-                                                style="width: {{ $event->percentage }}%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center justify-between pt-4 border-t border-white/10">
-                                        <div>
-                                            {{-- <p class="text-sm text-gray-400">Starting from</p>
-                                        <p class="text-xl font-bold text-white">$45</p> --}}
-                                        </div>
-                                        <div class="flex gap-2" onclick="event.stopPropagation()">
-                                            <button onclick='openEditModal(@json($event))'
-                                                class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a      2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                    </path>
-                                                </svg>
-                                            </button>
+                                <div class="flex items-center justify-end pt-4 border-t border-white/10">
+                                    <div class="flex gap-2" onclick="event.stopPropagation()">
+                                        <button onclick='openEditModal(@json($event))'
+                                            class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
+                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a      2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
+                                            </svg>
+                                        </button>
 
                                             <a href="{{ route('merchant.events.tickets.tickets', $event->slug) }}"
                                                 class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
@@ -463,6 +435,8 @@
             const totalTickets = event.tickets.reduce((sum, ticket) => {
                 return sum + ticket.original_qty;
             }, 0);
+            const soldTickets = Number(event.tickets_sold || 0);
+            const percentage = Math.max(0, Math.min(100, Number(event.percentage || 0)));
             const lowestPrice = event.tickets.length ? Math.min(...event.tickets.map(t => t.price ?? 0)) : 0;
 
             const seatPlanBtn = document.getElementById('viewSeatPlanBtn');
@@ -484,12 +458,13 @@
                 `${formatDate(event.event_date)} • ${formatTime(event.event_time)}`;
             document.getElementById('viewEventLocation').textContent = event.event_venue;
             document.getElementById('viewEventPrice').textContent = '₱ ' + lowestPrice.toFixed(2);
-            document.getElementById('viewEventDescription').innerHTML = isHtml(event.description) ?
-                event.description :
-                renderMarkdown(event.description);
+            document.getElementById('viewEventDescription').innerHTML = isHtml(event.description)
+                ? event.description
+                : renderMarkdown(event.description);
+            document.getElementById('viewEventSold').textContent = `${soldTickets} sold`;
             document.getElementById('viewEventTotal').textContent = `of ${totalTickets} tickets`;
-            document.getElementById('viewEventPercentage').textContent = `${event.percentage}%`;
-            document.getElementById('viewEventProgress').style.width = `${event.percentage}%`;
+            document.getElementById('viewEventPercentage').textContent = `${percentage.toFixed(2)}%`;
+            document.getElementById('viewEventProgress').style.width = `${percentage}%`;
 
             // Status Badge Formatting (styled like reference dropdown options + translucent pill background)
             const statusContainer = document.getElementById('viewEventStatusContainer');
@@ -571,19 +546,22 @@
             const viewModal = document.getElementById('viewEventModal');
             viewModal.classList.remove('hidden', 'modal-closing');
             viewModal.classList.add('flex', 'modal-opening');
+            if (typeof syncViewOverlayScrollLock === 'function') {
+                syncViewOverlayScrollLock();
+            }
             viewModal.addEventListener('animationend', () => {
                 viewModal.classList.remove('modal-opening');
             }, {
                 once: true
             });
 
-            document.getElementById('openEditModalFromView').addEventListener('click', function() {
+            document.getElementById('openEditModalFromView').onclick = function () {
                 // console.log(event);
                 closeViewModal();
                 setTimeout(() => {
                     openEditModal(event);
                 }, 300);
-            });
+            };
         }
 
         // Removed duplicate closeViewModal
@@ -976,16 +954,10 @@
             // Close modals when clicking outside
             document.addEventListener('click', function(event) {
                 const viewModal = document.getElementById('viewEventModal');
-                const eventModal = document.getElementById('eventModal');
 
                 if (viewModal && !viewModal.classList.contains('hidden') &&
                     event.target === viewModal) {
                     closeViewModal();
-                }
-
-                if (eventModal && !eventModal.classList.contains('hidden') &&
-                    event.target === eventModal) {
-                    closeModal();
                 }
             });
         });

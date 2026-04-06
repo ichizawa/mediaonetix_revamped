@@ -40,7 +40,14 @@ class SalesController extends Controller
 
         $sales = $salesQuery->orderByDesc('id')->paginate(10);
 
-        $rawData = Sales::revenueByDayOfWeek(null)->get();
+        $merchantId = Auth::user()->isAdmin() ? null : Auth::user()->id;
+        $currentDate = Carbon::now();
+
+        $buildRevenueQuery = function () use ($merchantId) {
+            return $merchantId ? Sales::getAllSalesByMerchant($merchantId) : Sales::query();
+        };
+
+        $weekRawData = Sales::revenueByDayOfWeek($merchantId)->get();
 
         $dayMap = [
             2 => 'Mon',
@@ -52,16 +59,76 @@ class SalesController extends Controller
             1 => 'Sun',
         ];
 
-        $labels = collect(array_values($dayMap));
-        $values = collect(array_fill(0, 7, 0));
+        $weekLabels = collect(array_values($dayMap));
+        $weekValues = collect(array_fill(0, 7, 0));
 
-        foreach ($rawData as $row) {
-            $index = array_search($dayMap[$row->day_number], $labels->toArray());
-            $values[$index] = $row->total_revenue;
+        foreach ($weekRawData as $row) {
+            $index = array_search($dayMap[$row->day_number], $weekLabels->toArray());
+            $weekValues[$index] = $row->total_revenue;
         }
+
+        $monthLabels = collect(range(1, $currentDate->daysInMonth));
+        $monthValues = collect(array_fill(0, $monthLabels->count(), 0));
+
+        $monthRawData = $buildRevenueQuery()
+            ->select(
+                DB::raw('DAY(created_at) as day_number'),
+                DB::raw('SUM(total_amount) as total_revenue')
+            )
+            ->whereYear('created_at', $currentDate->year)
+            ->whereMonth('created_at', $currentDate->month)
+            ->groupBy('day_number')
+            ->orderBy('day_number')
+            ->get();
+
+        foreach ($monthRawData as $row) {
+            $index = $row->day_number - 1;
+            if (isset($monthValues[$index])) {
+                $monthValues[$index] = $row->total_revenue;
+            }
+        }
+
+        $yearLabels = collect(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
+        $yearValues = collect(array_fill(0, 12, 0));
+
+        $yearRawData = $buildRevenueQuery()
+            ->select(
+                DB::raw('MONTH(created_at) as month_number'),
+                DB::raw('SUM(total_amount) as total_revenue')
+            )
+            ->whereYear('created_at', $currentDate->year)
+            ->groupBy('month_number')
+            ->orderBy('month_number')
+            ->get();
+
+        foreach ($yearRawData as $row) {
+            $index = $row->month_number - 1;
+            if (isset($yearValues[$index])) {
+                $yearValues[$index] = $row->total_revenue;
+            }
+        }
+
+        $chartData = [
+            'week' => [
+                'labels' => $weekLabels,
+                'values' => $weekValues,
+            ],
+            'month' => [
+                'labels' => $monthLabels,
+                'values' => $monthValues,
+            ],
+            'year' => [
+                'labels' => $yearLabels,
+                'values' => $yearValues,
+            ],
+        ];
+
+        $labels = $chartData['week']['labels'];
+        $values = $chartData['week']['values'];
+
         $total_sales = Sales::where('status', 1)->sum('total_amount');
 
-        return view(auth()->user()->routePrefix() . '.sales', compact('events', 'sales', 'labels', 'values', 'total_sales'));
+        return view(auth()->user()->routePrefix() . '.sales', compact('events', 'sales', 'labels', 'values', 'chartData', 'total_sales'));
     }
     public function edit($slug)
     {
@@ -107,6 +174,15 @@ class SalesController extends Controller
             }
 
             $ticket = Tickets::find($request->ticket);
+
+            if (!$ticket) {
+                return back()->withErrors('Selected ticket does not exist.')->withInput();
+            }
+
+            if ((int) $request->quantity > (int) $ticket->quantity) {
+                return back()->withErrors('Requested quantity exceeds available tickets.')->withInput();
+            }
+
             $ticket->decrement('quantity', $request->quantity);
             $ticket->save();
             $currentDate = date('y-m-d');

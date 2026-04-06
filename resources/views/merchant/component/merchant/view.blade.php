@@ -76,7 +76,6 @@
                 </div>
 
                 <div id="modalEventsList" class="space-y-3">
-                    <!-- Event items will be dynamically inserted here -->
                 </div>
             </div>
         </div>
@@ -138,16 +137,9 @@ function openMerchantModal(details) {
         statusElement.innerHTML = '<span class="w-1.5 h-1.5 bg-red-400 rounded-full mr-1.5"></span>Inactive';
     }
 
-    // // Get events for this merchant
-    // const events_list = merchantEvents[name] || [];
     const eventsList = document.getElementById('modalEventsList');
     document.getElementById('modalOngoingCount').textContent = data.events_count;
 
-    // // Calculate average price
-    // const avgPrice = events_list.length > 0
-    //     ? Math.round(events_list.reduce((sum, e) => sum + e.price, 0) / events_list.length)
-    //     : 0;
-    // document.getElementById('modalAvgPrice').textContent = '$' + avgPrice;
 
     // // Build events list HTML
     if (data.events_count > 0) {

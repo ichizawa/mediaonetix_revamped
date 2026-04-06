@@ -326,7 +326,7 @@
                                 <input type="text" name="cvc" id="cardCvc" placeholder="123" maxlength="4">
                             </div>
                         </div>
-                    </div>
+                    </div>e
 
                     <button class="checkout-btn" type="submit">
                         Confirm & Pay
