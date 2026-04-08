@@ -37,6 +37,39 @@ class PublicController extends Controller
         $event = Events::upcomingWithShowcases()->first();
         return view('public.landing', compact('event'));
     }
+    public function viewEvents(Request $request)
+    {
+        $query = Events::getUpcoming()
+            ->withSum('tickets', 'quantity')
+            ->withSum('tickets', 'original_qty')
+            ->withMin('tickets', 'price');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('event_name', 'like', "%{$search}%")
+                  ->orWhere('event_venue', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('category') && $request->category !== 'All') {
+            $query->where('category', $request->category);
+        }
+
+        $sort = $request->get('sort', 'date_asc');
+        match ($sort) {
+            'date_desc'  => $query->orderByDesc('event_date'),
+            'price_asc'  => $query->orderBy('tickets_min_price'),
+            'price_desc' => $query->orderByDesc('tickets_min_price'),
+            default      => $query->orderBy('event_date'),
+        };
+
+        $events = $query->get();
+
+        return view('public.view-events', compact('events'));
+    }
+
     public function events()
     {
         try {

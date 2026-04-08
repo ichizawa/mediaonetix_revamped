@@ -12,7 +12,7 @@
                             Recent <span class="gradient-text">Events</span>
                         </h2>
                     </div>
-                    <button
+                    <a href="{{ route('events.view') }}"
                         class="group px-6 py-3 border border-blue-500/30 rounded-xl font-semibold hover:bg-blue-500/10 transition-all inline-flex items-center gap-2 text-blue-400">
                         View All Events
                         <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none"
@@ -20,7 +20,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
                             </path>
                         </svg>
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Events Grid -->
@@ -78,21 +78,37 @@
                                         </svg>
                                     </div>
                                 @endif
+
+                                @php
+                                    $ticketsLeft  = $event->tickets_sum_quantity ?? 0;
+                                    $ticketsTotal = $event->tickets_sum_original_qty ?? 0;
+                                    if ($ticketsTotal <= 0) {
+                                        $availBadgeText  = 'Upcoming';
+                                        $availBadgeColor = 'bg-violet-500/80';
+                                    } elseif ($ticketsLeft <= 0) {
+                                        $availBadgeText  = 'Sold Out';
+                                        $availBadgeColor = 'bg-red-500/80';
+                                    } elseif ($ticketsTotal > 0 && ($ticketsLeft / $ticketsTotal) <= 0.30) {
+                                        $availBadgeText  = 'Selling Fast';
+                                        $availBadgeColor = 'bg-orange-500/80';
+                                    } else {
+                                        $availBadgeText  = 'Available';
+                                        $availBadgeColor = 'bg-green-500/80';
+                                    }
+                                @endphp
                                 <div
-                                    class="absolute top-3 left-3 px-2.5 py-1 bg-{{ $event->statuslabel['color'] }}-500 rounded-lg text-white text-xs font-bold">
-                                    {{ date('M d', strtotime($event->event_date)) }}
-                                </div>
-                                <div
-                                    class="absolute top-3 right-3 px-2.5 py-1 bg-black/50 backdrop-blur-sm rounded-lg text-white text-xs font-semibold">
-                                    {{ $event->tickets_sum_quantity ?? 0 }} left
+                                    class="absolute top-3 right-3 px-2.5 py-1 {{ $availBadgeColor }} backdrop-blur-sm rounded-lg text-white text-xs font-semibold">
+                                    {{ $availBadgeText }}
                                 </div>
                             </div>
 
                             <!-- Content -->
                             <div class="p-5 space-y-4">
                                 <div>
-                                    <div class="text-xs text-{{ $event->statuslabel['color'] }}-400 font-semibold mb-2">
-                                        {{ $event->category }}
+                                    <div class="flex items-center gap-1.5 text-xs text-{{ $event->statuslabel['color'] }}-400 font-semibold mb-2">
+                                        <span>{{ $event->category }}</span>
+                                        <span class="opacity-50">·</span>
+                                        <span>{{ date('M d', strtotime($event->event_date)) }}</span>
                                     </div>
                                     <h3
                                         class="text-xl font-bold text-white mb-2 group-hover:text-{{ $event->statuslabel['color'] }}-400 transition-colors">

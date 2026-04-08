@@ -12,6 +12,9 @@ use App\Models\Events;
 use App\Models\Sales;
 use App\Models\Tickets;
 use Exception;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SalesExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -268,5 +271,40 @@ class SalesController extends Controller
             DB::rollBack();
             return back()->withErrors($e->getMessage())->withInput();
         }
+    }
+
+    private function getFilteredSales(Request $request)
+    {
+        $merchantId = Auth::user()->isAdmin() ? null : Auth::user()->id;
+        $query = $merchantId 
+            ? Sales::getAllSalesByMerchant($merchantId)->with(['ticket', 'event']) 
+            : Sales::with(['ticket', 'event']);
+
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $startDate = Carbon::parse($request->start_date)->startOfDay();
+            $endDate = Carbon::parse($request->end_date)->endOfDay();
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        return $query->orderByDesc('id')->get();
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $sales = $this->getFilteredSales($request);
+        $data = [
+            'sales' => $sales,
+            'startDate' => $request->start_date,
+            'endDate' => $request->end_date,
+        ];
+
+        $pdf = Pdf::loadView('merchant.exports.sales_pdf', $data);
+        return $pdf->download('sales_export_' . now()->format('Ymd_His') . '.pdf');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $sales = $this->getFilteredSales($request);
+        return Excel::download(new SalesExport($sales), 'sales_export_' . now()->format('Ymd_His') . '.xlsx');
     }
 }

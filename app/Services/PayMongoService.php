@@ -10,12 +10,27 @@ class PayMongoService
     protected $client;
     protected $secretKey;
     protected $baseUrl;
+    protected $verifySsl;
+    protected $caBundle;
 
     public function __construct()
     {
-        $this->client = new Client();
         $this->secretKey = config('services.paymongo.secret');
         $this->baseUrl = config('services.paymongo.base_url');
+        $this->verifySsl = filter_var(config('services.paymongo.verify_ssl', true), FILTER_VALIDATE_BOOL);
+        $this->caBundle = config('services.paymongo.ca_bundle');
+
+        $clientOptions = [];
+
+        if ($this->verifySsl) {
+            if (!empty($this->caBundle)) {
+                $clientOptions['verify'] = $this->caBundle;
+            }
+        } else {
+            $clientOptions['verify'] = false;
+        }
+
+        $this->client = new Client($clientOptions);
     }
 
     public function createPaymentIntent($amount, $description)
