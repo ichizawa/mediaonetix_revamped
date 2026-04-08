@@ -15,6 +15,7 @@ Route::get('event/{id}', [PublicController::class, 'event_details'])->name('publ
 Route::post('create-sale', [PublicController::class, 'createSale'])->name('create.sale');
 Route::post('create-payment', [PublicController::class, 'createPayment'])->name('create.payment');
 Route::get('events', [PublicController::class, 'events'])->name('events.list');
+Route::get('all-events', [PublicController::class, 'viewEvents'])->name('events.view');
 
 // Purchase page route
 Route::get('purchase', function (\Illuminate\Http\Request $request) {

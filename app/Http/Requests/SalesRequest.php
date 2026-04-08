@@ -26,7 +26,7 @@ class SalesRequest extends FormRequest
             'ticket' => 'required|exists:tickets,id',
             'promo' => 'nullable|exists:promos,id',
             'quantity' => 'required|numeric|min:1',
-            'payment_method' => 'required|string|in:gcash,paymaya,card,brankas_bdo,brankas_landbank,brankas_metrobank',
+            'payment_method' => 'required|string|in:cash,credit_card,debit_card,gcash,paymaya,bank_transfer,card,brankas_bdo,brankas_landbank,brankas_metrobank',
             'customer_name' => 'required|string',
             'customer_email' => 'required|email',
             'customer_phone' => 'required|string',

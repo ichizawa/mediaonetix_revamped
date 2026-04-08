@@ -121,6 +121,38 @@
         #viewEventModal.modal-closing .modal-content {
             animation: modalContentOut 0.22s ease forwards;
         }
+
+        @keyframes deleteConfirmIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes deleteConfirmOut {
+            from {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+
+            to {
+                opacity: 0;
+                transform: scale(0.95) translateY(12px);
+            }
+        }
+
+        #deleteConfirmModal.modal-opening .delete-confirm-panel {
+            animation: deleteConfirmIn 0.2s ease forwards;
+        }
+
+        #deleteConfirmModal.modal-closing .delete-confirm-panel {
+            animation: deleteConfirmOut 0.16s ease forwards;
+        }
     </style>
 
     <div class="min-h-screen bg-[#0c1222]">
@@ -271,21 +303,21 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="p-5 sm:p-6">
-                                <div class="flex items-center gap-2 mb-3 min-w-0">
+                            <div class="p-6">
+                                <div class="flex items-center gap-2 mb-3">
                                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                                         </path>
                                     </svg>
-                                    <span class="text-sm text-gray-400 leading-snug">{{ date('F j, Y', strtotime($event->event_date)) }} •
+                                    <span class="text-sm text-gray-400">{{ date('F j, Y', strtotime($event->event_date)) }} •
                                         {{ date('g:i A', strtotime($event->event_time)) }}</span>
                                 </div>
-                                <h3 class="text-xl font-bold text-white mb-2 break-words">{{ $event->event_name }}</h3>
+                                <h3 class="text-xl font-bold text-white mb-2">{{ $event->event_name }}</h3>
                                 <p class="event-card-desc text-gray-400 text-sm mb-4 overflow-hidden"
                                     style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;"
                                     data-raw="{{ $event->description }}"></p>
-                                <div class="flex items-center gap-2 mb-4 min-w-0">
+                                <div class="flex items-center gap-2 mb-4">
                                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
@@ -293,21 +325,25 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                     </svg>
-                                    <span class="text-sm text-gray-400 truncate">{{ $event->event_venue }}</span>
+                                    <span class="text-sm text-gray-400">{{ $event->event_venue }}</span>
                                 </div>
                                 <div class="mb-4">
-                                    <div class="flex justify-between gap-2 text-xs sm:text-sm mb-2">
-                                        <span class="text-gray-400 truncate">{{ $event->tickets_sold }} /
+                                    <div class="flex justify-between text-sm mb-2">
+                                        <span class="text-gray-400">{{ $event->tickets_sold }} /
                                             {{ $event->tickets->sum('original_qty') }} sold</span>
                                         <span
-                                            class="text-blue-400 font-semibold">{{ number_format($event->percentage, 2) }}%</span>
+                                            class="text-blue-400 font-semibold">{{ number_format($event->percentage, 0) }}%</span>
                                     </div>
                                     <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
                                         <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all"
                                             style="width: {{ $event->percentage }}%"></div>
                                     </div>
                                 </div>
-                                <div class="flex items-center justify-end pt-4 border-t border-white/10">
+                                <div class="flex items-center justify-between pt-4 border-t border-white/10">
+                                    <div>
+                                        {{-- <p class="text-sm text-gray-400">Starting from</p>
+                                        <p class="text-xl font-bold text-white">$45</p> --}}
+                                    </div>
                                     <div class="flex gap-2" onclick="event.stopPropagation()">
                                         <button onclick='openEditModal(@json($event))'
                                             class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
@@ -359,12 +395,37 @@
         </div>
     </div>
 
+    <div id="deleteConfirmModal" class="hidden fixed inset-0 z-[70] items-center justify-center p-4"
+        style="background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px);">
+        <div
+            class="delete-confirm-panel w-full max-w-md rounded-2xl border border-white/10 bg-gradient-to-br from-[#1a2332] to-[#0c1222] p-6 shadow-2xl">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="h-10 w-10 rounded-xl bg-red-500/10 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-white">Delete Event?</h3>
+            </div>
+            <p class="text-sm text-gray-300 mb-6">This action is permanent and cannot be undone.</p>
+            <div class="flex items-center justify-end gap-3">
+                <button id="deleteModalCancelBtn" type="button"
+                    class="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg font-semibold transition-all">Cancel</button>
+                <button id="deleteModalConfirmBtn" type="button"
+                    class="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-200 rounded-lg font-semibold transition-all">Delete Event</button>
+            </div>
+        </div>
+    </div>
+
     @include('merchant.component.event.modal')
     @include ('merchant.component.event.view')
 
     <script>
         let currentEventId = null;
         let isEditMode = false;
+        let pendingDeleteForm = null;
         const deleteRouteTemplate = "{{ route('merchant.events.delete', '__EVENT_ID__') }}";
         const ticketsRouteTemplate = "{{ route('merchant.events.tickets.tickets', '__EVENT_SLUG__') }}";
         // Helper: set value + label for a custom dropdown
@@ -461,7 +522,6 @@
             document.getElementById('viewEventDescription').innerHTML = isHtml(event.description)
                 ? event.description
                 : renderMarkdown(event.description);
-            document.getElementById('viewEventSold').textContent = `${soldTickets} sold`;
             document.getElementById('viewEventTotal').textContent = `of ${totalTickets} tickets`;
             document.getElementById('viewEventPercentage').textContent = `${percentage.toFixed(2)}%`;
             document.getElementById('viewEventProgress').style.width = `${percentage}%`;
@@ -555,13 +615,13 @@
                 once: true
             });
 
-            document.getElementById('openEditModalFromView').onclick = function () {
+            document.getElementById('openEditModalFromView').addEventListener('click', function () {
                 // console.log(event);
                 closeViewModal();
                 setTimeout(() => {
                     openEditModal(event);
                 }, 300);
-            };
+            });
         }
 
         // Removed duplicate closeViewModal
@@ -628,20 +688,32 @@
 
         function confirmDelete(event, form) {
             event.preventDefault();
-            Swal.fire({
-                title: 'Delete Event?',
-                text: "Are you sure? You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                background: '#1a2332',
-                color: '#fff',
-                confirmButtonColor: '#ef4444',
-                cancelButtonColor: '#374151',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
+            pendingDeleteForm = form;
+
+            const deleteModal = document.getElementById('deleteConfirmModal');
+            if (!deleteModal) return;
+
+            deleteModal.classList.remove('hidden', 'modal-closing');
+            deleteModal.classList.add('flex', 'modal-opening');
+
+            deleteModal.addEventListener('animationend', () => {
+                deleteModal.classList.remove('modal-opening');
+            }, {
+                once: true
+            });
+        }
+
+        function closeDeleteConfirmModal() {
+            const deleteModal = document.getElementById('deleteConfirmModal');
+            if (!deleteModal || deleteModal.classList.contains('hidden')) return;
+
+            deleteModal.classList.remove('modal-opening');
+            deleteModal.classList.add('modal-closing');
+            deleteModal.addEventListener('animationend', () => {
+                deleteModal.classList.add('hidden');
+                deleteModal.classList.remove('flex', 'modal-closing');
+            }, {
+                once: true
             });
         }
 
@@ -954,10 +1026,44 @@
             // Close modals when clicking outside
             document.addEventListener('click', function(event) {
                 const viewModal = document.getElementById('viewEventModal');
+                const deleteModal = document.getElementById('deleteConfirmModal');
 
                 if (viewModal && !viewModal.classList.contains('hidden') &&
                     event.target === viewModal) {
                     closeViewModal();
+                }
+
+                if (deleteModal && !deleteModal.classList.contains('hidden') &&
+                    event.target === deleteModal) {
+                    pendingDeleteForm = null;
+                    closeDeleteConfirmModal();
+                }
+            });
+
+            const deleteModalCancelBtn = document.getElementById('deleteModalCancelBtn');
+            if (deleteModalCancelBtn) {
+                deleteModalCancelBtn.addEventListener('click', function() {
+                    pendingDeleteForm = null;
+                    closeDeleteConfirmModal();
+                });
+            }
+
+            const deleteModalConfirmBtn = document.getElementById('deleteModalConfirmBtn');
+            if (deleteModalConfirmBtn) {
+                deleteModalConfirmBtn.addEventListener('click', function() {
+                    if (pendingDeleteForm) {
+                        const formToSubmit = pendingDeleteForm;
+                        pendingDeleteForm = null;
+                        closeDeleteConfirmModal();
+                        formToSubmit.submit();
+                    }
+                });
+            }
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    pendingDeleteForm = null;
+                    closeDeleteConfirmModal();
                 }
             });
         });
