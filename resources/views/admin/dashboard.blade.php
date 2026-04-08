@@ -63,7 +63,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Total Revenue</p>
-                            <h3 class="text-3xl font-bold text-white">$48,521</h3>
+                            <h3 class="text-3xl font-bold text-white">₱{{ number_format($total_sales, 2) }}</h3>
                         </div>
                     </div>
 
@@ -85,7 +85,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Tickets Sold</p>
-                            <h3 class="text-3xl font-bold text-white">1,247</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ number_format($tickets_sold) }}</h3>
                         </div>
                     </div>
 
@@ -107,7 +107,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Active Events</p>
-                            <h3 class="text-3xl font-bold text-white">23</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ $active_events }}</h3>
                         </div>
                     </div>
 
@@ -129,7 +129,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Total Users</p>
-                            <h3 class="text-3xl font-bold text-white">8,492</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ $total_users }}</h3>
                         </div>
                     </div>
                 </div>

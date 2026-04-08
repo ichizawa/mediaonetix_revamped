@@ -121,7 +121,7 @@ class PublicController extends Controller
 
 
             $paymentIntentId = rand(1000, 9999);
-            $status = 'pending';
+            $status = '0';
 
             $sale = new Sales();
             $sale->ticket_id = $request->ticket;
@@ -388,7 +388,7 @@ class PublicController extends Controller
             if (!$resp) {
                 Log::error("Webhook triggered but no matching sale found for Intent ID: " . $intentId);
                 return null;
-            }
+                }
 
             $intentData = $this->payMongo->getPaymentIntent($intentId);
             if (isset($intentData['data']['attributes']['amount'])) {
@@ -434,7 +434,7 @@ class PublicController extends Controller
 
                 $resp->update([
                     'is_paid' => 1,
-                    'status' => 'S',
+                    'status' => '1',
                     'paymongo_payment_id' => $paymentId, 
                     'paymongo_fee' => $fee,              
                     'net_amount' => $netAmount,          
@@ -456,8 +456,11 @@ class PublicController extends Controller
                     $reference_number = 'M1-' . $currentDate . '-' . rand(1000, 9999) . rand(1000, 9999) . '-' . $nextId;
                     $qrcode = QrCode::size(250)->generate($reference_number);
 
+
+
                     CustomerTicket::create([
                         'sale_id' => $resp->id,
+                        'customer_id' => $resp->customer_id,
                         'reference_num' => $reference_number,
                         'is_redeemed' => 0,
                     ]);
@@ -499,7 +502,6 @@ class PublicController extends Controller
                     ]
                 );
 
-                // Facebook / Meta Pixel Tracking
                 if ($resp->is_tracked == 0) {
                     Log::info("Tracking Meta Pixel");
                     try {

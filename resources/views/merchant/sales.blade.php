@@ -353,7 +353,6 @@
                                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Tickets</th>
                                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Amount</th>
                                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Status</th>
-                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -403,18 +402,7 @@
                                                 {{ $sale->status_label['label'] }}
                                             </span>
                                         </td>
-                                        <td class="py-4 px-4">
-                                            <div class="flex gap-2">
-                                                <button onclick="event.stopPropagation()" class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                                        </path>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </td>
+                                      
                                     </tr>
                                 @empty
                                     <tr>

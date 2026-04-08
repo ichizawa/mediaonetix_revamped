@@ -18,6 +18,9 @@ Route::group(['middleware' => ['json.response']], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', [AuthController::class, 'logout']);
 
+    Route::post('/paymongo/postback', [PublicController::class, 'payMongoPostback']);
+
+
     Route::middleware('auth:api')->group(function () {
 
         // Route::prefix('staff')->group(function () {
@@ -45,6 +48,8 @@ Route::group(['middleware' => ['json.response']], function () {
             Route::get('events', [\App\Http\Controllers\PublicController::class, 'events']);
             Route::get('tickets', [TicketListsController::class, 'getTickets']);
 
+            Route::get('tickets/scanned', [TicketListsController::class, 'getTicketScanned']);
+
             Route::prefix('scan')->group(function () {
                 Route::get('/check-ticket/{refNumber}', [ScannerController::class, 'checkTicket']);
                 Route::get('/ticket/{refNumber}', [ScannerController::class, 'scanTicket']);
@@ -52,7 +57,9 @@ Route::group(['middleware' => ['json.response']], function () {
         });
 
         Route::prefix('users')->group(function () {
-            Route::get('events', [EventsController::class, 'events']);
+            Route::get('events', [EventsController::class, 'eventsPublic']);
+            Route::get('purchase-history', [TicketListsController::class, 'getPurchaseHistory']);
+            
         });
     });
 });

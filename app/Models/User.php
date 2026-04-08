@@ -182,6 +182,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->role?->name ?? 'user';
     }
+    
 
         public function scopeUser($query)
     {
