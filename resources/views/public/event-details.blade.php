@@ -156,39 +156,44 @@
                 linear-gradient(to top, rgba(8, 7, 15, 1) 0%, rgba(8, 7, 15, .5) 30%, transparent 65%);
         }
 
-  .hero__content {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column; justify-content: flex-end;
-    padding: 40px 32px; max-width: 680px;
-  }
+        .hero__content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 40px 32px;
+            max-width: 680px;
+        }
 
-  .hero__back {
-    position: fixed;
-    top: 22px;
-    left: 22px;
-    z-index: 110;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border-radius: 999px;
-    border: 1px solid var(--rim2);
-    background: rgba(8,7,15,.45);
-    backdrop-filter: blur(8px);
-    color: #fff;
-    text-decoration: none;
-    font-family: 'Space Mono', monospace;
-    font-size: .66rem;
-    font-weight: 700;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    transition: border-color .2s, background .2s, transform .2s;
-  }
-  .hero__back:hover {
-    border-color: rgba(56,189,248,.45);
-    background: rgba(56,189,248,.15);
-    transform: translateY(-1px);
-  }
+        .hero__back {
+            position: fixed;
+            top: 22px;
+            left: 22px;
+            z-index: 110;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--rim2);
+            background: rgba(8, 7, 15, .45);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            font-size: .66rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            transition: border-color .2s, background .2s, transform .2s;
+        }
+
+        .hero__back:hover {
+            border-color: rgba(56, 189, 248, .45);
+            background: rgba(56, 189, 248, .15);
+            transform: translateY(-1px);
+        }
 
         .hero__badge-row {
             display: flex;
@@ -1517,24 +1522,70 @@
             animation-delay: .25s;
         }
 
-  /* ─── RESPONSIVE (mobile overrides) ─── */
-  @media (max-width: 480px) {
-    .hero__back { top: 16px; left: 16px; }
-    .hero__content { padding: 28px 20px; }
-    .hero__title { font-size: clamp(3rem, 18vw, 4.5rem); }
-    .wrap { padding: 0 16px 120px; }
-    .tkt { padding: 18px; }
-    .buy-btn { padding: 13px 20px; font-size: 1rem; }
-    .bottom-bar { padding: 14px 16px 20px; }
-    .modal { border-radius: 22px 22px 0 0; }
-    .modal__body { padding: 20px 20px 0; }
-    .modal__head { padding: 18px 20px; }
-    .modal__summary-grid { grid-template-columns: 1fr 1fr; }
-    .hero__scroll-cue { display: none; }
-    .lineup-card { width: 136px; }
-    .lineup-card.featured { width: 158px; }
-    .sec-head { margin-top: 32px; }
-  }
+        /* ─── RESPONSIVE (mobile overrides) ─── */
+        @media (max-width: 480px) {
+            .hero__back {
+                top: 16px;
+                left: 16px;
+            }
+
+            .hero__content {
+                padding: 28px 20px;
+            }
+
+            .hero__title {
+                font-size: clamp(3rem, 18vw, 4.5rem);
+            }
+
+            .wrap {
+                padding: 0 16px 120px;
+            }
+
+            .tkt {
+                padding: 18px;
+            }
+
+            .buy-btn {
+                padding: 13px 20px;
+                font-size: 1rem;
+            }
+
+            .bottom-bar {
+                padding: 14px 16px 20px;
+            }
+
+            .modal {
+                border-radius: 22px 22px 0 0;
+            }
+
+            .modal__body {
+                padding: 20px 20px 0;
+            }
+
+            .modal__head {
+                padding: 18px 20px;
+            }
+
+            .modal__summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .hero__scroll-cue {
+                display: none;
+            }
+
+            .lineup-card {
+                width: 136px;
+            }
+
+            .lineup-card.featured {
+                width: 158px;
+            }
+
+            .sec-head {
+                margin-top: 32px;
+            }
+        }
 
         @media (min-width: 700px) {
             .hero__content {
@@ -1549,49 +1600,54 @@
 
     @if (isset($event))
 
-    {{-- ─── HERO ─── --}}
-    <div class="hero">
-      <a class="hero__back" href="{{ url()->previous() }}" aria-label="Go back">
-        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-        </svg>
-        <span>Back</span>
-      </a>
+        {{-- ─── HERO ─── --}}
+        <div class="hero">
+            <a class="hero__back" href="{{ url()->previous() }}" aria-label="Go back">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                <span>Back</span>
+            </a>
 
-      @if ($event->event_image)
-        <img class="hero__img" src="{{ asset('images/events/' . $event->event_image) }}" alt="{{ $event->event_name }}">
-      @else
-        <div class="hero__fallback">
-          <div class="hero__fallback-glow"></div>
-        </div>
-      @endif
+            @if ($event->event_image)
+                <img class="hero__img" src="{{ asset('images/events/' . $event->event_image) }}"
+                    alt="{{ $event->event_name }}">
+            @else
+                <div class="hero__fallback">
+                    <div class="hero__fallback-glow"></div>
+                </div>
+            @endif
 
             <div class="hero__orb hero__orb--1"></div>
             <div class="hero__orb hero__orb--2"></div>
             <div class="hero__grad"></div>
 
-      <div class="hero__content">
-        @php
-          $ticketCollection = collect($event->tickets ?? []);
-          $hasTickets = $ticketCollection->count() > 0;
-          $hasAvailableTickets = $ticketCollection->contains(function ($ticket) {
-            return (int) ($ticket->quantity ?? 0) > 0;
-          });
-          $saleBadgeText = $hasAvailableTickets
-            ? 'On Sale Now'
-            : ($hasTickets ? 'Sold Out' : 'No Available Tickets');
-        @endphp
-        <div class="hero__badge-row">
-          <div class="hero__badge">
-            @if ($hasAvailableTickets)
-              <div class="hero__badge-live"></div>
-            @endif
-            {{ $saleBadgeText }}
-          </div>
-          @if ($event->event_date)
-            <div class="hero__badge-date">{{ strtoupper(\Carbon\Carbon::parse($event->event_date)->format('M d, Y')) }}</div>
-          @endif
-        </div>
+            <div class="hero__content">
+                @php
+                    $ticketCollection = collect($event->tickets ?? []);
+                    $hasTickets = $ticketCollection->count() > 0;
+                    $hasAvailableTickets = $ticketCollection->contains(function ($ticket) {
+                        return (int) ($ticket->quantity ?? 0) > 0;
+                    });
+                    $saleBadgeText = $hasAvailableTickets
+                        ? 'On Sale Now'
+                        : ($hasTickets
+                            ? 'Sold Out'
+                            : 'No Available Tickets');
+                @endphp
+                <div class="hero__badge-row">
+                    <div class="hero__badge">
+                        @if ($hasAvailableTickets)
+                            <div class="hero__badge-live"></div>
+                        @endif
+                        {{ $saleBadgeText }}
+                    </div>
+                    @if ($event->event_date)
+                        <div class="hero__badge-date">
+                            {{ strtoupper(\Carbon\Carbon::parse($event->event_date)->format('M d, Y')) }}</div>
+                    @endif
+                </div>
 
                 <h1 class="hero__title">{{ $event->event_name }}</h1>
 
@@ -1741,106 +1797,112 @@
                         </div>
                     @endif
 
-          {{-- TICKETS --}}
-          @if ($event->tickets && count($event->tickets))
-            <div class="sec-head fade-up">
-              <div class="sec-label">Select Tickets</div>
-              <div class="sec-line"></div>
-            </div>
+                    {{-- TICKETS --}}
+                    @if ($event->tickets && count($event->tickets))
+                        <div class="sec-head fade-up">
+                            <div class="sec-label">Select Tickets</div>
+                            <div class="sec-line"></div>
+                        </div>
 
-            <div class="ticket-cards" id="ticketList">
-              @foreach ($event->tickets as $i => $ticket)
-                @php
-                  $qty      = $ticket->quantity ?? 0;
-                  $sold     = $qty <= 0;
-                  $tktName  = $ticket->name     ?? ($ticket->type ?? 'General');
-                  $tktType  = $ticket->type     ?? ($ticket->category ?? 'General Admission');
-                  $inclusions = $ticket->inclusions ?? ($ticket->perks ?? null);
+                        <div class="ticket-cards" id="ticketList">
+                            @foreach ($event->tickets as $i => $ticket)
+                                @php
+                                    $qty = $ticket->quantity ?? 0;
+                                    $sold = $qty <= 0;
+                                    $tktName = $ticket->name ?? ($ticket->type ?? 'General');
+                                    $tktType = $ticket->type ?? ($ticket->category ?? 'General Admission');
+                                    $inclusions = $ticket->inclusions ?? ($ticket->perks ?? null);
 
-                  $rawColor = ltrim(trim((string) ($ticket->color ?? '')), '#');
-                  if (preg_match('/^[A-Fa-f0-9]{3}$/', $rawColor)) {
-                    $rawColor = preg_replace('/(.)/', '$1$1', $rawColor);
-                  }
-                  $isValidHex = preg_match('/^[A-Fa-f0-9]{6}$/', $rawColor) === 1;
-                  $hexColor = $isValidHex ? '#' . strtoupper($rawColor) : '#38BDF8';
-                  $rgbColor = $isValidHex
-                    ? hexdec(substr($rawColor, 0, 2)) . ',' . hexdec(substr($rawColor, 2, 2)) . ',' . hexdec(substr($rawColor, 4, 2))
-                    : '56,189,248';
-                @endphp
+                                    $rawColor = ltrim(trim((string) ($ticket->color ?? '')), '#');
+                                    if (preg_match('/^[A-Fa-f0-9]{3}$/', $rawColor)) {
+                                        $rawColor = preg_replace('/(.)/', '$1$1', $rawColor);
+                                    }
+                                    $isValidHex = preg_match('/^[A-Fa-f0-9]{6}$/', $rawColor) === 1;
+                                    $hexColor = $isValidHex ? '#' . strtoupper($rawColor) : '#38BDF8';
+                                    $rgbColor = $isValidHex
+                                        ? hexdec(substr($rawColor, 0, 2)) .
+                                            ',' .
+                                            hexdec(substr($rawColor, 2, 2)) .
+                                            ',' .
+                                            hexdec(substr($rawColor, 4, 2))
+                                        : '56,189,248';
+                                @endphp
 
-                <div
-                  class="tkt fade-up {{ $i === 0 && !$sold ? 'selected' : '' }} {{ $sold ? 'sold-out' : '' }}"
-                  data-price="{{ $ticket->price ?? 0 }}"
-                  data-name="{{ $tktName }}"
-                  data-sold="{{ $sold ? '1' : '0' }}"
-                  data-max="{{ max(0, (int) $qty) }}"
-                  data-color="{{ $hexColor }}"
-                  style="--tkt-color: {{ $hexColor }}; --tkt-rgb: {{ $rgbColor }};"
-                  onclick="selectTicket(this)"
-                >
-                  {{-- Top row: name + price --}}
-                  <div class="tkt__top">
-                    <div>
-                      <div class="tkt__name" style="color: {{ $hexColor }};">{{ $tktName }}</div>
-                      <div class="tkt__sub">{{ $tktType }}</div>
-                    </div>
-                    <div class="tkt__price" style="color: {{ $hexColor }};">
-                      <span class="tkt__currency">₱</span>{{ number_format($ticket->price ?? 0, 0) }}
-                    </div>
-                  </div>
+                                <div class="tkt fade-up {{ $i === 0 && !$sold ? 'selected' : '' }} {{ $sold ? 'sold-out' : '' }}"
+                                    data-id="{{ $ticket->id }}" data-price="{{ $ticket->price ?? 0 }}"
+                                    data-name="{{ $tktName }}" data-sold="{{ $sold ? '1' : '0' }}"
+                                    data-max="{{ max(0, (int) $qty) }}" data-color="{{ $hexColor }}"
+                                    style="--tkt-color: {{ $hexColor }}; --tkt-rgb: {{ $rgbColor }};"
+                                    onclick="selectTicket(this)">
+                                    {{-- Top row: name + price --}}
+                                    <div class="tkt__top">
+                                        <div>
+                                            <div class="tkt__name" style="color: {{ $hexColor }};">
+                                                {{ $tktName }}</div>
+                                            <div class="tkt__sub">{{ $tktType }}</div>
+                                        </div>
+                                        <div class="tkt__price" style="color: {{ $hexColor }};">
+                                            <span
+                                                class="tkt__currency">₱</span>{{ number_format($ticket->price ?? 0, 0) }}
+                                        </div>
+                                    </div>
 
-                  {{-- Availability --}}
-                  @if ($sold)
-                    <div class="tkt__avail avail--gray">
-                      <div class="avail-dot avail-dot--gray"></div>
-                      Sold Out
-                    </div>
-                  @else
-                    <div class="tkt__avail" style="color: {{ $hexColor }};">
-                      <div class="avail-dot" style="background: {{ $hexColor }}; box-shadow: 0 0 7px {{ $hexColor }};"></div>
-                      Available
-                    </div>
-                  @endif
+                                    {{-- Availability --}}
+                                    @if ($sold)
+                                        <div class="tkt__avail avail--gray">
+                                            <div class="avail-dot avail-dot--gray"></div>
+                                            Sold Out
+                                        </div>
+                                    @else
+                                        <div class="tkt__avail" style="color: {{ $hexColor }};">
+                                            <div class="avail-dot"
+                                                style="background: {{ $hexColor }}; box-shadow: 0 0 7px {{ $hexColor }};">
+                                            </div>
+                                            Available
+                                        </div>
+                                    @endif
 
-                  {{-- Inclusions --}}
-                  @if ($inclusions && !$sold)
-                    <hr class="tkt__divider">
-                    <div class="tkt__inclusions-label" style="color: {{ $hexColor }};">Inclusions</div>
-                    <div class="tkt__perks">
-                      @foreach (preg_split('/\r\n|\r|\n/', $inclusions) as $item)
-                        @php $item = trim(ltrim(trim($item), '-')); @endphp
-                        @if ($item)
-                          <div class="tkt__perk">— {{ $item }}</div>
-                        @endif
-                      @endforeach
-                    </div>
-                  @endif
+                                    {{-- Inclusions --}}
+                                    @if ($inclusions && !$sold)
+                                        <hr class="tkt__divider">
+                                        <div class="tkt__inclusions-label" style="color: {{ $hexColor }};">Inclusions
+                                        </div>
+                                        <div class="tkt__perks">
+                                            @foreach (preg_split('/\r\n|\r|\n/', $inclusions) as $item)
+                                                @php $item = trim(ltrim(trim($item), '-')); @endphp
+                                                @if ($item)
+                                                    <div class="tkt__perk">— {{ $item }}</div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    @endif
 
-                  {{-- Quantity stepper --}}
-                  <div class="tkt__stepper-row" style="--tkt-rgb: {{ $rgbColor }};">
-                    <div class="stepper-label">Quantity</div>
-                    <div class="stepper-controls">
-                      <button type="button" class="stepper-btn stepper-btn--minus" onclick="changeQty(event, this, -1)">−</button>
-                      <span class="stepper-num" data-qty="1">1</span>
-                      <button type="button" class="stepper-btn stepper-btn--plus"
-                        style="background: {{ $hexColor }}; color: #000;"
-                        onmouseover="this.style.filter='brightness(1.15)'"
-                        onmouseout="this.style.filter=''"
-                        onclick="changeQty(event, this, 1)">+</button>
-                    </div>
-                  </div>
-                </div>
-              @endforeach
-            </div>
-          @else
-            <div class="sec-head fade-up">
-              <div class="sec-label">Tickets</div>
-              <div class="sec-line"></div>
-            </div>
-            <div class="about-card fade-up">
-              <div class="about-text">Tickets are still not available. Stay tuned.</div>
-            </div>
-          @endif
+                                    {{-- Quantity stepper --}}
+                                    <div class="tkt__stepper-row" style="--tkt-rgb: {{ $rgbColor }};">
+                                        <div class="stepper-label">Quantity</div>
+                                        <div class="stepper-controls">
+                                            <button type="button" class="stepper-btn stepper-btn--minus"
+                                                onclick="changeQty(event, this, -1)">−</button>
+                                            <span class="stepper-num" data-qty="1">1</span>
+                                            <button type="button" class="stepper-btn stepper-btn--plus"
+                                                style="background: {{ $hexColor }}; color: #000;"
+                                                onmouseover="this.style.filter='brightness(1.15)'"
+                                                onmouseout="this.style.filter=''"
+                                                onclick="changeQty(event, this, 1)">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="sec-head fade-up">
+                            <div class="sec-label">Tickets</div>
+                            <div class="sec-line"></div>
+                        </div>
+                        <div class="about-card fade-up">
+                            <div class="about-text">Tickets are still not available. Stay tuned.</div>
+                        </div>
+                    @endif
 
                 </div>
                 {{-- END col-right --}}
@@ -1867,22 +1929,23 @@
                             d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                 </a>
-            <script>
-                // ...existing code...
-                // Redirect to purchase page with ticket and quantity
-                document.getElementById('buyTicketsBtn')?.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const selectedTicket = document.querySelector('.tkt.selected');
-                    if (!selectedTicket) return;
-                    const ticketId = selectedTicket.getAttribute('data-id') || selectedTicket.getAttribute('data-ticket-id') || selectedTicket.dataset.ticketId || selectedTicket.dataset.id;
-                    const qty = selQty;
-                    const url = `{{ url('purchase') }}?event={{ $event->id }}&ticket=${ticketId}&quantity=${qty}`;
-                    window.location.href = url;
-                });
-            </script>
+                <script>
+                    // ...existing code...
+                    // Redirect to purchase page with ticket and quantity
+                    document.getElementById('buyTicketsBtn')?.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const selectedTicket = document.querySelector('.tkt.selected');
+                        if (!selectedTicket) return;
+                        const ticketId = selectedTicket.getAttribute('data-id') || selectedTicket.getAttribute(
+                            'data-ticket-id') || selectedTicket.dataset.ticketId || selectedTicket.dataset.id;
+                        const qty = selQty;
+                        const url = `{{ url('purchase') }}?event={{ $event->id }}&ticket=${ticketId}&quantity=${qty}`;
+                        window.location.href = url;
+                    });
+                </script>
         </div>
 
-    
+
 
         {{-- ─── LIGHTBOX ─── --}}
         @if ($event->seat_plan)

@@ -25,7 +25,7 @@ Route::get('purchase', function (\Illuminate\Http\Request $request) {
     $total = $unitPrice * $quantity;
     return view('public.purchase', [
         'event' => $event,
-        'ticketType' => $ticket ? ($ticket->name ?? ($ticket->type ?? 'General')) : '',
+        'ticketType' => $ticket->type ?? null,
         'ticketId' => $ticket ? $ticket->id : '',
         'quantity' => $quantity,
         'unitPrice' => $unitPrice,
