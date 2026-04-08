@@ -14,7 +14,7 @@
 
 <body>
     <div>
-        @if (Route::is('admin.*') || Route::is('merchant.*') || Route::is('staff.*'))
+        @if (Route::is('admin.*') || Route::is('merchant.*') || Route::is('staff.*') || Route::is('user.*'))
             <x-navbar />
             <x-sidebar />
         @endif

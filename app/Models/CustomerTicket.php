@@ -18,4 +18,8 @@ class CustomerTicket extends Model
     {
         return $this->belongsTo(Sales::class);
     }
+      public function ticket()
+    {
+        return $this->belongsTo(Tickets::class, 'ticket_id', 'id');
+    }
 }

@@ -19,6 +19,7 @@ class Sales extends Model
             'label' => 'Completed',
             'color' => 'text-green-400',
         ],
+        
         2 => [
             'label' => 'Cancelled',
             'color' => 'text-red-400',
