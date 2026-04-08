@@ -11,7 +11,7 @@ class PublicEventsComponent extends Component
 
     public function mount(Events $event)
     {
-        $this->events = $event->getUpcoming()->withSum('tickets', 'quantity')->withMin('tickets', 'price')->get();
+        $this->events = $event->getUpcoming()->withSum('tickets', 'quantity')->withSum('tickets', 'original_qty')->withMin('tickets', 'price')->get();
         // $this->events = $event->withSum('tickets', 'quantity')->withMin('tickets', 'price')->get();
     }
     public function render()
