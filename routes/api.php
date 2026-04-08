@@ -49,6 +49,7 @@ Route::group(['middleware' => ['json.response']], function () {
             Route::get('tickets', [TicketListsController::class, 'getTickets']);
 
             Route::get('tickets/scanned', [TicketListsController::class, 'getTicketScanned']);
+            Route::get('ticket-category/scanned/{eventId}', [TicketListsController::class, 'getScannedTicketCategory']);
 
             Route::prefix('scan')->group(function () {
                 Route::get('/check-ticket/{refNumber}', [ScannerController::class, 'checkTicket']);
