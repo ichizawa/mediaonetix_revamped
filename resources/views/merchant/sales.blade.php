@@ -284,6 +284,7 @@
                         @forelse($sales as $sale)
                             <div onclick="openViewSalesModal({
                                     ref: '{{ $sale->reference_number }}',
+                                    transactionId: '{{ addslashes($sale->transaction_id ?? 'N/A') }}',
                                     status: '{{ $sale->status_label['label'] }}',
                                     statusColor: '{{ $sale->status_label['color'] }}',
                                     customerName: '{{ addslashes($sale->customer_name) }}',
@@ -359,6 +360,7 @@
                                 @forelse($sales as $sale)
                                     <tr onclick="openViewSalesModal({
                                                     ref: '{{ $sale->reference_number }}',
+                                                    transactionId: '{{ addslashes($sale->transaction_id ?? 'N/A') }}',
                                                     status: '{{ $sale->status_label['label'] }}',
                                                     statusColor: '{{ $sale->status_label['color'] }}',
                                                     customerName: '{{ addslashes($sale->customer_name) }}',

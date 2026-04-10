@@ -65,6 +65,10 @@
                         <span class="text-white/80 flex-shrink-0">Quantity</span>
                         <span class="text-white font-bold" id="viewSaleQuantity">—</span>
                     </div>
+                    <div class="flex justify-between items-center gap-3 py-2 border-t border-white/5">
+                        <span class="text-white/70 font-medium flex-shrink-0">Transaction ID</span>
+                        <span class="font-semibold text-white/90 text-right break-all max-w-[65%]" id="viewSaleTransactionId">#—</span>
+                    </div>
                 </div>
             </section>
 
@@ -168,6 +172,7 @@
             document.getElementById('viewSaleEventName').textContent     = sale.eventName || '—';
             document.getElementById('viewSaleTicketType').textContent    = sale.ticketType || '—';
             document.getElementById('viewSaleQuantity').textContent      = (sale.quantity || 0) + ' ticket' + ((sale.quantity || 0) !== 1 ? 's' : '');
+            document.getElementById('viewSaleTransactionId').textContent = sale.transactionId || '—';
             document.getElementById('viewSaleUnitPrice').textContent     = '₱' + formatCurrency(sale.unitPrice || 0);
             document.getElementById('viewSalePaymentMethod').textContent = sale.paymentMethod || '—';
             document.getElementById('viewSaleTotalAmount').textContent   = '₱' + formatCurrency(sale.totalAmount || 0);

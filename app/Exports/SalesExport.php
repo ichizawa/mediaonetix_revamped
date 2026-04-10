@@ -9,10 +9,12 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class SalesExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $sales;
+    protected $includeEventColumn;
 
-    public function __construct($sales)
+    public function __construct($sales, bool $includeEventColumn = true)
     {
         $this->sales = $sales;
+        $this->includeEventColumn = $includeEventColumn;
     }
 
     public function collection()
@@ -22,11 +24,11 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping
 
     public function headings(): array
     {
-        return [
+        $headings = [
             'Reference Number',
+            'Transaction ID',
             'Customer Name',
             'Customer Email',
-            'Event Name',
             'Ticket Name',
             'Quantity',
             'Total Amount',
@@ -34,15 +36,21 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping
             'Status',
             'Date Created',
         ];
+
+        if ($this->includeEventColumn) {
+            array_splice($headings, 4, 0, 'Event Name');
+        }
+
+        return $headings;
     }
 
     public function map($sale): array
     {
-        return [
+        $row = [
             $sale->reference_number,
+            $sale->transaction_id ?? 'N/A',
             $sale->customer_name,
             $sale->customer_email,
-            $sale->event->event_name ?? 'N/A',
             $sale->ticket->name ?? 'N/A',
             $sale->quantity,
             number_format($sale->total_amount, 2),
@@ -50,5 +58,11 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping
             $sale->status_label['label'] ?? 'Unknown',
             $sale->created_at->format('Y-m-d H:i:s'),
         ];
+
+        if ($this->includeEventColumn) {
+            array_splice($row, 4, 0, $sale->event->event_name ?? 'N/A');
+        }
+
+        return $row;
     }
 }
