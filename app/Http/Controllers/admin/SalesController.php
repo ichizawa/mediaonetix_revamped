@@ -133,7 +133,7 @@ class SalesController extends Controller
 
         return view(auth()->user()->routePrefix() . '.sales', compact('events', 'sales', 'labels', 'values', 'chartData', 'total_sales'));
     }
-    public function edit($slug)
+    public function edit(Request $request, $slug)
     {
         if (Auth::user()->isAdmin()) {
             // Admin Logic
@@ -144,7 +144,17 @@ class SalesController extends Controller
                 return redirect()->back()->with('error', 'Event not found.');
             }
 
-            $sales = Sales::with('ticket')->where('event_id', $event->id)->orderByDesc('id')->paginate(10);
+            $salesQuery = Sales::with('ticket')->where('event_id', $event->id);
+
+            if ($request->filled('start_date')) {
+                $salesQuery->whereDate('created_at', '>=', $request->start_date);
+            }
+
+            if ($request->filled('end_date')) {
+                $salesQuery->whereDate('created_at', '<=', $request->end_date);
+            }
+
+            $sales = $salesQuery->orderByDesc('id')->paginate(10)->appends($request->query());
             return view('admin.component.sales.view-specific', compact('event', 'sales'));
         } else {
             // Merchant Logic
@@ -154,7 +164,17 @@ class SalesController extends Controller
                 return redirect()->route('merchant.sales')->with('error', 'Event not found or access denied.');
             }
 
-            $sales = Sales::with('ticket')->where('event_id', $event->id)->orderByDesc('id')->paginate(10);
+            $salesQuery = Sales::with('ticket')->where('event_id', $event->id);
+
+            if ($request->filled('start_date')) {
+                $salesQuery->whereDate('created_at', '>=', $request->start_date);
+            }
+
+            if ($request->filled('end_date')) {
+                $salesQuery->whereDate('created_at', '<=', $request->end_date);
+            }
+
+            $sales = $salesQuery->orderByDesc('id')->paginate(10)->appends($request->query());
             return view('merchant.component.sales.view-specific', compact('event', 'sales'));
         }
     }
@@ -280,6 +300,10 @@ class SalesController extends Controller
             ? Sales::getAllSalesByMerchant($merchantId)->with(['ticket', 'event']) 
             : Sales::with(['ticket', 'event']);
 
+        if ($request->filled('event_id')) {
+            $query->where('event_id', $request->event_id);
+        }
+
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $startDate = Carbon::parse($request->start_date)->startOfDay();
             $endDate = Carbon::parse($request->end_date)->endOfDay();
@@ -289,22 +313,53 @@ class SalesController extends Controller
         return $query->orderByDesc('id')->get();
     }
 
+    private function getExportNames(Request $request): array
+    {
+        if ($request->filled('event_id')) {
+            $eventQuery = Events::query()->where('id', $request->event_id);
+
+            if (!Auth::user()->isAdmin()) {
+                $eventQuery->where('created_by', Auth::user()->id);
+            }
+
+            $event = $eventQuery->first();
+
+            if ($event) {
+                $safeName = preg_replace('/[^A-Za-z0-9_-]+/', '_', $event->event_name);
+                $safeName = trim($safeName, '_');
+
+                return [
+                    'file' => $safeName !== '' ? $safeName : 'sales_export',
+                    'display' => $event->event_name,
+                ];
+            }
+        }
+
+        return [
+            'file' => 'sales_export',
+            'display' => 'Sales Export',
+        ];
+    }
+
     public function exportPdf(Request $request)
     {
         $sales = $this->getFilteredSales($request);
+        $exportNames = $this->getExportNames($request);
         $data = [
             'sales' => $sales,
             'startDate' => $request->start_date,
             'endDate' => $request->end_date,
+            'exportTitle' => $exportNames['display'],
         ];
 
         $pdf = Pdf::loadView('merchant.exports.sales_pdf', $data);
-        return $pdf->download('sales_export_' . now()->format('Ymd_His') . '.pdf');
+        return $pdf->download($exportNames['file'] . '_' . now()->format('Ymd_His') . '.pdf');
     }
 
     public function exportExcel(Request $request)
     {
         $sales = $this->getFilteredSales($request);
-        return Excel::download(new SalesExport($sales), 'sales_export_' . now()->format('Ymd_His') . '.xlsx');
+        $exportNames = $this->getExportNames($request);
+        return Excel::download(new SalesExport($sales), $exportNames['file'] . '_' . now()->format('Ymd_His') . '.xlsx');
     }
 }

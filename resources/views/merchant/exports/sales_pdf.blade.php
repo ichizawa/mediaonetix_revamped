@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Sales Export</title>
+    <title>{{ $exportTitle ?? 'Sales Export' }}</title>
     <style>
         body { font-family: sans-serif; font-size: 12px; }
         .header { text-align: center; margin-bottom: 20px; }
@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="header">
-        <h2>Sales Report</h2>
+        <h2>{{ $exportTitle ?? 'Sales Report' }}</h2>
         <p>Generated on: {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}</p>
         @if(isset($startDate) && isset($endDate))
             <p>Period: {{ \Carbon\Carbon::parse($startDate)->format('M d, Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('M d, Y') }}</p>

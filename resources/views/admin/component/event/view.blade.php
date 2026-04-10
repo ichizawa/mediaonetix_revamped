@@ -76,7 +76,7 @@
 
             <div class="mb-6">
                 <h4 class="text-lg font-semibold text-white mb-2">Description</h4>
-                <p id="viewEventDescription" class="text-gray-400 leading-relaxed">Event description goes here</p>
+                <div id="viewEventDescription" class="wysiwyg-content">Event description goes here</div>
             </div>
 
             <div class="mb-6">

@@ -46,7 +46,7 @@
                                 </svg>
                                 <span class="hidden sm:inline">Add Promo</span>
                             </button>
-                            <button
+                            <button onclick="openExportSalesModal()"
                                 class="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-white font-medium transition-all">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -153,6 +153,26 @@
                 <!-- Sales List -->
                 <div
                     class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+                    <form method="GET" action="{{ route('merchant.sales.edit', ['slug' => $event->slug]) }}"
+                        class="flex flex-col md:flex-row md:items-end gap-3 mb-4">
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Start Date</label>
+                            <input type="date" name="start_date" value="{{ request('start_date') }}"
+                                class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">End Date</label>
+                            <input type="date" name="end_date" value="{{ request('end_date') }}"
+                                class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="submit"
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium transition-all">Apply</button>
+                            <a href="{{ route('merchant.sales.edit', ['slug' => $event->slug]) }}"
+                                class="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-sm font-medium transition-all">Reset</a>
+                        </div>
+                    </form>
+
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-xl font-bold text-white">Sales List</h3>
                         <div class="flex gap-2">
@@ -182,10 +202,6 @@
                                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Date/Time</th>
                                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Name</th>
                                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Email</th>
-                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Contact</th>
-                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Address</th>
-                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">City</th>
-                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Birthdate</th>
                                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Ticket Type</th>
                                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Quantity</th>
                                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Total</th>
@@ -197,7 +213,20 @@
                             </thead>
                             <tbody>
                                 @forelse($sales as $sale)
-                                    <tr class="border-b border-white/5 hover:bg-white/5 transition-all">
+                                    <tr onclick="openViewSalesModal({
+                                                    ref: '{{ $sale->reference_number }}',
+                                                    status: '{{ $sale->status_label['label'] }}',
+                                                    statusColor: '{{ $sale->status_label['color'] }}',
+                                                    customerName: '{{ addslashes($sale->customer_name) }}',
+                                                    customerEmail: '{{ addslashes($sale->customer_email) }}',
+                                                    eventName: '{{ addslashes($event->event_name) }}',
+                                                    ticketType: '{{ addslashes($sale->ticket->name) }}',
+                                                    quantity: {{ $sale->quantity }},
+                                                    unitPrice: '{{ number_format($sale->ticket->price, 2) }}',
+                                                    totalAmount: '{{ number_format($sale->total_amount, 2) }}',
+                                                    paymentMethod: '{{ addslashes($sale->payment_method ?? 'N/A') }}',
+                                                    date: '{{ $sale->created_at->format('M d, Y • h:i A') }}'
+                                                })" class="border-b border-white/5 hover:bg-white/5 transition-all cursor-pointer">
                                         <td class="py-4 px-4 whitespace-nowrap">
                                             <div>
                                                 <p class="text-white text-sm">{{ $sale->created_at->format('F d, Y') }}</p>
@@ -209,18 +238,6 @@
                                         </td>
                                         <td class="py-4 px-4 whitespace-nowrap">
                                             <span class="text-gray-400 text-sm">{{ $sale->customer_email }}</span>
-                                        </td>
-                                        <td class="py-4 px-4 whitespace-nowrap">
-                                            <span class="text-gray-400 text-sm">{{ $sale->customer_phone }}</span>
-                                        </td>
-                                        <td class="py-4 px-4">
-                                            <span class="text-gray-400 text-sm">{{ $sale->customer_address }}</span>
-                                        </td>
-                                        <td class="py-4 px-4 whitespace-nowrap">
-                                            <span class="text-gray-400 text-sm">{{ $sale->customer_city }}</span>
-                                        </td>
-                                        <td class="py-4 px-4 whitespace-nowrap">
-                                            <span class="text-gray-400 text-sm">{{ $sale->customer_birthdate }}</span>
                                         </td>
                                         <td class="py-4 px-4 whitespace-nowrap">
                                             <span
@@ -245,18 +262,18 @@
                                         </td>
                                         <td class="py-4 px-4 whitespace-nowrap">
                                             <span class="text-white font-mono text-xs">
-                                                Test
+                                                {{ $sale->transaction_id ?? '-' }}
                                             </span>
                                         </td>
                                         <td class="py-4 px-4 whitespace-nowrap">
                                             <span class="text-gray-400 font-mono text-xs">
-                                                Test
+                                                {{ $sale->reference_number ?? '-' }}
                                             </span>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="14" class="py-4 px-4">
+                                        <td colspan="10" class="py-4 px-4">
                                             <p class="text-white text-sm">No sales found.</p>
                                         </td>
                                     </tr>
@@ -385,5 +402,13 @@
                 closePromoModal();
             }
         });
+
     </script>
+
+    @include('merchant.component.sales.export-modal', [
+        'exportPdfRoute' => route('merchant.sales.export.pdf', ['event_id' => $event->id]),
+        'exportExcelRoute' => route('merchant.sales.export.excel', ['event_id' => $event->id]),
+    ])
+
+    @include('merchant.component.sales.view-sales')
 @endsection

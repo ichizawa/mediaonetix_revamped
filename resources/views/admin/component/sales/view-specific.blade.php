@@ -46,15 +46,25 @@
                                 </svg>
                                 <span class="hidden sm:inline">Add Promo</span>
                             </button>
-                            <button
-                                class="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-white font-medium transition-all">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                    </path>
-                                </svg>
-                                <span class="hidden sm:inline">Export</span>
-                            </button>
+                            <div class="relative" id="exportMenuWrapper">
+                                <button onclick="toggleExportMenu(event)"
+                                    class="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-white font-medium transition-all">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                        </path>
+                                    </svg>
+                                    <span class="hidden sm:inline">Export</span>
+                                </button>
+
+                                <div id="exportMenu"
+                                    class="hidden absolute right-0 mt-2 w-48 bg-[#0c1222] border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
+                                    <a href="{{ route('admin.sales.export.pdf', ['event_id' => $event->id, 'start_date' => request('start_date'), 'end_date' => request('end_date')]) }}"
+                                        class="block px-4 py-2.5 text-sm text-white hover:bg-white/10 transition-all">Export as PDF</a>
+                                    <a href="{{ route('admin.sales.export.excel', ['event_id' => $event->id, 'start_date' => request('start_date'), 'end_date' => request('end_date')]) }}"
+                                        class="block px-4 py-2.5 text-sm text-white hover:bg-white/10 transition-all">Export as Excel</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -153,6 +163,26 @@
                 <!-- Sales List -->
                 <div
                     class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+                    <form method="GET" action="{{ route('admin.sales.edit', ['slug' => $event->slug]) }}"
+                        class="flex flex-col md:flex-row md:items-end gap-3 mb-4">
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Start Date</label>
+                            <input type="date" name="start_date" value="{{ request('start_date') }}"
+                                class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">End Date</label>
+                            <input type="date" name="end_date" value="{{ request('end_date') }}"
+                                class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="submit"
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium transition-all">Apply</button>
+                            <a href="{{ route('admin.sales.edit', ['slug' => $event->slug]) }}"
+                                class="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-sm font-medium transition-all">Reset</a>
+                        </div>
+                    </form>
+
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-xl font-bold text-white">Sales List</h3>
                         <div class="flex gap-2">
@@ -383,6 +413,18 @@
         document.getElementById('promoModal')?.addEventListener('click', function (e) {
             if (e.target === this) {
                 closePromoModal();
+            }
+        });
+
+        function toggleExportMenu(event) {
+            event.stopPropagation();
+            document.getElementById('exportMenu')?.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', function (e) {
+            const wrapper = document.getElementById('exportMenuWrapper');
+            if (wrapper && !wrapper.contains(e.target)) {
+                document.getElementById('exportMenu')?.classList.add('hidden');
             }
         });
     </script>
