@@ -80,7 +80,7 @@
                                 </div>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Walk-in Sales</p>
-                            <h3 class="text-3xl font-bold text-white">342</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ $walkin_sales_count }}</h3>
                             <p class="text-xs text-gray-500 mt-2">$17,850 revenue</p>
                         </div>
                     </div>
@@ -102,7 +102,7 @@
                                 </div>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Online Sales</p>
-                            <h3 class="text-3xl font-bold text-white">587</h3>
+                            <h3 class="text-3xl font-bold text-white">{{$online_sales_count}}</h3>
                             <p class="text-xs text-gray-500 mt-2">$28,420 revenue</p>
                         </div>
                     </div>
@@ -123,7 +123,7 @@
                                 </div>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Pending Sales</p>
-                            <h3 class="text-3xl font-bold text-white">45</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ $pending_sales_count}}</h3>
                             <p class="text-xs text-gray-500 mt-2">$2,180 pending</p>
                         </div>
                     </div>
@@ -301,7 +301,7 @@
                 </button>
             </div>
 
-            <form action="{{ route('admin.promo_codes.store') }}" method="POST" class="space-y-4">
+            <form action="{{ route('merchant.promo_codes.store') }}" method="POST" class="space-y-4">
                 @csrf
                 <input type="text" name="event_id" value="{{ $event->id }}" hidden />
                 <div>

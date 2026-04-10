@@ -23,7 +23,8 @@
                             </a>
                             <div>
                                 <div class="flex items-center gap-2 mb-1">
-                                    <a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Sales</a>
+                                    <a href="#"
+                                        class="text-sm text-gray-400 hover:text-white transition-colors">Sales</a>
                                     <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -73,14 +74,15 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div
                                     class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                     </svg>
                                 </div>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Walk-in Sales</p>
-                            <h3 class="text-3xl font-bold text-white">342</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ $walkin_sales_count }}</h3>
                             <p class="text-xs text-gray-500 mt-2">$17,850 revenue</p>
                         </div>
                     </div>
@@ -94,7 +96,8 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div
                                     class="w-12 h-12 bg-gradient-to-br from-green-600 to-green-400 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9">
                                         </path>
@@ -102,7 +105,7 @@
                                 </div>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Online Sales</p>
-                            <h3 class="text-3xl font-bold text-white">587</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ $online_sales_count }}</h3>
                             <p class="text-xs text-gray-500 mt-2">$28,420 revenue</p>
                         </div>
                     </div>
@@ -116,27 +119,30 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div
                                     class="w-12 h-12 bg-gradient-to-br from-yellow-600 to-yellow-400 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                 </div>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Pending Sales</p>
-                            <h3 class="text-3xl font-bold text-white">45</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ $pending_sales_count }}</h3>
                             <p class="text-xs text-gray-500 mt-2">$2,180 pending</p>
                         </div>
                     </div>
 
                     <div class="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden cursor-pointer hover:border-red-500/30 transition-all"
                         onclick="filterSales('disabled')">
-                        <div class="absolute top-0 right-0 w-24 h-24 bg-red-500 rounded-full filter blur-[60px] opacity-20">
+                        <div
+                            class="absolute top-0 right-0 w-24 h-24 bg-red-500 rounded-full filter blur-[60px] opacity-20">
                         </div>
                         <div class="relative">
                             <div class="flex items-center justify-between mb-4">
                                 <div
                                     class="w-12 h-12 bg-gradient-to-br from-red-600 to-red-400 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636">
                                         </path>
@@ -201,7 +207,8 @@
                                         <td class="py-4 px-4 whitespace-nowrap">
                                             <div>
                                                 <p class="text-white text-sm">{{ $sale->created_at->format('F d, Y') }}</p>
-                                                <p class="text-gray-400 text-xs">{{ $sale->created_at->format('h:i A') }}</p>
+                                                <p class="text-gray-400 text-xs">{{ $sale->created_at->format('h:i A') }}
+                                                </p>
                                             </div>
                                         </td>
                                         <td class="py-4 px-4 whitespace-nowrap">
@@ -380,7 +387,7 @@
         }
 
         // Close modal when clicking outside
-        document.getElementById('promoModal')?.addEventListener('click', function (e) {
+        document.getElementById('promoModal')?.addEventListener('click', function(e) {
             if (e.target === this) {
                 closePromoModal();
             }

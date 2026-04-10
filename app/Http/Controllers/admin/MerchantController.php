@@ -86,4 +86,77 @@ class MerchantController extends Controller
 
         return view('admin.component.merchant.files.files', compact('files'));
     }
+
+    public function update(MerchantRequest $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $genderMap = [
+                'male' => 0,
+                'female' => 1,
+                'other' => 2,
+            ];
+
+            $data = $request->validated();
+
+            $merchant = User::findOrFail($id);
+            $merchant->name = $data['name'];
+            $merchant->email = $data['email'];
+            $merchant->username = $data['username'];
+            $merchant->first_name = $data['first_name'];
+            $merchant->last_name = $data['last_name'];
+            $merchant->phone_number = $data['phone_number'];
+            $merchant->city = $data['city'];
+            $merchant->dob = $data['dob'];
+            $merchant->gender = $genderMap[$data['gender']];
+            $merchant->country = $data['country'];
+            $merchant->zip_code = $data['zip_code'];
+            $merchant->address = $data['address'];
+
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('images/merchants'), $imageName);
+                $merchant->image = $imageName;
+            }
+
+            // Only update password if provided
+            if (!empty($data['password'])) {
+                $merchant->password = Hash::make($data['password']);
+            }
+
+            $merchant->is_active = 1;
+            $merchant->role_id = Role::where('type', 'merchant')->first()->id;
+            $merchant->save();
+
+            Log::info('Merchant Updated Successfully');
+
+            DB::commit();
+            return back()->with('success', 'Merchant Updated Successfully');
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return back()->withErrors($e->getMessage())->withInput();
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $merchant = User::findOrFail($id);
+            $merchant->delete();
+
+            Log::info('Merchant Deleted Successfully');
+
+            return back()->with('success', 'Merchant Deleted Successfully');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return back()->withErrors($e->getMessage());
+        }
+    }
 }

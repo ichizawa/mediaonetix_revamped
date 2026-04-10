@@ -89,4 +89,6 @@ class OrganizerController extends Controller
             return back()->withErrors($e->getMessage())->withInput();
         }
     }
+
+   
 }

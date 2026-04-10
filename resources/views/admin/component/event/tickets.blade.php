@@ -143,7 +143,9 @@
                             </svg>
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Total Revenue</p>
-                        <h3 class="text-3xl font-bold text-white">₱0</h3>
+                        <h3 class="text-3xl font-bold text-white">
+                            ₱{{ number_format($tickets->sum(function ($ticket) {return $ticket->price * $ticket->quantity;}),2) }}
+                        </h3>
                     </div>
                     <div
                         class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
@@ -205,8 +207,7 @@
                                     </div>
 
                                     <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
-                                        <div
-                                            class="h-full transition-all"
+                                        <div class="h-full transition-all"
                                             style="
                                                 width: {{ min(100, $percentage) }}%;
                                                 background: {{ $ticket->color }};
@@ -218,7 +219,7 @@
 
                                 <div class="flex items-center justify-between pt-4 border-t border-white/10">
                                     <div class="text-sm text-gray-400">
-                                        Revenue: 
+                                        Revenue:
                                         {{-- <span class="text-white font-semibold">₱{{ number_format($ticket->price * $ticket->quantity, 2) }}</span> --}}
                                     </div>
                                     <div class="flex gap-2">
@@ -231,7 +232,8 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        <form action="{{ route(auth()->user()->routePrefix() . '.events.tickets.destroy', [$event->slug, $ticket->id]) }}"
+                                        <form
+                                            action="{{ route(auth()->user()->routePrefix() . '.events.tickets.destroy', [$event->slug, $ticket->id]) }}"
                                             method="POST"
                                             onsubmit="return confirm('Are you sure you want to delete this ticket type?')"
                                             class="inline">
@@ -263,7 +265,7 @@
         </div>
     </div>
 
-    @if(session('success'))
+    @if (session('success'))
         <script type="module">
             Toast.fire({
                 icon: 'success',
@@ -272,7 +274,7 @@
         </script>
     @endif
 
-    @if($errors->any())
+    @if ($errors->any())
         <script type="module">
             Toast.fire({
                 icon: 'error',
@@ -303,24 +305,25 @@
             document.getElementById('ticketSubmitBtn').textContent = 'Update Ticket Type';
             document.getElementById('ticketId').value = ticket.id;
             document.getElementById('ticketFormMethod').value = 'POST';
-            
+
             document.getElementById('ticketName').value = ticket.name || '';
             document.getElementById('ticketType').value = ticket.type || '';
             document.getElementById('ticketInclusions').value = ticket.inclusions || '';
             document.getElementById('ticketStatus').value = ticket.status !== undefined ? ticket.status : '';
             document.getElementById('ticketPrice').value = ticket.price || '';
             document.getElementById('ticketQuantity').value = ticket.quantity || '';
-            
+
             if (typeof setTicketColorForEdit === 'function' && ticket.color) {
                 setTicketColorForEdit(ticket.color);
             }
-            
-            document.getElementById('ticketForm').action = "{{ route(auth()->user()->routePrefix() . '.events.tickets.store', $event->slug) }}";
+
+            document.getElementById('ticketForm').action =
+                "{{ route(auth()->user()->routePrefix() . '.events.tickets.store', $event->slug) }}";
             document.getElementById('ticketModal').classList.add('active');
         }
 
         // Close modal when clicking outside
-        document.addEventListener('click', function (event) {
+        document.addEventListener('click', function(event) {
             const modal = document.getElementById('ticketModal');
             if (modal && modal.classList.contains('active') && event.target === modal) {
                 closeTicketModal();

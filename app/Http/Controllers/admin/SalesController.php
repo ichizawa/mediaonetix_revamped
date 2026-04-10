@@ -141,7 +141,7 @@ class SalesController extends Controller
             $pending_sales = Sales::getAllSalesByMerchant(Auth::user()->id)->where('status', 0)->count();
         }
 
-   
+
 
         return view(auth()->user()->routePrefix() . '.sales', compact('events', 'sales', 'labels', 'values', 'chartData', 'total_sales', 'tickets_sold', 'completed_sales', 'pending_sales'));
     }
@@ -156,7 +156,10 @@ class SalesController extends Controller
             }
 
             $sales = Sales::with('ticket')->where('event_id', $event->id)->orderByDesc('id')->paginate(10);
-            return view('admin.component.sales.view-specific', compact('event', 'sales'));
+            $online_sales_count = Sales::where('event_id', $event->id)->where('is_online', 1)->count();
+            $walkin_sales_count = Sales::where('event_id', $event->id)->where('is_online', 0)->count();
+            $pending_sales_count = Sales::where('event_id', $event->id)->where('status', 0)->count();
+            return view('admin.component.sales.view-specific', compact('event', 'sales', 'online_sales_count', 'walkin_sales_count', 'pending_sales_count'));
         } else {
             // Merchant Logic
             $event = Events::where('slug', $slug)->where('created_by', Auth::user()->id)->first();
@@ -171,7 +174,16 @@ class SalesController extends Controller
             $walkin_sales_count = Sales::where('event_id', $event->id)->where('is_online', 0)->count();
             $pending_sales_count = Sales::where('event_id', $event->id)->where('status', 0)->count();
             $customer_tickets = CustomerTicket::whereIn('sale_id', $sales->pluck('id'))->get()->keyBy('sale_id');
-            return view('merchant.component.sales.view-specific', compact('event', 'sales', 'online_sales_count', 'walkin_sales_count', 'pending_sales_count', 'customer_tickets'));
+            return view(auth()->user()->routePrefix() . '.component.sales.view-specific',
+                [
+                    'event' => $event,
+                    'sales' => $sales,
+                    'online_sales_count' => $online_sales_count,
+                    'walkin_sales_count' => $walkin_sales_count,
+                    'pending_sales_count' => $pending_sales_count,
+                    'customer_tickets' => $customer_tickets
+                ]
+            );
         }
     }
     public function store(SalesRequest $request)

@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\ControlPanelController;
 use App\Http\Controllers\admin\DashboardController;
@@ -53,6 +54,8 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
         Route::get('/', [MerchantController::class, 'index'])->name('merchant');
         Route::post('store', [MerchantController::class, 'store'])->name('store');
         Route::get('files/{id}', [MerchantController::class, 'files'])->name('files');
+        Route::put('update/{id}', [MerchantController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [MerchantController::class, 'destroy'])->name('delete');
     });
 
     Route::get('users', [UsersController::class, 'index'])->name('users');
