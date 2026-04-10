@@ -172,7 +172,7 @@ class PublicController extends Controller
             $sale->payment_method = $request->payment_method;
             $sale->purchase_type = 1;
             $sale->reference_number = $uid;
-            $sale->payment_intent_id = $paymentIntentId;
+            $sale->reference_id = $paymentIntentId;
             $sale->save();
 
             // $createdSale = $sale->load(['ticket', 'event', 'customer_tickets']);
@@ -330,8 +330,9 @@ class PublicController extends Controller
             // Update the sale record with the Intent ID so the webhook can find it later
             $sales = Sales::find($sale->id);
             $sales->update([
-                'payment_intent_id' => $intentId,
-                'txnid' => 'DDC-SDMF-' . now()->format('YmdHis'),
+                'reference_id' => $intentId,
+                'transaction_id' => 'DDC-SDMF-' . now()->format('YmdHis'),
+                
             ]);
 
             // 4. Handle the Redirect to GCash/Maya
@@ -342,7 +343,6 @@ class PublicController extends Controller
                 return redirect($checkoutUrl);
             }
 
-            // If payment succeeds instantly (rare, but handles cards without 3D secure)
             if ($status === 'succeeded') {
                 return redirect($returnUrl);
             }
@@ -364,16 +364,16 @@ class PublicController extends Controller
                 $sale = \App\Models\Sales::with(['ticket', 'event'])->find($saleId);
 
                 // 2. Only process if we found the sale and it hasn't been paid yet
-                if ($sale && $sale->status !== 'S' && $sale->payment_intent_id) {
+                if ($sale && $sale->status !== 'S' && $sale->reference_id) {
                     // 3. Ask PayMongo directly: "Did this person actually pay?"
-                    $intent = $this->payMongo->getPaymentIntent($sale->payment_intent_id);
+                    $intent = $this->payMongo->getPaymentIntent($sale->reference_id);
 
                     if (isset($intent['data']['attributes']['status'])) {
                         $paymongoStatus = $intent['data']['attributes']['status'];
 
                         // 4. If PayMongo says it's paid, trigger your email and update status!
                         if ($paymongoStatus === 'succeeded') {
-                            $this->checkStatusAndSendEmail($sale->payment_intent_id, 'paid');
+                            $this->checkStatusAndSendEmail($sale->reference_id, 'paid');
                         }
                     }
                 }
@@ -413,9 +413,9 @@ class PublicController extends Controller
     public function checkStatusAndSendEmail($intentId, $status)
     {
         try {
-            // Find the sale using the payment_intent_id we saved during checkout
+            // Find the sale using the reference_id we saved during checkout
             $resp = Sales::with(['ticket', 'event', 'customer_tickets'])
-                ->where('payment_intent_id', $intentId)
+                ->where('reference_id', $intentId)
                 ->first();
 
             if (!$resp) {
@@ -467,6 +467,7 @@ class PublicController extends Controller
 
                 $resp->update([
                     'is_paid' => 1,
+                    'is_online' => 1,
                     'status' => '1',
                     'paymongo_payment_id' => $paymentId, 
                     'paymongo_fee' => $fee,              
@@ -598,7 +599,7 @@ class PublicController extends Controller
                 }
                 // 2. Fallback just in case you are only listening for payment.paid
                 elseif ($eventType === 'payment.paid') {
-                    $intentId = $payload['data']['attributes']['data']['attributes']['payment_intent_id'] ?? null;
+                    $intentId = $payload['data']['attributes']['data']['attributes']['reference_id'] ?? null;
 
                     if ($intentId) {
                         $this->checkStatusAndSendEmail($intentId, 'paid');

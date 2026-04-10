@@ -17,7 +17,11 @@ class UsersController extends Controller
     {
         $users = User::all();
 
-        return view('admin.users', compact('users'));
+        $active_users = User::where('is_active', 1)->count();
+        $pending_user = User::where('role_id', 2)->where('is_active', 2)->count();
+        $inactive_user = User::where('role_id', 2)->where('is_active', 0)->count();
+
+        return view('admin.users', compact('users', 'active_users', 'pending_user', 'inactive_user'));
     }
 
     public function store(Request $request)
@@ -42,7 +46,7 @@ class UsersController extends Controller
                 'role_id' => 'required|exists:roles,id'
             ]);
 
-             $genderMap = [
+            $genderMap = [
                 'male' => 0,
                 'female' => 1,
                 'other' => 2,

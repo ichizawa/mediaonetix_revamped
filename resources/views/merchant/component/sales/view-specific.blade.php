@@ -245,12 +245,12 @@
                                         </td>
                                         <td class="py-4 px-4 whitespace-nowrap">
                                             <span class="text-white font-mono text-xs">
-                                                Test
+                                                {{$sale->transaction_id ?? 'N/A'}}
                                             </span>
                                         </td>
                                         <td class="py-4 px-4 whitespace-nowrap">
                                             <span class="text-gray-400 font-mono text-xs">
-                                                Test
+                                              {{ $sale->reference_number }}
                                             </span>
                                         </td>
                                     </tr>

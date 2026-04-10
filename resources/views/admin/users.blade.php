@@ -94,8 +94,8 @@
                                 </div>
                                 <span class="text-green-400 text-sm font-semibold">94.3%</span>
                             </div>
-                            <p class="text-gray-400 text-sm mb-1">Active Merchants</p>
-                            {{-- <h3 class="text-3xl font-bold text-white">{{ $active }}</h3> --}}
+                            <p class="text-gray-400 text-sm mb-1">Active Users</p>
+                            <h3 class="text-3xl font-bold text-white">{{ $active_users }}</h3>
                             <p class="text-xs text-gray-500 mt-2">Currently active</p>
                         </div>
                     </div>
@@ -117,7 +117,7 @@
                                 <span class="text-yellow-400 text-sm font-semibold">8</span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Pending Review</p>
-                            {{-- <h3 class="text-3xl font-bold text-white">{{ $pending }}</h3> --}}
+                            <h3 class="text-3xl font-bold text-white">{{ $pending_user }}</h3>
                             <p class="text-xs text-gray-500 mt-2">Awaiting approval</p>
                         </div>
                     </div>
@@ -139,7 +139,7 @@
                                 <span class="text-red-400 text-sm font-semibold">6</span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Inactive</p>
-                            {{-- <h3 class="text-3xl font-bold text-white">{{ $inactive }}</h3> --}}
+                            <h3 class="text-3xl font-bold text-white">{{ $inactive_user }}</h3>
                             <p class="text-xs text-gray-500 mt-2">Suspended/Inactive</p>
                         </div>
                     </div>

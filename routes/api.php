@@ -59,8 +59,9 @@ Route::group(['middleware' => ['json.response']], function () {
 
         Route::prefix('users')->group(function () {
             Route::get('events', [EventsController::class, 'eventsPublic']);
+            Route::get('tickets', [TicketListsController::class, 'getTickets']);
+
             Route::get('purchase-history', [TicketListsController::class, 'getPurchaseHistory']);
-            
         });
     });
 });

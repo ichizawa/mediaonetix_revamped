@@ -20,6 +20,7 @@ class OrganizerController extends Controller
         $users = User::staffs()->withCount('events')->paginate(10);
         $active = User::active()->staffs()->count();
         $scans =  UserScanner::whereIn('user_id', User::staffs()->pluck('id'))->sum('scanning_count');
+        $access = UserScanner::whereIn('user_id', User::staffs()->pluck('id'))->count();
 
         // Attach scans_today to each user (scanning_count from UserScanner)
         $userScans = UserScanner::whereIn('user_id', $users->pluck('id'))->pluck('scanning_count', 'user_id');
@@ -30,7 +31,7 @@ class OrganizerController extends Controller
         // Get events as id => name for dropdown
         $events = method_exists(Auth::user(), 'events') ? Auth::user()->events()->pluck('event_name', 'id')->toArray() : [];
 
-        return view(auth()->user()->routePrefix() . '.staffs', compact('users', 'active', 'scans', 'events'));
+        return view(auth()->user()->routePrefix() . '.staffs', compact('users', 'active', 'scans', 'events', 'access'));
     }
 
     public function store(StaffRequest $request)

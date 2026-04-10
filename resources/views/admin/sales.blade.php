@@ -120,7 +120,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Total Sales</p>
-                            <h3 class="text-3xl font-bold text-white">0</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ number_format($tickets_sold) }}</h3>
                             <p class="text-xs text-gray-500 mt-2">Tickets sold</p>
                         </div>
                     </div>

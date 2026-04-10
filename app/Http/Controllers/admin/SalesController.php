@@ -129,9 +129,21 @@ class SalesController extends Controller
         $labels = $chartData['week']['labels'];
         $values = $chartData['week']['values'];
 
-        $total_sales = Sales::where('status', 1)->sum('total_amount');
+        if (Auth::user()->isAdmin()) {
+            $total_sales = Sales::where('status', 1)->sum('total_amount');
+            $tickets_sold = Sales::where('status', 1)->sum('quantity');
+            $completed_sales = Sales::where('status', 1)->count();
+            $pending_sales = Sales::where('status', 0)->count();
+        } else {
+            $total_sales = Sales::getAllSalesByMerchant(Auth::user()->id)->where('status', 1)->sum('total_amount');
+            $tickets_sold = Sales::getAllSalesByMerchant(Auth::user()->id)->where('status', 1)->sum('quantity');
+            $completed_sales = Sales::getAllSalesByMerchant(Auth::user()->id)->where('status', 1)->count();
+            $pending_sales = Sales::getAllSalesByMerchant(Auth::user()->id)->where('status', 0)->count();
+        }
 
-        return view(auth()->user()->routePrefix() . '.sales', compact('events', 'sales', 'labels', 'values', 'chartData', 'total_sales'));
+   
+
+        return view(auth()->user()->routePrefix() . '.sales', compact('events', 'sales', 'labels', 'values', 'chartData', 'total_sales', 'tickets_sold', 'completed_sales', 'pending_sales'));
     }
     public function edit($slug)
     {
@@ -139,7 +151,6 @@ class SalesController extends Controller
             // Admin Logic
             $event = Events::where('slug', $slug)->first();
 
-            // Good practice: Check if event exists for admin too
             if (!$event) {
                 return redirect()->back()->with('error', 'Event not found.');
             }
@@ -150,12 +161,17 @@ class SalesController extends Controller
             // Merchant Logic
             $event = Events::where('slug', $slug)->where('created_by', Auth::user()->id)->first();
 
+
             if (!$event) {
                 return redirect()->route('merchant.sales')->with('error', 'Event not found or access denied.');
             }
 
             $sales = Sales::with('ticket')->where('event_id', $event->id)->orderByDesc('id')->paginate(10);
-            return view('merchant.component.sales.view-specific', compact('event', 'sales'));
+            $online_sales_count = Sales::where('event_id', $event->id)->where('is_online', 1)->count();
+            $walkin_sales_count = Sales::where('event_id', $event->id)->where('is_online', 0)->count();
+            $pending_sales_count = Sales::where('event_id', $event->id)->where('status', 0)->count();
+            $customer_tickets = CustomerTicket::whereIn('sale_id', $sales->pluck('id'))->get()->keyBy('sale_id');
+            return view('merchant.component.sales.view-specific', compact('event', 'sales', 'online_sales_count', 'walkin_sales_count', 'pending_sales_count', 'customer_tickets'));
         }
     }
     public function store(SalesRequest $request)
@@ -276,8 +292,8 @@ class SalesController extends Controller
     private function getFilteredSales(Request $request)
     {
         $merchantId = Auth::user()->isAdmin() ? null : Auth::user()->id;
-        $query = $merchantId 
-            ? Sales::getAllSalesByMerchant($merchantId)->with(['ticket', 'event']) 
+        $query = $merchantId
+            ? Sales::getAllSalesByMerchant($merchantId)->with(['ticket', 'event'])
             : Sales::with(['ticket', 'event']);
 
         if ($request->filled('start_date') && $request->filled('end_date')) {
