@@ -833,6 +833,11 @@
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
+            // Open Add Event modal if ?add=1 is in the URL
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('add') === '1' && typeof openAddModal === 'function') {
+                setTimeout(() => openAddModal(), 200);
+            }
             document.querySelectorAll('.event-card-desc').forEach(el => {
                 const raw = el.getAttribute('data-raw');
                 const tempDiv = document.createElement('div');

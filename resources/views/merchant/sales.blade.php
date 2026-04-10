@@ -138,7 +138,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Total Sales</p>
-                            <h3 class="text-3xl font-bold text-white">0</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ number_format($tickets_sold) }}</h3>
                             <p class="text-xs text-gray-500 mt-2">Tickets sold</p>
                         </div>
                     </div>
@@ -166,7 +166,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Completed</p>
-                            <h3 class="text-3xl font-bold text-white">0</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ $completed_sales }}</h3>
                             <p class="text-xs text-gray-500 mt-2">Successful transactions</p>
                         </div>
                     </div>
@@ -194,7 +194,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Pending</p>
-                            <h3 class="text-3xl font-bold text-white">0</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ $pending_sales }}</h3>
                             <p class="text-xs text-gray-500 mt-2">Awaiting payment</p>
                         </div>
                     </div>
@@ -554,11 +554,18 @@
             setActiveRevenuePeriod('week');
         }
 
+          // Open Add Event modal if ?add=1 is in the URL
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('add') === '1' && typeof openSalesModal === 'function') {
+                setTimeout(() => openSalesModal(), 200);
+            }
+
         // --- "New Sale" Modal Functions ---
         function openSalesModal() {
             document.getElementById('salesModal').classList.add('active');
             
         }
+      
 
         function closeSalesModal() {
             document.getElementById('salesModal').classList.remove('active');

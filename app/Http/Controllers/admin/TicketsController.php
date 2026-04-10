@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TicketsRequest;
 use App\Models\Events;
+use App\Models\Sales;
 use App\Models\Tickets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,9 +18,15 @@ class TicketsController extends Controller
     {
         $event = Events::where('slug', $slug)->get()->first();
         $tickets = Tickets::where('event_id', $event->id)->get();
+        $tickets_sold = Sales::where('event_id', $event->id)->where('status', 1)->sum('quantity');
+        $total_revenue = Sales::where('event_id', $event->id)->where('status', 1)->sum('total_amount');
+
+
         return view(auth()->user()->routePrefix() . '.component.event.tickets', [
             'event' => $event,
             'tickets' => $tickets,
+            'tickets_sold' => $tickets_sold,
+            'total_revenue' => $total_revenue,  
             'total_tickets' => Tickets::where('event_id', $event->id)->count(),
             'available_tickets' => Tickets::where('event_id', $event->id)->sum('quantity'),
         ]);

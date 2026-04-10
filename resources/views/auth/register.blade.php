@@ -146,7 +146,7 @@
                                             </svg>
                                         </div>
                                         <div>
-                                            <div class="font-semibold text-white">Event Organizer</div>
+                                            <div class="font-semibold text-white">Event Merchant</div>
                                             <div class="text-xs text-gray-400">Sell tickets for events</div>
                                         </div>
                                     </div>

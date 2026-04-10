@@ -143,7 +143,9 @@
                             </svg>
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Total Revenue</p>
-                        <h3 class="text-3xl font-bold text-white">₱0</h3>
+                        <h3 class="text-3xl font-bold text-white">
+                            ₱{{ number_format($tickets->sum(function($ticket) { return $ticket->price * $ticket->quantity; }), 2) }}
+                        </h3>
                     </div>
                     <div
                         class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
@@ -223,8 +225,8 @@
                                 <div class="flex items-center justify-between pt-4 border-t border-white/10">
                                     <div class="text-sm text-gray-400">
                                         Revenue:
-                                        {{-- <span class="text-white font-semibold">₱{{ number_format($ticket->price *
-                                            $ticket->quantity, 2) }}</span> --}}
+                                        <span class="text-white font-semibold">₱{{ number_format($ticket->price *
+                                            $ticket->quantity, 2) }}</span>
                                     </div>
                                     <div class="flex gap-2">
                                         <button onclick='openEditTicketModal(@json($ticket))'
