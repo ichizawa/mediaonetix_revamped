@@ -145,7 +145,7 @@ class SalesController extends Controller
 
         return view(auth()->user()->routePrefix() . '.sales', compact('events', 'sales', 'labels', 'values', 'chartData', 'total_sales', 'tickets_sold', 'completed_sales', 'pending_sales'));
     }
-    public function edit($slug)
+    public function edit(Request $request, $slug)
     {
         if (Auth::user()->isAdmin()) {
             // Admin Logic
@@ -155,7 +155,38 @@ class SalesController extends Controller
                 return redirect()->back()->with('error', 'Event not found.');
             }
 
-            $sales = Sales::with('ticket')->where('event_id', $event->id)->orderByDesc('id')->paginate(10);
+            $salesQuery = Sales::with('ticket')->where('event_id', $event->id);
+
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            if ($startDate && $endDate && $startDate > $endDate) {
+                [$startDate, $endDate] = [$endDate, $startDate];
+                $request->merge([
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                ]);
+            }
+
+            if (!empty($startDate)) {
+                $salesQuery->whereDate('created_at', '>=', $startDate);
+            }
+
+            if (!empty($endDate)) {
+                $salesQuery->whereDate('created_at', '<=', $endDate);
+            }
+
+            if ($request->filled('search')) {
+                $search = trim((string) $request->input('search'));
+                $salesQuery->where(function ($query) use ($search) {
+                    $query->where('customer_name', 'like', "%{$search}%")
+                        ->orWhere('customer_email', 'like', "%{$search}%")
+                        ->orWhere('reference_number', 'like', "%{$search}%")
+                        ->orWhere('transaction_id', 'like', "%{$search}%");
+                });
+            }
+
+            $sales = $salesQuery->orderByDesc('id')->paginate(10)->appends($request->query());
             $online_sales_count = Sales::where('event_id', $event->id)->where('is_online', 1)->count();
             $walkin_sales_count = Sales::where('event_id', $event->id)->where('is_online', 0)->count();
             $pending_sales_count = Sales::where('event_id', $event->id)->where('status', 0)->count();
@@ -169,10 +200,64 @@ class SalesController extends Controller
                 return redirect()->route('merchant.sales')->with('error', 'Event not found or access denied.');
             }
 
-            $sales = Sales::with('ticket')->where('event_id', $event->id)->orderByDesc('id')->paginate(10);
-            $online_sales_count = Sales::where('event_id', $event->id)->where('is_online', 1)->count();
-            $walkin_sales_count = Sales::where('event_id', $event->id)->where('is_online', 0)->count();
-            $pending_sales_count = Sales::where('event_id', $event->id)->where('status', 0)->count();
+            $baseSalesQuery = Sales::where('event_id', $event->id);
+
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            if ($startDate && $endDate && $startDate > $endDate) {
+                [$startDate, $endDate] = [$endDate, $startDate];
+                $request->merge([
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                ]);
+            }
+
+            if (!empty($startDate)) {
+                $baseSalesQuery->whereDate('created_at', '>=', $startDate);
+            }
+
+            if (!empty($endDate)) {
+                $baseSalesQuery->whereDate('created_at', '<=', $endDate);
+            }
+
+            if ($request->filled('search')) {
+                $search = trim((string) $request->input('search'));
+                $baseSalesQuery->where(function ($query) use ($search) {
+                    $query->where('customer_name', 'like', "%{$search}%")
+                        ->orWhere('customer_email', 'like', "%{$search}%")
+                        ->orWhere('reference_number', 'like', "%{$search}%")
+                        ->orWhere('transaction_id', 'like', "%{$search}%");
+                });
+            }
+
+            $sale_filter = $request->input('sale_filter', 'all');
+            $salesQuery = (clone $baseSalesQuery)->with('ticket');
+
+            switch ($sale_filter) {
+                case 'online':
+                    $salesQuery->where('is_online', 1);
+                    break;
+                case 'walkin':
+                    $salesQuery->where('is_online', 0);
+                    break;
+                case 'pending':
+                    $salesQuery->where('status', 0);
+                    break;
+                case 'disabled':
+                    $salesQuery->where('status', 2);
+                    break;
+                default:
+                    $sale_filter = 'all';
+                    break;
+            }
+
+            $sales = $salesQuery->orderByDesc('id')->paginate(10)->appends($request->query());
+            $all_sales_count = (clone $baseSalesQuery)->count();
+            $online_sales_count = (clone $baseSalesQuery)->where('is_online', 1)->count();
+            $walkin_sales_count = (clone $baseSalesQuery)->where('is_online', 0)->count();
+            $pending_sales_count = (clone $baseSalesQuery)->where('status', 0)->count();
+            $disabled_sales_count = (clone $baseSalesQuery)->where('status', 2)->count();
             $customer_tickets = CustomerTicket::whereIn('sale_id', $sales->pluck('id'))->get()->keyBy('sale_id');
             return view(auth()->user()->routePrefix() . '.component.sales.view-specific',
                 [
@@ -308,6 +393,10 @@ class SalesController extends Controller
             ? Sales::getAllSalesByMerchant($merchantId)->with(['ticket', 'event'])
             : Sales::with(['ticket', 'event']);
 
+        if ($request->filled('event_id')) {
+            $query->where('event_id', $request->event_id);
+        }
+
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $startDate = Carbon::parse($request->start_date)->startOfDay();
             $endDate = Carbon::parse($request->end_date)->endOfDay();
@@ -317,22 +406,56 @@ class SalesController extends Controller
         return $query->orderByDesc('id')->get();
     }
 
+    private function getExportNames(Request $request): array
+    {
+        if ($request->filled('event_id')) {
+            $eventQuery = Events::query()->where('id', $request->event_id);
+
+            if (!Auth::user()->isAdmin()) {
+                $eventQuery->where('created_by', Auth::user()->id);
+            }
+
+            $event = $eventQuery->first();
+
+            if ($event) {
+                $safeName = preg_replace('/[^A-Za-z0-9_-]+/', '_', $event->event_name);
+                $safeName = trim($safeName, '_');
+
+                return [
+                    'file' => $safeName !== '' ? $safeName : 'sales_export',
+                    'display' => $event->event_name,
+                ];
+            }
+        }
+
+        return [
+            'file' => 'sales_export',
+            'display' => 'Sales Export',
+        ];
+    }
+
     public function exportPdf(Request $request)
     {
         $sales = $this->getFilteredSales($request);
+        $exportNames = $this->getExportNames($request);
+        $includeEventColumn = !$request->filled('event_id');
         $data = [
             'sales' => $sales,
             'startDate' => $request->start_date,
             'endDate' => $request->end_date,
+            'exportTitle' => $exportNames['display'],
+            'includeEventColumn' => $includeEventColumn,
         ];
 
         $pdf = Pdf::loadView('merchant.exports.sales_pdf', $data);
-        return $pdf->download('sales_export_' . now()->format('Ymd_His') . '.pdf');
+        return $pdf->download($exportNames['file'] . '_' . now()->format('Ymd_His') . '.pdf');
     }
 
     public function exportExcel(Request $request)
     {
         $sales = $this->getFilteredSales($request);
-        return Excel::download(new SalesExport($sales), 'sales_export_' . now()->format('Ymd_His') . '.xlsx');
+        $exportNames = $this->getExportNames($request);
+        $includeEventColumn = !$request->filled('event_id');
+        return Excel::download(new SalesExport($sales, $includeEventColumn), $exportNames['file'] . '_' . now()->format('Ymd_His') . '.xlsx');
     }
 }

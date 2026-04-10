@@ -61,6 +61,52 @@
             color: white;
             border: 1px solid rgba(59, 130, 246, 0.3);
         }
+
+        .event-description {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-word;
+        }
+
+        .wysiwyg-content {
+            color: #9ca3af;
+            line-height: 1.7;
+            word-break: break-word;
+        }
+
+        .wysiwyg-content p,
+        .wysiwyg-content ul,
+        .wysiwyg-content ol,
+        .wysiwyg-content blockquote,
+        .wysiwyg-content h1,
+        .wysiwyg-content h2,
+        .wysiwyg-content h3,
+        .wysiwyg-content h4,
+        .wysiwyg-content h5,
+        .wysiwyg-content h6 {
+            margin-bottom: 0.75rem;
+        }
+
+        .wysiwyg-content ul,
+        .wysiwyg-content ol {
+            padding-left: 1.25rem;
+        }
+
+        .wysiwyg-content ul {
+            list-style: disc;
+        }
+
+        .wysiwyg-content ol {
+            list-style: decimal;
+        }
+
+        .wysiwyg-content a {
+            color: #60a5fa;
+            text-decoration: underline;
+        }
     </style>
 
     <div class="min-h-screen bg-[#0c1222]">
@@ -164,7 +210,15 @@
                         <div data-status="{{ $event->status }}" onclick="setActiveEvent('{{ $event->slug }}')"
                             class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm rounded-2xl overflow-hidden {{ $event->latestShowcase ? 'border border-green-400' : '' }}">
                             <div class="relative h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
-                                <div class="absolute inset-0 bg-cover bg-center opacity-40">
+                                <div
+                                    class="event-card-media absolute inset-0 bg-cover bg-center opacity-40"
+                                    data-image-url="{{ $event->event_image ? asset('images/events/' . $event->event_image) : '' }}"
+                                    data-crop-x="{{ $event->crop_x ?? '' }}"
+                                    data-crop-y="{{ $event->crop_y ?? '' }}"
+                                    data-crop-width="{{ $event->crop_width ?? '' }}"
+                                    data-crop-height="{{ $event->crop_height ?? '' }}"
+                                    data-crop-natural-width="{{ $event->crop_natural_width ?? '' }}"
+                                    data-crop-natural-height="{{ $event->crop_natural_height ?? '' }}">
                                     @if ($event->event_image)
                                         <img src="{{ asset('images/events/' . $event->event_image) }}" alt="Event Image"
                                             class="w-full h-full object-cover">
@@ -232,7 +286,9 @@
                                         {{ date('g:i A', strtotime($event->event_time)) }}</span>
                                 </div>
                                 <h3 class="text-xl font-bold text-white mb-2">{{ $event->event_name }}</h3>
-                                <p class="text-gray-400 text-sm mb-4">{{ $event->description }}</p>
+                                <p class="event-description text-gray-400 text-sm mb-4">
+                                    {{ preg_replace('/\s+/', ' ', trim(strip_tags(html_entity_decode($event->description ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8')))) }}
+                                </p>
                                 <div class="flex items-center gap-2 mb-4">
                                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
@@ -330,6 +386,90 @@
     <script>
         let currentEventId = null;
         let isEditMode = false;
+        const EVENT_IMAGE_BASE_URL = @json(asset('images/events'));
+        const EVENT_SEAT_PLAN_BASE_URL = @json(asset('images/events/seat_plan'));
+
+        function getEventImageUrl(imagePath) {
+            if (!imagePath) {
+                return '';
+            }
+
+            if (/^(https?:)?\/\//i.test(imagePath) || imagePath.startsWith('/')) {
+                return imagePath;
+            }
+
+            return `${EVENT_IMAGE_BASE_URL}/${String(imagePath).replace(/^\/+/, '')}`;
+        }
+
+        function hasValidCropData(cropX, cropY, cropW, cropH, natW, natH) {
+            return Number.isFinite(cropX) && Number.isFinite(cropY) && Number.isFinite(cropW) &&
+                Number.isFinite(cropH) && Number.isFinite(natW) && Number.isFinite(natH) &&
+                cropW > 0 && cropH > 0 && natW > 0 && natH > 0;
+        }
+
+        function buildFocalStyles(cropX, cropY, cropW, cropH, natW, natH, containerW, containerH) {
+            const scaleX = containerW / cropW;
+            const scaleY = containerH / cropH;
+            const scale = Math.max(scaleX, scaleY);
+
+            return {
+                sizeX: natW * scale,
+                sizeY: natH * scale,
+                posX: -(cropX * scale),
+                posY: -(cropY * scale),
+            };
+        }
+
+        function applyFocalImageToBox(boxEl, imageUrl, cropX, cropY, cropW, cropH, natW, natH) {
+            if (!boxEl || !imageUrl || !hasValidCropData(cropX, cropY, cropW, cropH, natW, natH)) return;
+
+            const containerW = boxEl.offsetWidth;
+            const containerH = boxEl.offsetHeight;
+            if (!containerW || !containerH) {
+                requestAnimationFrame(() => {
+                    applyFocalImageToBox(boxEl, imageUrl, cropX, cropY, cropW, cropH, natW, natH);
+                });
+                return;
+            }
+
+            const focal = buildFocalStyles(cropX, cropY, cropW, cropH, natW, natH, containerW, containerH);
+            boxEl.style.backgroundImage = `url('${imageUrl}')`;
+            boxEl.style.backgroundSize = `${focal.sizeX}px ${focal.sizeY}px`;
+            boxEl.style.backgroundPosition = `${focal.posX}px ${focal.posY}px`;
+            boxEl.style.backgroundRepeat = 'no-repeat';
+
+            const fallbackImg = boxEl.querySelector('img');
+            if (fallbackImg) fallbackImg.style.display = 'none';
+        }
+
+        function sanitizeWysiwygHtml(html) {
+            if (!html) {
+                return '';
+            }
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(String(html), 'text/html');
+
+            doc.querySelectorAll('script, style, iframe, object, embed').forEach((el) => el.remove());
+
+            doc.querySelectorAll('*').forEach((el) => {
+                Array.from(el.attributes).forEach((attr) => {
+                    const name = attr.name.toLowerCase();
+                    const value = String(attr.value || '').toLowerCase();
+
+                    if (name.startsWith('on')) {
+                        el.removeAttribute(attr.name);
+                    }
+
+                    if ((name === 'href' || name === 'src') && value.startsWith('javascript:')) {
+                        el.removeAttribute(attr.name);
+                    }
+                });
+            });
+
+            return doc.body.innerHTML;
+        }
+
         // Modal management functions
         function openAddModal() {
             isEditMode = false;
@@ -378,16 +518,40 @@
                 `${formatDate(event.event_date)} • ${formatTime(event.event_time)}`;
             document.getElementById('viewEventLocation').textContent = event.event_venue;
             document.getElementById('viewEventPrice').textContent = '₱ ' + lowestPrice.toFixed(2);
-            document.getElementById('viewEventDescription').textContent = event.description;
+            document.getElementById('viewEventDescription').innerHTML = sanitizeWysiwygHtml(event.description);
             document.getElementById('viewEventSold').textContent = `${event.tickets_sold} sold`;
             document.getElementById('viewEventTotal').textContent = `of ${totalTickets} tickets`;
-            document.getElementById('viewEventPercentage').textContent = `${event.percentage}%`;
-            document.getElementById('viewEventProgress').style.width = `${event.percentage}%`;
+            const percentage = Number(event.percentage || 0);
+            const safePercentage = Math.max(0, Math.min(100, percentage));
+            document.getElementById('viewEventPercentage').textContent = `${safePercentage.toFixed(2)}%`;
+            document.getElementById('viewEventProgress').style.width = `${safePercentage}%`;
             document.getElementById('viewEventStatus').textContent = event.status_label.label;
 
             // Set background image
             const imageEl = document.getElementById('viewEventImage');
-            imageEl.style.backgroundImage = `url('${event.event_image}')`;
+            if (event.event_image) {
+                const imageUrl = getEventImageUrl(event.event_image);
+                imageEl.style.backgroundImage = `url('${imageUrl}')`;
+                imageEl.style.backgroundSize = '';
+                imageEl.style.backgroundPosition = '';
+                imageEl.style.backgroundRepeat = '';
+
+                applyFocalImageToBox(
+                    imageEl,
+                    imageUrl,
+                    Number(event.crop_x),
+                    Number(event.crop_y),
+                    Number(event.crop_width),
+                    Number(event.crop_height),
+                    Number(event.crop_natural_width),
+                    Number(event.crop_natural_height)
+                );
+            } else {
+                imageEl.style.backgroundImage = 'none';
+                imageEl.style.backgroundSize = '';
+                imageEl.style.backgroundPosition = '';
+                imageEl.style.backgroundRepeat = '';
+            }
 
             // Store event ID for edit functionality (in real app, use real ID)
             document.getElementById('viewEventModal').dataset.eventId = event.id;
@@ -395,17 +559,46 @@
             // // Show the view modal
             document.getElementById('viewEventModal').classList.add('active');
 
-            document.getElementById('openEditModalFromView').addEventListener('click', function() {
+            document.getElementById('openEditModalFromView').onclick = function() {
                 // console.log(event);
                 closeViewModal();
                 setTimeout(() => {
                     openEditModal(event);
                 }, 300);
-            });
+            };
         }
 
         function closeViewModal() {
             document.getElementById('viewEventModal').classList.remove('active');
+        }
+
+        function openSeatPlanLightbox() {
+            const seatPlanPreview = document.getElementById('seatPlanPreview');
+            const lightbox = document.getElementById('seatPlanLightbox');
+            const lightboxImg = document.getElementById('seatPlanLightboxImg');
+
+            if (!seatPlanPreview || !lightbox || !lightboxImg || !seatPlanPreview.src) {
+                return;
+            }
+
+            lightboxImg.src = seatPlanPreview.src;
+            lightbox.classList.remove('hidden');
+            lightbox.classList.add('flex');
+        }
+
+        function closeSeatPlanLightbox() {
+            const lightbox = document.getElementById('seatPlanLightbox');
+            const lightboxImg = document.getElementById('seatPlanLightboxImg');
+
+            if (!lightbox) {
+                return;
+            }
+
+            lightbox.classList.add('hidden');
+            lightbox.classList.remove('flex');
+            if (lightboxImg) {
+                lightboxImg.src = '';
+            }
         }
 
         function openEditModal(event) {
@@ -436,9 +629,127 @@
             document.getElementById('eventLocation').value = event.event_venue || '';
             // document.getElementById('eventTotalTickets').value = event.event_total_tickets || '';
             document.getElementById('eventStatus').value = event.status;
+            const eventStatusDisplay = document.getElementById('eventStatusDisplay');
+            if (eventStatusDisplay) {
+                eventStatusDisplay.value = String(event.status ?? 0);
+            }
             document.getElementById('eventForm').action = "{{ route('admin.events.update') }}";
             document.getElementById('eventForm').value = "PUT";
             document.getElementById('currentImageText').style.display = 'block';
+
+            const categoryBadge = document.getElementById('eventCategoryBadge');
+            if (categoryBadge) {
+                categoryBadge.textContent = event.category || 'Category';
+            }
+
+            const statusBadge = document.getElementById('eventStatusBadge');
+            if (statusBadge) {
+                const statusText = event?.status_label?.label || 'Status';
+                const statusStyles = {
+                    0: {
+                        background: 'rgba(192,132,252,0.18)',
+                        border: 'rgba(192,132,252,0.35)',
+                        color: '#c084fc'
+                    },
+                    1: {
+                        background: 'rgba(74,222,128,0.18)',
+                        border: 'rgba(74,222,128,0.35)',
+                        color: '#4ade80'
+                    },
+                    2: {
+                        background: 'rgba(96,165,250,0.18)',
+                        border: 'rgba(96,165,250,0.35)',
+                        color: '#60a5fa'
+                    },
+                    3: {
+                        background: 'rgba(156,163,175,0.18)',
+                        border: 'rgba(156,163,175,0.35)',
+                        color: '#9ca3af'
+                    },
+                    4: {
+                        background: 'rgba(248,113,113,0.18)',
+                        border: 'rgba(248,113,113,0.35)',
+                        color: '#f87171'
+                    }
+                };
+                const badgeStyle = statusStyles[Number(event.status)] || statusStyles[0];
+
+                statusBadge.textContent = statusText;
+                statusBadge.style.background = badgeStyle.background;
+                statusBadge.style.borderColor = badgeStyle.border;
+                statusBadge.style.color = badgeStyle.color;
+            }
+
+            const previewContainer = document.getElementById('eventPreviewContainer');
+            const previewImage = document.getElementById('previewImage');
+            const imagePlaceholder = document.getElementById('eventImagePlaceholder');
+            const imageUrl = event.event_image ? getEventImageUrl(event.event_image) : '';
+
+            if (previewContainer) {
+                previewContainer.style.backgroundImage = '';
+                previewContainer.style.backgroundSize = '';
+                previewContainer.style.backgroundPosition = '';
+                previewContainer.style.backgroundRepeat = '';
+            }
+
+            if (previewImage) {
+                previewImage.style.display = '';
+            }
+
+            if (imageUrl && previewContainer && previewImage) {
+                previewImage.src = imageUrl;
+                previewContainer.classList.remove('hidden');
+                if (imagePlaceholder) {
+                    imagePlaceholder.classList.add('hidden');
+                }
+
+                applyFocalImageToBox(
+                    previewContainer,
+                    imageUrl,
+                    Number(event.crop_x),
+                    Number(event.crop_y),
+                    Number(event.crop_width),
+                    Number(event.crop_height),
+                    Number(event.crop_natural_width),
+                    Number(event.crop_natural_height)
+                );
+            } else {
+                if (previewImage) {
+                    previewImage.src = '';
+                }
+                if (previewContainer) {
+                    previewContainer.classList.add('hidden');
+                }
+                if (imagePlaceholder) {
+                    imagePlaceholder.classList.remove('hidden');
+                }
+            }
+
+            const seatPlanPreviewContainer = document.getElementById('seatPlanPreviewContainer');
+            const seatPlanPreview = document.getElementById('seatPlanPreview');
+            const seatPlanPlaceholder = document.getElementById('seatPlanPlaceholder');
+            const seatPlanUrl = event.seat_plan ?
+                `${EVENT_SEAT_PLAN_BASE_URL}/${String(event.seat_plan).replace(/^\/+/, '')}` : '';
+
+            if (seatPlanUrl && seatPlanPreview && seatPlanPreviewContainer) {
+                seatPlanPreview.src = seatPlanUrl;
+                seatPlanPreviewContainer.classList.remove('hidden');
+                if (seatPlanPlaceholder) {
+                    seatPlanPlaceholder.classList.add('hidden');
+                }
+            } else {
+                if (seatPlanPreview) {
+                    seatPlanPreview.src = '';
+                }
+                if (seatPlanPreviewContainer) {
+                    seatPlanPreviewContainer.classList.add('hidden');
+                }
+                if (seatPlanPlaceholder) {
+                    seatPlanPlaceholder.classList.remove('hidden');
+                }
+            }
+
+            closeSeatPlanLightbox();
 
             // Set approve form action for this event
             var approveForm = document.getElementById('approveEventForm');
@@ -531,6 +842,18 @@
         }
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.event-card-media').forEach(mediaEl => {
+                const imageUrl = mediaEl.dataset.imageUrl || '';
+                const cropX = Number(mediaEl.dataset.cropX);
+                const cropY = Number(mediaEl.dataset.cropY);
+                const cropW = Number(mediaEl.dataset.cropWidth);
+                const cropH = Number(mediaEl.dataset.cropHeight);
+                const natW = Number(mediaEl.dataset.cropNaturalWidth);
+                const natH = Number(mediaEl.dataset.cropNaturalHeight);
+
+                applyFocalImageToBox(mediaEl, imageUrl, cropX, cropY, cropW, cropH, natW, natH);
+            });
+
             // Tab filtering
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -553,6 +876,7 @@
             document.addEventListener('click', function(event) {
                 const viewModal = document.getElementById('viewEventModal');
                 const eventModal = document.getElementById('eventModal');
+                const seatPlanLightbox = document.getElementById('seatPlanLightbox');
 
                 if (viewModal && viewModal.classList.contains('active') &&
                     event.target === viewModal) {
@@ -562,6 +886,20 @@
                 if (eventModal && eventModal.classList.contains('active') &&
                     event.target === eventModal) {
                     closeModal();
+                }
+
+                if (seatPlanLightbox && !seatPlanLightbox.classList.contains('hidden') &&
+                    event.target === seatPlanLightbox) {
+                    closeSeatPlanLightbox();
+                }
+            });
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    const seatPlanLightbox = document.getElementById('seatPlanLightbox');
+                    if (seatPlanLightbox && !seatPlanLightbox.classList.contains('hidden')) {
+                        closeSeatPlanLightbox();
+                    }
                 }
             });
         });
