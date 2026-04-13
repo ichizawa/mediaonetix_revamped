@@ -48,8 +48,8 @@ class PublicController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('event_name', 'like', "%{$search}%")
-                  ->orWhere('event_venue', 'like', "%{$search}%")
-                  ->orWhere('category', 'like', "%{$search}%");
+                    ->orWhere('event_venue', 'like', "%{$search}%")
+                    ->orWhere('category', 'like', "%{$search}%");
             });
         }
 
@@ -332,7 +332,7 @@ class PublicController extends Controller
             $sales->update([
                 'reference_id' => $intentId,
                 'transaction_id' => 'DDC-SDMF-' . now()->format('YmdHis'),
-                
+
             ]);
 
             // 4. Handle the Redirect to GCash/Maya
@@ -421,7 +421,7 @@ class PublicController extends Controller
             if (!$resp) {
                 Log::error("Webhook triggered but no matching sale found for Intent ID: " . $intentId);
                 return null;
-                }
+            }
 
             $intentData = $this->payMongo->getPaymentIntent($intentId);
             if (isset($intentData['data']['attributes']['amount'])) {
@@ -469,10 +469,10 @@ class PublicController extends Controller
                     'is_paid' => 1,
                     'is_online' => 1,
                     'status' => '1',
-                    'paymongo_payment_id' => $paymentId, 
-                    'paymongo_fee' => $fee,              
-                    'net_amount' => $netAmount,          
-                    'paid_at' => $paidAt                 
+                    'paymongo_payment_id' => $paymentId,
+                    'paymongo_fee' => $fee,
+                    'net_amount' => $netAmount,
+                    'paid_at' => $paidAt
                 ]);
 
                 event(new MerchantSales($resp));
@@ -531,7 +531,7 @@ class PublicController extends Controller
                     [
                         'name' => $resp->customer_name,
                         'password' => Hash::make('12345678'),
-                        'role' => $user->role->type === 'user' ? 4 : null,
+                        'role_id' => 4,
                         'email_verified_at' => now(),
                     ]
                 );
