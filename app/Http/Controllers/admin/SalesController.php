@@ -155,7 +155,7 @@ class SalesController extends Controller
                 return redirect()->back()->with('error', 'Event not found.');
             }
 
-            $salesQuery = Sales::with('ticket')->where('event_id', $event->id);
+            $baseSalesQuery = Sales::where('event_id', $event->id);
 
             $startDate = $request->input('start_date');
             $endDate = $request->input('end_date');
@@ -169,16 +169,16 @@ class SalesController extends Controller
             }
 
             if (!empty($startDate)) {
-                $salesQuery->whereDate('created_at', '>=', $startDate);
+                $baseSalesQuery->whereDate('created_at', '>=', $startDate);
             }
 
             if (!empty($endDate)) {
-                $salesQuery->whereDate('created_at', '<=', $endDate);
+                $baseSalesQuery->whereDate('created_at', '<=', $endDate);
             }
 
             if ($request->filled('search')) {
                 $search = trim((string) $request->input('search'));
-                $salesQuery->where(function ($query) use ($search) {
+                $baseSalesQuery->where(function ($query) use ($search) {
                     $query->where('customer_name', 'like', "%{$search}%")
                         ->orWhere('customer_email', 'like', "%{$search}%")
                         ->orWhere('reference_number', 'like', "%{$search}%")
@@ -186,11 +186,33 @@ class SalesController extends Controller
                 });
             }
 
+            $sale_filter = $request->input('sale_filter', 'all');
+            $salesQuery = (clone $baseSalesQuery)->with(['ticket', 'event']);
+
+            switch ($sale_filter) {
+                case 'online':
+                    $salesQuery->where('is_online', 1);
+                    break;
+                case 'walkin':
+                    $salesQuery->where('is_online', 0);
+                    break;
+                case 'pending':
+                    $salesQuery->where('status', 0);
+                    break;
+                case 'disabled':
+                    $salesQuery->where('status', 2);
+                    break;
+                default:
+                    $sale_filter = 'all';
+                    break;
+            }
+
             $sales = $salesQuery->orderByDesc('id')->paginate(10)->appends($request->query());
-            $online_sales_count = Sales::where('event_id', $event->id)->where('is_online', 1)->count();
-            $walkin_sales_count = Sales::where('event_id', $event->id)->where('is_online', 0)->count();
-            $pending_sales_count = Sales::where('event_id', $event->id)->where('status', 0)->count();
-            return view('admin.component.sales.view-specific', compact('event', 'sales', 'online_sales_count', 'walkin_sales_count', 'pending_sales_count'));
+            $online_sales_count = (clone $baseSalesQuery)->where('is_online', 1)->count();
+            $walkin_sales_count = (clone $baseSalesQuery)->where('is_online', 0)->count();
+            $pending_sales_count = (clone $baseSalesQuery)->where('status', 0)->count();
+            $disabled_sales_count = (clone $baseSalesQuery)->where('status', 2)->count();
+            return view('admin.component.sales.view-specific', compact('event', 'sales', 'online_sales_count', 'walkin_sales_count', 'pending_sales_count', 'disabled_sales_count'));
         } else {
             // Merchant Logic
             $event = Events::where('slug', $slug)->where('created_by', Auth::user()->id)->first();
