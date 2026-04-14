@@ -52,7 +52,7 @@ class OrganizerController extends Controller
             $staff->last_name = $data['last_name'];
             $staff->phone_number = $data['phone_number'];
             $staff->password = Hash::make($data['password']);
-            $staff->role_id = 3; 
+            $staff->role_id = 3;
             $staff->is_active = 1;
             $staff->event_id = $data['event_id'];
             $staff->binded_merchant_id = Auth::user()->id;
@@ -77,8 +77,6 @@ class OrganizerController extends Controller
 
             DB::commit();
             return back()->with('success', 'Staff Created Successfully');
-
-
         } catch (ValidationException $e) {
             DB::rollBack();
             Log::error($e->getMessage());
@@ -90,5 +88,64 @@ class OrganizerController extends Controller
         }
     }
 
-   
+    public function update(StaffRequest $request, $id)
+    {
+        try {
+            $staff = User::findOrFail($id);
+            $data = $request->validated();
+
+            $staff->name = $data['first_name'] . ' ' . $data['last_name'];
+            $staff->email = $data['email'];
+            $staff->username = $data['username'];
+            $staff->first_name = $data['first_name'];
+            $staff->last_name = $data['last_name'];
+            $staff->phone_number = $data['phone_number'];
+            if (!empty($data['password'])) {
+                $staff->password = Hash::make($data['password']);
+            }
+            if (!empty($data['security_pin'])) {
+                UserScanner::updateOrCreate(
+                    ['user_id' => $staff->id],
+                    ['security_pin' => Hash::make($data['security_pin'])]
+                );
+            }
+            $staff->event_id = $data['event_id'];
+            $staff->save();
+
+            // Update permissions only if present
+            if (isset($data['permission_name']) && is_array($data['permission_name'])) {
+                \App\Models\UserPermission::where('user_id', $staff->id)->delete();
+                foreach ($data['permission_name'] as $permission) {
+                    $user_permission = new \App\Models\UserPermission();
+                    $user_permission->user_id = $staff->id;
+                    $user_permission->role_id = 3;
+                    $user_permission->permission_name = $permission;
+                    $user_permission->save();
+                }
+            }
+
+            Log::info('Staff Updated Successfully');
+            return back()->with('success', 'Staff Updated Successfully');
+        } catch (ValidationException $e) {
+            Log::error($e->getMessage());
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return back()->withErrors($e->getMessage())->withInput();
+        }
+    }
+
+
+    public function destroy($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+
+            return back()->with('success', 'User deleted successfully');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return back()->withErrors($e->getMessage());
+        }
+    }
 }

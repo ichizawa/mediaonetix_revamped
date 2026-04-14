@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\SalesController;
@@ -16,6 +17,13 @@ Route::prefix('user')->name('user.')->middleware('role.check:4')->group(function
         Route::get('edit/{slug}', [SalesController::class, 'edit'])->name('edit');
         Route::put('update/{id}', [SalesController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [SalesController::class, 'delete'])->name('delete');
+    });
+
+    Route::get('profile', [AdminController::class, 'profile'])->name('profile');
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::post('store', [AdminController::class, 'store'])->name('store');
+        Route::post('update', [AdminController::class, 'update'])->name('update');
+        Route::post('change-password', [AdminController::class, 'changePassword'])->name('change-password');
     });
 
 

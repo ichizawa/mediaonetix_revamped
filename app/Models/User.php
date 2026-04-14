@@ -94,8 +94,24 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     public function sendEmailVerificationNotification(): void
     {
-        $this->notify(new VerifyEmailNotification());
+        // $this->notify(new VerifyEmailNotification());
+
+        // Only for development/testing, uncomment the above line and comment out the below code to use the default URL generation without dynamic base URL handling. 
+        $currentBaseUrl = request()->getSchemeAndHttpHost(); 
+
+        if (app()->runningInConsole()) {
+            // Fallback to the .env APP_URL for artisan commands or cron jobs
+            $currentBaseUrl = config('app.url'); 
+        } else {
+            // Grab the dynamic URL/IP from the active browser request
+            $currentBaseUrl = request()->getSchemeAndHttpHost(); 
+        }
+        
+        // Pass it into the notification before it goes to the queue
+        $this->notify(new VerifyEmailNotification($currentBaseUrl));
     }
+
+    
     public function role()
     {
         return $this->belongsTo(Role::class);

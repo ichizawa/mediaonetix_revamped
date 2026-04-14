@@ -80,6 +80,14 @@ class TicketListsController extends Controller
             ->latest()
             ->get();
 
+        $formattedTickets = $customerTickets->map(function ($ticket) {
+
+            $ticketData = $ticket->toArray();
+            $ticketData['qr_code_url'] = $ticket->qr_path ? asset($ticket->qr_path) : null;
+
+            return $ticketData;
+        });
+
         $userEventIds = CustomerTicket::whereHas('sale', function ($q) {
             $q->where('customer_email', auth()->user()->email);
         })
@@ -92,7 +100,7 @@ class TicketListsController extends Controller
         $events = \App\Models\Events::whereIn('id', $userEventIds)->get();
 
         return response()->json([
-            'customerTickets' => $customerTickets,
+            'customerTickets' => $formattedTickets,
             'events' => $events,
             'selectedEvent' => $eventId,
         ]);

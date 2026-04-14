@@ -31,7 +31,7 @@ class EventsController extends Controller
         }
     }
 
-    
+
     public function eventsPublic()
     {
         try {
@@ -48,6 +48,28 @@ class EventsController extends Controller
             ], 200);
         } catch (\Exception $e) {
             Log::error('Error fetching upcoming events: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'data' => null,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function pastEvents()
+    {
+        try {
+            $events = Events::pastWithShowcases()
+                ->with(['tickets'])
+                ->get();
+            Log::info('Past events retrieved successfully');
+            return response()->json([
+                'success' => true,
+                'data' => $events,
+                'message' => 'Past events retrieved successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Error fetching past events: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'data' => null,

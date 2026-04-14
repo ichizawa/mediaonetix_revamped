@@ -9,6 +9,7 @@ class CustomerTicket extends Model
        protected $fillable = [
         'sale_id',
         'reference_num',
+        'qr_path',
         'is_redeemed',
         'is_disabled',
         'scanned_by'

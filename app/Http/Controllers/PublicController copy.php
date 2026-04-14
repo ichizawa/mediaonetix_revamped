@@ -460,7 +460,7 @@ class PublicController extends Controller
             $latest_id = Sales::max('id');
             $nextId = is_null($latest_id) ? 1 : $latest_id + 1;
             $currentDate = date('y-m-d');
-            $password = 'M1TIX-' . bin2hex(random_bytes(6)) ;
+            $password = 'M1TIX-' . rand(1000, 9999);
 
             // Check if PayMongo says it's paid AND we haven't sent the email yet
             if ($status === 'paid' && $resp->is_email_sent == 0) {
@@ -486,28 +486,24 @@ class PublicController extends Controller
                 $sales = [];
 
                 // Generate QR Codes and Customer Tickets
+                $qrDir = public_path('images/qrcodes');
+                if (!file_exists($qrDir)) {
+                    mkdir($qrDir, 0777, true);
+                }
                 for ($i = 0; $i < $ticketCount; $i++) {
                     $reference_number = 'M1-' . $currentDate . '-' . rand(1000, 9999) . rand(1000, 9999) . '-' . $nextId;
-                    $qrcode = QrCode::size(250)->generate($reference_number);
-
-                    $fileName = 'qr_' . $reference_number . '.svg'; // Use .svg as it's the default format for this package
-                    $filePath = 'images/qrcodes/' . $fileName;
-
-                    // 2. Ensure the target directory exists inside the public folder
-                    $directoryPath = public_path('images/qrcodes');
-                    if (!file_exists($directoryPath)) {
-                        mkdir($directoryPath, 0755, true);
-                    }
-
-                    file_put_contents($directoryPath . '/' . $fileName, $qrcode);
-
+                    $qrFileName = $reference_number . '.png';
+                    $qrPath = 'images/qrcodes/' . $qrFileName;
+                    $qrFullPath = $qrDir . DIRECTORY_SEPARATOR . $qrFileName;
+                    // Save QR code as PNG
+                    QrCode::format('png')->size(250)->generate($reference_number, $qrFullPath);
 
                     CustomerTicket::create([
                         'sale_id' => $resp->id,
                         'customer_id' => $resp->customer_id,
                         'reference_num' => $reference_number,
+                        'qr_path' => $qrPath,
                         'is_redeemed' => 0,
-                        'qr_path' => $filePath, // Save the public path to the QR code
                     ]);
 
                     $sales[] = [
@@ -520,7 +516,7 @@ class PublicController extends Controller
                         'ticket_color' => $resp->ticket->color ?? '#000000',
                         'ticket_type' => $resp->ticket->ticket_type ?? $resp->ticket->type,
                         'event_date' => $resp->event->event_date,
-                        'qrcode' => $qrcode,
+                        'qrcode' => asset($qrPath),
                     ];
                 }
 
@@ -541,7 +537,7 @@ class PublicController extends Controller
                     ['email' => $resp->customer_email],
                     [
                         'name' => $resp->customer_name,
-                        'password' => Hash::make($password),
+                        'password' => Hash::make('12345678'),
                         'role_id' => 4,
                         'email_verified_at' => now(),
                     ]

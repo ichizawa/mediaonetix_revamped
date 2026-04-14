@@ -1,3 +1,4 @@
+
 @extends('layouts')
 @section('content')
     @include('admin.component.users.add')
@@ -233,7 +234,7 @@
                                         </td>
                                         <td class="py-4 px-4">
                                             <div class="flex gap-2">
-                                                <button onclick="openMerchantModal('{{ $user }}')"
+                                                <button onclick="openUserModal('{{ $user }}')"
                                                     class="p-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded-lg transition-all group">
                                                     <svg class="w-4 h-4 text-blue-400" fill="none"
                                                         stroke="currentColor" viewBox="0 0 24 24">
@@ -245,8 +246,9 @@
                                                         </path>
                                                     </svg>
                                                 </button>
-                                                <button
-                                                    class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
+                                                <button type="button"
+                                                    class="js-open-user-edit p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all"
+                                                    data-user='@json($user, JSON_HEX_APOS | JSON_HEX_QUOT)'>
                                                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -255,13 +257,15 @@
                                                         </path>
                                                     </svg>
                                                 </button>
+
+
                                                 <form id="delete-user-form-{{ $user['id'] }}"
                                                     action="{{ route('admin.users.delete', $user['id']) }}"
                                                     method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="button"
-                                                        onclick="openDeleteMerchantModal('delete-user-form-{{ $user['id'] }}', '{{ route('admin.users.delete', $user['id']) }}')"
+                                                        onclick="openDeleteUserModal('delete-user-form-{{ $user['id'] }}', '{{ route('admin.users.delete', $user['id']) }}')"
                                                         class="p-1.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-lg transition-all">
                                                         <svg class="w-4 h-4 text-red-400" fill="none"
                                                             stroke="currentColor" viewBox="0 0 24 24">
@@ -272,16 +276,9 @@
                                                         </svg>
                                                     </button>
                                                 </form>
-                                                <a href="{{ route('admin.merchants.files', $user['id']) }}"
-                                                    class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a2 2 0 00-2.828-2.828zM16.88 12.88a3 3 0 010 4.242m-4.242 0a3 3 0 014.242 0M18 10h.01">
-                                                        </path>
-                                                    </svg>
-                                                </a>
+
+
+                
                                             </div>
                                         </td>
                                     </tr>
@@ -303,6 +300,14 @@
         </div>
     </div>
 
+
+    @include('admin.component.users.deletemodal')
+    @include('admin.component.users.view')
+    @include('admin.component.users.edit')
+
     @include('admin.component.event.modal')
     @include ('admin.component.event.view')
+
+
+    
 @endsection

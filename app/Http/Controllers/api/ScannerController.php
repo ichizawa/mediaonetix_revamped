@@ -14,6 +14,30 @@ use Illuminate\Support\Facades\Log;
 class ScannerController extends Controller
 {
 
+    /**
+     * Verify the security pin for the authenticated user.
+     * POST /api/verify-pin { security_pin }
+     */
+    public function verifyPin(Request $request)
+    {
+        $security_pin = $request->input('security_pin', $request->query('security_pin'));
+
+        if (!$security_pin || strlen($security_pin) < 4 || strlen($security_pin) > 6) {
+            return response()->json(['success' => false, 'message' => 'Invalid security pin format.'], 422);
+        }
+
+        $userScanner = UserScanner::where('user_id', Auth::user()->id)->first();
+        if (!$userScanner || !$userScanner->security_pin) {
+            return response()->json(['success' => false, 'message' => 'No security pin set for this user.'], 403);
+        }
+
+        if (!\Illuminate\Support\Facades\Hash::check($security_pin, $userScanner->security_pin)) {
+            return response()->json(['success' => false, 'message' => 'Invalid security pin.'], 401);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Security pin verified.']);
+    }
+
     public function checkTicket($reference_num)
     {
 
@@ -39,7 +63,9 @@ class ScannerController extends Controller
             ], 500);
         }
     }
-    
+
+
+
     public function scanTicket($reference_num)
     {
         try {
@@ -87,7 +113,6 @@ class ScannerController extends Controller
                             'last_scanned' => now()
                         ]);
                     }
-
                 } catch (\Exception $e) {
                     Log::error('Error redeeming ticket: ' . $e->getMessage());
                     return response()->json(['message' => 'An error occurred while redeeming the ticket', 'error' => $e->getMessage()], 500);
@@ -96,7 +121,6 @@ class ScannerController extends Controller
             } else {
                 return response(['message' => 'Ticket not found', 'status' => 404], 404);
             }
-            
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred while checking the ticket', 'error' => $e->getMessage()], 500);
         }

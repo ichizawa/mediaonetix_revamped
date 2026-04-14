@@ -47,6 +47,7 @@ Route::group(['middleware' => ['json.response']], function () {
 
             Route::get('events', [\App\Http\Controllers\PublicController::class, 'events']);
             Route::get('tickets', [TicketListsController::class, 'getTickets']);
+            Route::post('verify-pin', [ScannerController::class, 'verifyPin']); 
 
             Route::get('tickets/scanned', [TicketListsController::class, 'getTicketScanned']);
             Route::get('ticket-category/scanned/{eventId}', [TicketListsController::class, 'getScannedTicketCategory']);
@@ -60,7 +61,7 @@ Route::group(['middleware' => ['json.response']], function () {
         Route::prefix('users')->group(function () {
             Route::get('events', [EventsController::class, 'eventsPublic']);
             Route::get('tickets', [TicketListsController::class, 'getTickets']);
-
+            Route::get('past-events', [EventsController::class, 'pastEvents']);
             Route::get('purchase-history', [TicketListsController::class, 'getPurchaseHistory']);
         });
     });

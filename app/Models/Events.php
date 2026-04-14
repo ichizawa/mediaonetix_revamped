@@ -105,6 +105,18 @@ class Events extends Model
     {
         return $this->hasOne(ShowCases::class, 'event_id')->latestOfMany();
     }
+
+  
+    
+
+    public function scopePastWithShowcases($query)
+    {
+        return $query->where('event_date', '<', date('Y-m-d'))
+            ->whereHas('showcases', function ($q) {
+                $q->whereNull('deleted_at');
+            });
+    }
+
     protected static function boot()
     {
         parent::boot();

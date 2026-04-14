@@ -61,6 +61,8 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
     Route::get('users', [UsersController::class, 'index'])->name('users');
     Route::prefix('users')->name('users.')->group(function () {
         Route::post('store', [UsersController::class, 'store'])->name('store');
+        Route::delete('delete/{id}', [UsersController::class, 'destroy'])->name('delete');
+        Route::put('update/{id}', [UsersController::class, 'update'])->name('update');
     });
 
     Route::get('control-panel', [ControlPanelController::class, 'index'])->name('control-panel');

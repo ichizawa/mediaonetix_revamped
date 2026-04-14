@@ -16,12 +16,13 @@ class UsersController extends Controller
     public function index()
     {
         $users = User::all();
+        $roles = Role::select('id', 'name')->get();
 
         $active_users = User::where('is_active', 1)->count();
         $pending_user = User::where('role_id', 2)->where('is_active', 2)->count();
         $inactive_user = User::where('role_id', 2)->where('is_active', 0)->count();
 
-        return view('admin.users', compact('users', 'active_users', 'pending_user', 'inactive_user'));
+        return view('admin.users', compact('users', 'roles', 'active_users', 'pending_user', 'inactive_user'));
     }
 
     public function store(Request $request)
@@ -133,7 +134,7 @@ class UsersController extends Controller
             }
             $role = Role::find($request->role_id);
             // Update the name field based on the role name, fallback to 'Unknown' if not found
-            $user->name = $role ? $role->name : 'Unknown';
+            $user->role_id = $role;
             $user->email = $request->email;
             $user->username = $request->username;
             $user->first_name = $request->first_name;

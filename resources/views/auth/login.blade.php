@@ -115,12 +115,12 @@
         </script>
     @endif
 
-    {{-- @if(session('error'))
+    @if(session('error'))
         <script type="module">
             Toast.fire({
                 icon: 'error',
-                title: "{{ session('error') }}"
+                title: @json(session('error'))
             });
         </script>
-    @endif --}}
+    @endif
 @endsection

@@ -135,8 +135,7 @@
 
         <!-- Bottom Actions -->
         <div class="p-6 space-y-2 border-t border-white/10">
-            @if (auth()->user()->isAdmin())
-                <a href="{{ route(auth()->user()->routePrefix() . '.settings') }}"
+                <a href="{{ route(auth()->user()->routePrefix() . '.profile') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -147,6 +146,8 @@
                     </svg>
                     <span class="font-medium">Profile</span>
                 </a>
+
+            @if (auth()->user()->isAdmin())
 
                 <a href="{{ route(auth()->user()->routePrefix() . '.settings') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-all">

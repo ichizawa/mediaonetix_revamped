@@ -22,15 +22,17 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|exists:users,email',
-            'password' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|string'
         ];
     }
     
     public function messages(): array
     {
         return [
-            'email.exists' => 'This email is not registered in our system.',
+            'email.required' => 'Please enter your email address.',
+            'email.email' => 'Please enter a valid email address.',
+            'password.required' => 'Please enter your password.',
         ];
     }
 

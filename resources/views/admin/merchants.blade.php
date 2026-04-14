@@ -328,6 +328,7 @@
 
 
     @include('admin.component.merchant.deletemodal')
+    @include('admin.component.merchant.view')
 
 
     @include('admin.component.event.modal')

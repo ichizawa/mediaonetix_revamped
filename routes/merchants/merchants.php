@@ -90,5 +90,7 @@ Route::prefix('merchant')->name('merchant.')->middleware('role.check:2')->group(
     Route::prefix('organizers')->name('organizers.')->group(function () {
 
         Route::post('store', [OrganizerController::class, 'store'])->name('store');
+        Route::delete('delete/{id}', [OrganizerController::class, 'destroy'])->name('delete');
+        Route::put('update/{id}', [OrganizerController::class, 'update'])->name('update');
     });
 });

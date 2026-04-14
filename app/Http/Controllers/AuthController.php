@@ -37,7 +37,7 @@ class AuthController extends Controller
                 return redirect()->route(auth()->user()->routePrefix() . '.dashboard');
             }
 
-            return redirect()->route('login')->with('error', 'Invalid email or password');
+            return redirect()->route('login')->with('error', 'The login information you entered is incorrect.');
         } catch (ValidationException $e) {
             $messages = implode(' ', collect($e->errors())->flatten()->toArray());
             return redirect()->route('login')->with('error', $messages);

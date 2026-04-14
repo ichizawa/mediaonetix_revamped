@@ -22,15 +22,15 @@ class StaffRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|max:255|unique:users,email',
-            'phone_number' => 'required|string|max:20|unique:users,phone_number',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users,username',
+            'username' => 'required|string|max:255|unique:users,username' . ($this->id ? (',' . $this->id) : ''),
+            'email' => 'required|email|max:255|unique:users,email' . ($this->id ? (',' . $this->id) : ''),
+            'phone_number' => 'required|string|max:20|unique:users,phone_number' . ($this->id ? (',' . $this->id) : ''),
+            'password' => ($this->isMethod('put') || $this->isMethod('patch') ? 'nullable' : 'required') . '|string|min:6',
+            'security_pin' => ($this->isMethod('put') || $this->isMethod('patch') ? 'nullable' : 'required') . '|string|min:4|max:6',
             'event_id' => 'required|exists:events,id',
-            'password' => 'required|string|min:8|',
-            'security_pin' => 'required|string|min:4|max:6',
-            'permission_name' => 'required|array',
+            'permission_name' => ($this->isMethod('put') || $this->isMethod('patch') ? 'nullable' : 'required') . '|array|min:1',
             'permission_name.*' => 'string|max:255',
         ];
     }

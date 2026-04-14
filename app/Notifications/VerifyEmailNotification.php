@@ -9,12 +9,26 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
+
 class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
 {
     use Queueable;
 
+    protected $baseUrl;
+
+    public function __construct($baseUrl = null)
+    {
+        $this->baseUrl = $baseUrl;
+    }
+
     protected function verificationUrl($notifiable): string
     {
+
+        if ($this->baseUrl) {
+            URL::forceRootUrl($this->baseUrl);
+        }
+
+
         return URL::temporarySignedRoute(
             'verification.verify',
             Carbon::now()->addHours(24),
@@ -24,6 +38,13 @@ class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
                 'hash' => sha1($notifiable->getEmailForVerification()),
             ]
         );
+
+
+        if ($this->baseUrl) {
+            URL::forceRootUrl(Config::get('app.url'));
+        }
+
+        return $url;
     }
 
     public function toMail($notifiable): MailMessage
