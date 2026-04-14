@@ -18,6 +18,15 @@
             position: relative;
             height: 300px;
         }
+
+        .responsive-chip-row {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .responsive-chip-row::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 
     <div class="min-h-screen bg-[#0c1222]">
@@ -40,7 +49,7 @@
                         </div>
 
                         <div class="flex items-center gap-3">
-                            <button
+                            <button onclick="openExportSalesModal()"
                                 class="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-white font-medium transition-all">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -186,16 +195,16 @@
                 <div class="grid lg:grid-cols-3 gap-6 mb-8">
                     <!-- Revenue Chart -->
                     <div
-                        class="lg:col-span-2 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-xl font-bold text-white">Revenue Overview</h3>
-                            <div class="flex gap-2">
-                                <button
-                                    class="px-3 py-1 text-sm bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg font-medium">Week</button>
-                                <button
-                                    class="px-3 py-1 text-sm bg-white/5 text-gray-400 hover:bg-white/10 rounded-lg font-medium transition-all">Month</button>
-                                <button
-                                    class="px-3 py-1 text-sm bg-white/5 text-gray-400 hover:bg-white/10 rounded-lg font-medium transition-all">Year</button>
+                        class="lg:col-span-2 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
+                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
+                            <h3 class="text-lg sm:text-xl font-bold text-white">Revenue Overview</h3>
+                            <div class="flex gap-2 w-full sm:w-auto overflow-x-auto responsive-chip-row pb-1">
+                                <button type="button" data-revenue-period="week"
+                                    class="revenue-period-btn shrink-0 px-3 py-1 text-sm bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg font-medium transition-all">Week</button>
+                                <button type="button" data-revenue-period="month"
+                                    class="revenue-period-btn shrink-0 px-3 py-1 text-sm bg-white/5 text-gray-400 hover:bg-white/10 rounded-lg font-medium transition-all">Month</button>
+                                <button type="button" data-revenue-period="year"
+                                    class="revenue-period-btn shrink-0 px-3 py-1 text-sm bg-white/5 text-gray-400 hover:bg-white/10 rounded-lg font-medium transition-all">Year</button>
                             </div>
                         </div>
                         <div class="chart-container">
@@ -246,23 +255,78 @@
                 <!-- Recent Transactions -->
                 <div
                     class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-                    <div class="flex items-center justify-between mb-6">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
                         <h3 class="text-xl font-bold text-white">Recent Transactions</h3>
-                        <div class="flex gap-2">
+                        <div class="flex gap-2 w-full sm:w-auto overflow-x-auto responsive-chip-row pb-1">
                             <button
-                                class="px-3 py-1 text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">All</button>
+                                class="shrink-0 px-3 py-1 text-xs sm:text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">All</button>
                             <button
-                                class="px-3 py-1 text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">Completed</button>
+                                class="shrink-0 px-3 py-1 text-xs sm:text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">Completed</button>
                             <button
-                                class="px-3 py-1 text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">Pending</button>
+                                class="shrink-0 px-3 py-1 text-xs sm:text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">Pending</button>
                             <button
-                                class="px-3 py-1 text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">Failed</button>
+                                class="shrink-0 px-3 py-1 text-xs sm:text-sm bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg font-medium transition-all">Failed</button>
                         </div>
                     </div>
 
+                    <!-- Mobile Cards -->
+                    <div class="space-y-3 md:hidden">
+                        @forelse($sales as $sale)
+                            <div onclick="openViewSalesModal({
+                                    ref: '{{ $sale->reference_number }}',
+                                    transactionId: '{{ addslashes($sale->transaction_id ?? 'N/A') }}',
+                                    status: '{{ $sale->status_label['label'] }}',
+                                    statusColor: '{{ $sale->status_label['color'] }}',
+                                    customerName: '{{ addslashes($sale->customer_name) }}',
+                                    customerEmail: '{{ addslashes($sale->customer_email) }}',
+                                    eventName: '{{ addslashes($sale->event?->event_name ?? 'N/A') }}',
+                                    ticketType: '{{ addslashes($sale->ticket?->name ?? 'N/A') }}',
+                                    quantity: {{ $sale->quantity }},
+                                    unitPrice: '{{ number_format($sale->ticket?->price ?? 0, 2) }}',
+                                    totalAmount: '{{ number_format($sale->total_amount, 2) }}',
+                                    paymentMethod: '{{ addslashes($sale->payment_method ?? 'N/A') }}',
+                                    date: '{{ $sale->created_at->format('M d, Y • h:i A') }}'
+                                })" class="bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer hover:bg-white/10 transition-all">
+                                <div class="flex items-start justify-between gap-3 mb-3">
+                                    <p class="text-white font-mono text-xs break-all">{{ $sale->reference_number }}</p>
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $sale->status_label['color'] }}/10 {{ $sale->status_label['color'] }} border {{ $sale->status_label['color'] }}/20">
+                                        {{ $sale->status_label['label'] }}
+                                    </span>
+                                </div>
+
+                                <div class="space-y-2 mb-3">
+                                    <p class="text-white font-medium text-sm">{{ $sale->customer_name }}</p>
+                                    <p class="text-gray-400 text-xs break-all">{{ $sale->customer_email }}</p>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3 text-xs mb-4">
+                                    <div>
+                                        <p class="text-gray-400">Event</p>
+                                        <p class="text-white mt-0.5">{{ $sale->event?->event_name ?? 'N/A' }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400">Amount</p>
+                                        <p class="text-white font-semibold mt-0.5">₱{{ $sale->total_amount }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400">Ticket</p>
+                                        <p class="text-white mt-0.5">{{ $sale->ticket?->name ?? 'N/A' }} x {{ $sale->quantity }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400">Date</p>
+                                        <p class="text-white mt-0.5">{{ $sale->created_at->format('M d, Y - h:i A') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-white text-sm">No sales found.</p>
+                        @endforelse
+                    </div>
+
                     <!-- Table -->
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
+                    <div class="hidden md:block overflow-x-auto">
+                        <table class="w-full min-w-[980px]">
                             <thead>
                                 <tr class="border-b border-white/10">
                                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Transaction ID</th>
@@ -272,12 +336,25 @@
                                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Tickets</th>
                                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Amount</th>
                                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Status</th>
-                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-400">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($sales as $sale)
-                                    <tr class="border-b border-white/5 hover:bg-white/5 transition-all">
+                                    <tr onclick="openViewSalesModal({
+                                                    ref: '{{ $sale->reference_number }}',
+                                                    transactionId: '{{ addslashes($sale->transaction_id ?? 'N/A') }}',
+                                                    status: '{{ $sale->status_label['label'] }}',
+                                                    statusColor: '{{ $sale->status_label['color'] }}',
+                                                    customerName: '{{ addslashes($sale->customer_name) }}',
+                                                    customerEmail: '{{ addslashes($sale->customer_email) }}',
+                                                    eventName: '{{ addslashes($sale->event?->event_name ?? 'N/A') }}',
+                                                    ticketType: '{{ addslashes($sale->ticket?->name ?? 'N/A') }}',
+                                                    quantity: {{ $sale->quantity }},
+                                                    unitPrice: '{{ number_format($sale->ticket?->price ?? 0, 2) }}',
+                                                    totalAmount: '{{ number_format($sale->total_amount, 2) }}',
+                                                    paymentMethod: '{{ addslashes($sale->payment_method ?? 'N/A') }}',
+                                                    date: '{{ $sale->created_at->format('M d, Y • h:i A') }}'
+                                                })" class="border-b border-white/5 hover:bg-white/10 transition-all cursor-pointer">
                                         <td class="py-4 px-4">
                                             <span class="text-white font-mono text-sm">{{ $sale->reference_number }}</span>
                                         </td>
@@ -288,14 +365,14 @@
                                             </div>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <span class="text-white text-sm">{{ $sale->event->event_name }}</span>
+                                            <span class="text-white text-sm">{{ $sale->event?->event_name ?? 'N/A' }}</span>
                                         </td>
                                         <td class="py-4 px-4">
                                             <span class="text-gray-400 text-sm">{{ $sale->created_at->format('M d, Y - h:i A') }}</span>
                                         </td>
                                         <td class="py-4 px-4">
                                             <div>
-                                                <p class="text-white font-medium text-sm">{{ $sale->ticket->name }}</p>
+                                                <p class="text-white font-medium text-sm">{{ $sale->ticket?->name ?? 'N/A' }}</p>
                                                 <p class="text-gray-400 text-xs">x {{ $sale->quantity }}</p>
                                             </div>
                                         </td>
@@ -307,28 +384,6 @@
                                                 class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $sale->status_label['color'] }}/10 {{ $sale->status_label['color'] }} border {{ $sale->status_label['color'] }}/20">
                                                 {{ $sale->status_label['label'] }}
                                             </span>
-                                        </td>
-                                        <td class="py-4 px-4">
-                                            <div class="flex gap-2">
-                                                <button class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24z 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                        </path>
-                                                    </svg>
-                                                </button>
-                                                <button class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                                        </path>
-                                                    </svg>
-                                                </button>
-                                            </div>
                                         </td>
                                     </tr>
                                 @empty
@@ -369,14 +424,53 @@
     <script>
         // Revenue Chart
         const ctx = document.getElementById('revenueChart');
+        const isMobileViewport = window.matchMedia('(max-width: 640px)').matches;
+        const revenuePeriods = @json($chartData ?? []);
+        const revenuePeriodButtons = document.querySelectorAll('.revenue-period-btn');
+        const activeRevenuePeriodClasses = ['bg-blue-500/20', 'text-blue-400', 'border', 'border-blue-500/30'];
+        const inactiveRevenuePeriodClasses = ['bg-white/5', 'text-gray-400'];
+
+        const defaultRevenueData = revenuePeriods.week ?? {
+            labels: @json($labels),
+            values: @json($values)
+        };
+
+        let revenueChart;
+
+        function setActiveRevenuePeriod(period) {
+            revenuePeriodButtons.forEach((button) => {
+                const isActive = button.dataset.revenuePeriod === period;
+
+                button.classList.remove(...activeRevenuePeriodClasses, ...inactiveRevenuePeriodClasses);
+
+                if (isActive) {
+                    button.classList.add(...activeRevenuePeriodClasses);
+                } else {
+                    button.classList.add(...inactiveRevenuePeriodClasses);
+                }
+            });
+        }
+
+        function updateRevenueChart(period) {
+            if (!revenueChart || !revenuePeriods[period]) {
+                return;
+            }
+
+            revenueChart.data.labels = revenuePeriods[period].labels;
+            revenueChart.data.datasets[0].data = revenuePeriods[period].values;
+            revenueChart.update();
+
+            setActiveRevenuePeriod(period);
+        }
+
         if (ctx) {
-            new Chart(ctx, {
+            revenueChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: @json($labels),
+                    labels: defaultRevenueData.labels,
                     datasets: [{
                         label: 'Revenue',
-                        data: @json($values),
+                        data: defaultRevenueData.values,
                         borderColor: 'rgb(59, 130, 246)',
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         tension: 0.4,
@@ -384,8 +478,8 @@
                         pointBackgroundColor: 'rgb(59, 130, 246)',
                         pointBorderColor: '#fff',
                         pointBorderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
+                        pointRadius: isMobileViewport ? 2.5 : 4,
+                        pointHoverRadius: isMobileViewport ? 4 : 6
                     }]
                 },
                 options: {
@@ -397,7 +491,7 @@
                         },
                         tooltip: {
                             backgroundColor: 'rgba(17, 24, 39, 0.9)',
-                            padding: 12,
+                            padding: isMobileViewport ? 10 : 12,
                             titleColor: '#fff',
                             bodyColor: '#fff',
                             borderColor: 'rgba(255, 255, 255, 0.1)',
@@ -419,6 +513,10 @@
                             },
                             ticks: {
                                 color: '#9ca3af',
+                                maxTicksLimit: isMobileViewport ? 5 : 8,
+                                font: {
+                                    size: isMobileViewport ? 10 : 12
+                                },
                                 callback: function (value) {
                                     return '₱' + value.toLocaleString();
                                 }
@@ -430,12 +528,26 @@
                                 drawBorder: false
                             },
                             ticks: {
-                                color: '#9ca3af'
+                                color: '#9ca3af',
+                                maxRotation: 0,
+                                autoSkip: true,
+                                maxTicksLimit: isMobileViewport ? 4 : 7,
+                                font: {
+                                    size: isMobileViewport ? 10 : 12
+                                }
                             }
                         }
                     }
                 }
             });
+
+            revenuePeriodButtons.forEach((button) => {
+                button.addEventListener('click', function () {
+                    updateRevenueChart(this.dataset.revenuePeriod);
+                });
+            });
+
+            setActiveRevenuePeriod('week');
         }
     </script>
 
@@ -463,4 +575,9 @@
         //     document.getElementById('totalPrice').textContent = total.toFixed(2);
         // }
     </script>
+    @include('merchant.component.sales.export-modal', [
+        'exportPdfRoute' => route('admin.sales.export.pdf'),
+        'exportExcelRoute' => route('admin.sales.export.excel'),
+    ])
+    @include('merchant.component.sales.view-sales')
 @endsection

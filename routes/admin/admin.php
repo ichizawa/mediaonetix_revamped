@@ -41,6 +41,8 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
         Route::get('edit/{slug}', [SalesController::class, 'edit'])->name('edit');
         Route::put('update/{id}', [SalesController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [SalesController::class, 'delete'])->name('delete');
+        Route::get('export/pdf', [SalesController::class, 'exportPdf'])->name('export.pdf');
+        Route::get('export/excel', [SalesController::class, 'exportExcel'])->name('export.excel');
     });
     //End Sales CRUD
 
