@@ -24,7 +24,7 @@ class EventsController extends Controller
 
         $events = $eventsQuery->get();
 
-
+ 
         $tickets_sold = $events->sum('tickets_sold');
         $upcoming_events = $eventsQuery->getUpcoming()->count();
         $active_events = $eventsQuery->getActive()->count();

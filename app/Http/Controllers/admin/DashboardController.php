@@ -7,12 +7,31 @@ use App\Models\Events;
 use App\Models\Sales;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $total_sales = Sales::where('status', 1)->sum('total_amount');
+
+        // Filter sales per merchant or auth
+        $user = Auth::user();
+        $salesQuery = Sales::where('status', 1);
+        if ($user->isMerchant()) {
+            // Join with events and filter by created_by (merchant)
+            $salesQuery->whereHas('event', function ($q) use ($user) {
+                $q->where('created_by', $user->id);
+            });
+        } elseif ($user->isOrganizer()) {
+            // If staff/organizer, filter by assigned merchant if applicable
+            if ($user->binded_merchant_id) {
+                $salesQuery->whereHas('event', function ($q) use ($user) {
+                    $q->where('created_by', $user->binded_merchant_id);
+                });
+            }
+        }
+        // Admin sees all
+        $total_sales = $salesQuery->sum('total_amount');
 
         // Calculate previous period sales (e.g., last month)
         $currentMonth = now()->month;
@@ -20,12 +39,13 @@ class DashboardController extends Controller
         $lastMonth = now()->subMonth()->month;
         $lastMonthYear = now()->subMonth()->year;
 
-        $sales_last_month = Sales::where('status', 1)
+
+        $sales_last_month = (clone $salesQuery)
             ->whereMonth('created_at', $lastMonth)
             ->whereYear('created_at', $lastMonthYear)
             ->sum('total_amount');
 
-        $sales_this_month = Sales::where('status', 1)
+        $sales_this_month = (clone $salesQuery)
             ->whereMonth('created_at', $currentMonth)
             ->whereYear('created_at', $currentYear)
             ->sum('total_amount');
@@ -39,15 +59,16 @@ class DashboardController extends Controller
             $sales_percent = 0;
         }
         
-        $tickets_sold = Sales::where('status', 1)->sum('quantity');
+
+        $tickets_sold = $salesQuery->sum('quantity');
 
         // Calculate tickets sold percentage change
-        $tickets_last_month = Sales::where('status', 1)
+        $tickets_last_month = (clone $salesQuery)
             ->whereMonth('created_at', $lastMonth)
             ->whereYear('created_at', $lastMonthYear)
             ->sum('quantity');
 
-        $tickets_this_month = Sales::where('status', 1)
+        $tickets_this_month = (clone $salesQuery)
             ->whereMonth('created_at', $currentMonth)
             ->whereYear('created_at', $currentYear)
             ->sum('quantity');
@@ -60,27 +81,54 @@ class DashboardController extends Controller
         } else {
             $tickets_percent = 0;
         }
-        $active_events = Events::where('status', 1)->count();
+        // Filter events per merchant or assigned merchant for organizer
+        $eventsQuery = Events::where('status', 1);
+        if ($user->isMerchant()) {
+            $eventsQuery->where('created_by', $user->id);
+        } elseif ($user->isOrganizer() && $user->binded_merchant_id) {
+            $eventsQuery->where('created_by', $user->binded_merchant_id);
+        }
 
-        // Calculate additional active events this month compared to last month
-        $active_events_last_month = Events::where('status', 1)
+        $active_events = $eventsQuery->count();
+
+        // Calculate additional active events this month compared to last month, per merchant
+        $eventsLastMonthQuery = Events::where('status', 1)
             ->whereMonth('created_at', $lastMonth)
-            ->whereYear('created_at', $lastMonthYear)
-            ->count();
-
-        $active_events_this_month = Events::where('status', 1)
+            ->whereYear('created_at', $lastMonthYear);
+        $eventsThisMonthQuery = Events::where('status', 1)
             ->whereMonth('created_at', $currentMonth)
-            ->whereYear('created_at', $currentYear)
-            ->count();
+            ->whereYear('created_at', $currentYear);
 
+        if ($user->isMerchant()) {
+            $eventsLastMonthQuery->where('created_by', $user->id);
+            $eventsThisMonthQuery->where('created_by', $user->id);
+        } elseif ($user->isOrganizer() && $user->binded_merchant_id) {
+            $eventsLastMonthQuery->where('created_by', $user->binded_merchant_id);
+            $eventsThisMonthQuery->where('created_by', $user->binded_merchant_id);
+        }
+
+        $active_events_last_month = $eventsLastMonthQuery->count();
+        $active_events_this_month = $eventsThisMonthQuery->count();
         $active_events_additional = $active_events_this_month - $active_events_last_month;
         $total_users = User::count();
+
+        if ($user->isMerchant()) {
+            $total_staffs = User::staffs()->where('binded_merchant_id', $user->id)->count();
+        } elseif ($user->isOrganizer() && $user->binded_merchant_id) {
+            $total_staffs = User::staffs()->where('binded_merchant_id', $user->binded_merchant_id)->count();
+        } else {
+            $total_staffs = User::staffs()->count(); // Admin or fallback
+        }
+
+    
+        $recent_events_all = Events::where('status', 1)->take(5)->get();
+
+
+        $recent_events = Events::where('created_by', $user->id)->latest()->take(5)->get();
         
+        $recent_sales = (clone $salesQuery)->latest()->take(5)->get();
 
-        $recent_events = Events::where('status', 1)->latest()->take(5)->get();
-        $recent_sales = Sales::where('status', 1)->latest()->take(5)->get();
-
-        return view(auth()->user()->routePrefix() . '.dashboard', compact('total_sales', 'tickets_sold', 'active_events', 'total_users', 'recent_events', 'recent_sales', 'sales_percent', 'tickets_percent', 'active_events_additional'));
+        return view(Auth::user()->routePrefix() . '.dashboard', compact('total_sales', 'tickets_sold', 'active_events', 'total_users', 'recent_events', 'recent_sales', 'sales_percent', 'tickets_percent', 'active_events_additional','total_staffs', 'recent_events_all'));
         
     }
 }

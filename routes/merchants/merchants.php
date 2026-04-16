@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('merchant')->name('merchant.')->middleware('role.check:2')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('payment/success', [SalesController::class, 'paymentSuccess'])->name('paymongo.return');
 
     //Events CRUD
     Route::get('events', [EventsController::class, 'index'])->name('events');

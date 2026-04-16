@@ -143,7 +143,7 @@
                             <a href="{{ route('admin.events') }}" class="text-blue-400 hover:text-blue-300 text-sm font-medium">View All</a>
                         </div>
                         <div class="space-y-4">
-                            @foreach($recent_events as $event)
+                            @foreach($recent_events_all as $event)
                                 <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all">
                                     <div class="flex-1">
                                         <h4 class="font-semibold text-white mb-1">{{ $event->event_name }}</h4>
@@ -216,4 +216,6 @@
             </div>
         </div>
     </div>
+
+
 @endsection

@@ -27,6 +27,10 @@ class AdminController extends Controller
             'phone_number' => 'nullable|string|max:20',
         ]);
 
+
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+
         $user->email = $request->email;
         $user->username = $request->username;
         $user->phone_number = $request->phone_number;

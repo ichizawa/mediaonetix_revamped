@@ -59,8 +59,9 @@ class MerchantController extends Controller
             }
 
             $merchant->email = $data['email'];
-            $merchant->password = $data['password'];
+            $merchant->email_verified_at = now();
             $merchant->is_active = 1;
+            $merchant->password = $data['password'];
             $merchant->role_id = Role::where('type', 'merchant')->first()->id;
             $merchant->password = Hash::make($data['password']);
             $merchant->save();

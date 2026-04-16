@@ -17,10 +17,36 @@ class OrganizerController extends Controller
 {
     public function index()
     {
-        $users = User::staffs()->withCount('events')->paginate(10);
-        $active = User::active()->staffs()->count();
-        $scans =  UserScanner::whereIn('user_id', User::staffs()->pluck('id'))->sum('scanning_count');
-        $access = UserScanner::whereIn('user_id', User::staffs()->pluck('id'))->count();
+        $users = User::staffs()->where(function ($query) {
+            if (Auth::user()->isMerchant()) {
+                $query->where('binded_merchant_id', Auth::user()->id);
+            } elseif (Auth::user()->isOrganizer() && Auth::user()->binded_merchant_id) {
+                $query->where('binded_merchant_id', Auth::user()->binded_merchant_id);
+            }
+        })->get();
+        if (Auth::user()->isMerchant()) {
+            $total_staffs = User::staffs()->where('binded_merchant_id', Auth::user()->id)->count();
+        } elseif (Auth::user()->isOrganizer() && Auth::user()->binded_merchant_id) {
+            $total_staffs = User::staffs()->where('binded_merchant_id', Auth::user()->binded_merchant_id)->count();
+        } else {
+            $total_staffs = User::staffs()->count(); // Admin or fallback
+        }
+        $active = User::active()->staffs()->where(function ($query) {
+            if (Auth::user()->isMerchant()) {
+                $query->where('binded_merchant_id', auth()->id());
+            } elseif (Auth::user()->isOrganizer() && Auth::user()->binded_merchant_id) {
+                $query->where('binded_merchant_id', Auth::user()->binded_merchant_id);
+            }
+        })->count();
+        $scans =  UserScanner::whereIn('user_id', $users->pluck('id'))->sum('scanning_count');
+        // Only count access for staff under the merchant or assigned merchant
+        if (Auth::user()->isMerchant()) {
+            $access = UserScanner::whereIn('user_id', User::staffs()->where('binded_merchant_id', Auth::user()->id)->pluck('id'))->count();
+        } elseif (Auth::user()->isOrganizer() && Auth::user()->binded_merchant_id) {
+            $access = UserScanner::whereIn('user_id', User::staffs()->where('binded_merchant_id', Auth::user()->binded_merchant_id)->pluck('id'))->count();
+        } else {
+            $access = UserScanner::whereIn('user_id', User::staffs()->pluck('id'))->count();
+        }
 
         // Attach scans_today to each user (scanning_count from UserScanner)
         $userScans = UserScanner::whereIn('user_id', $users->pluck('id'))->pluck('scanning_count', 'user_id');
@@ -31,7 +57,7 @@ class OrganizerController extends Controller
         // Get events as id => name for dropdown
         $events = method_exists(Auth::user(), 'events') ? Auth::user()->events()->pluck('event_name', 'id')->toArray() : [];
 
-        return view(auth()->user()->routePrefix() . '.staffs', compact('users', 'active', 'scans', 'events', 'access'));
+        return view(Auth::user()->routePrefix() . '.staffs', compact('users', 'total_staffs', 'active', 'scans', 'events', 'access'));
     }
 
     public function store(StaffRequest $request)
@@ -54,6 +80,7 @@ class OrganizerController extends Controller
             $staff->password = Hash::make($data['password']);
             $staff->role_id = 3;
             $staff->is_active = 1;
+            $staff->email_verified_at = now();
             $staff->event_id = $data['event_id'];
             $staff->binded_merchant_id = Auth::user()->id;
             $staff->save();

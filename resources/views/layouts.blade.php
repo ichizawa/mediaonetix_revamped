@@ -10,14 +10,18 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <livewire:styles />
 </head>
 
 <body>
     <div>
-        @if (Route::is('admin.*') || Route::is('merchant.*') || Route::is('staff.*') || Route::is('user.*'))
+        @if (
+            !View::hasSection('hide_nav') &&
+                (Route::is('admin.*') || Route::is('merchant.*') || Route::is('staff.*') || Route::is('user.*')))
             <x-navbar />
             <x-sidebar />
         @endif

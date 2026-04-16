@@ -30,7 +30,7 @@
                             </button>
                             <div>
                                 <h2 class="text-2xl font-bold text-white">Dashboard</h2>
-                                <p class="text-sm text-gray-400">Welcome back, {{ auth()->user()->first_name }}</p>
+                                <p class="text-sm text-gray-400">Welcome back, {{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</p>
                             </div>
                         </div>
 
@@ -71,7 +71,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                                     </svg>
-                                    +12.5%
+                                    {{ $sales_percent }}%
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Total Revenue</p>
@@ -101,7 +101,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                                     </svg>
-                                    +8.2%
+                                    {{ $tickets_percent }}%
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Tickets Sold</p>
@@ -131,7 +131,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                     </svg>
-                                    +3
+                                    {{$active_events_additional}}
                                 </span>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Active Events</p>
@@ -161,11 +161,11 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                                     </svg>
-                                    +15.3%
+                                    
                                 </span>
                             </div>
-                            <p class="text-gray-400 text-sm mb-1">Total Users</p>
-                            <h3 class="text-3xl font-bold text-white">{{ $total_users }}</h3>
+                            <p class="text-gray-400 text-sm mb-1">Total Staffs</p>
+                            <h3 class="text-3xl font-bold text-white">{{ $total_staffs }}</h3>
                         </div>
                     </div>
                 </div>
@@ -187,7 +187,7 @@
                                     <div class="flex-1">
                                         <h4 class="font-semibold text-white mb-1">{{ $event->event_name }}</h4>
                                         <p class="text-sm text-gray-400">
-                                            {{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</p>
+                                            {{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</p>
                                     </div>
                                     <div class="text-right">
                                         <p class="text-sm text-gray-400 mb-1">

@@ -144,7 +144,7 @@
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Total Revenue</p>
                         <h3 class="text-3xl font-bold text-white">
-                            ₱{{ number_format($tickets->sum(function($ticket) { return $ticket->price * $ticket->quantity; }), 2) }}
+                            ₱{{ number_format($tickets->sum(function ($ticket) {return $ticket->price * $ticket->quantity;}),2) }}
                         </h3>
                     </div>
                     <div
@@ -195,10 +195,11 @@
                                     {!! nl2br(e($ticket->inclusions)) !!}
                                 </p>
 
+
                                 @php
                                     $totalQty = $ticket->original_qty;
-                                    $soldQty = $ticket->quantity;
-                                    $percentage = $totalQty > 0 ? (($totalQty - $soldQty) / $totalQty) * 100 : 0;
+                                    $soldQty = $totalQty - $ticket->quantity;
+                                    $percentage = $totalQty > 0 ? (($totalQty - $ticket->quantity) / $totalQty) * 100 : 0;
                                 @endphp
 
                                 <div class="mb-4">
@@ -225,8 +226,8 @@
                                 <div class="flex items-center justify-between pt-4 border-t border-white/10">
                                     <div class="text-sm text-gray-400">
                                         Revenue:
-                                        <span class="text-white font-semibold">₱{{ number_format($ticket->price *
-                                            $ticket->quantity, 2) }}</span>
+                                        <span
+                                            class="text-white font-semibold">₱{{ number_format($ticket->price * $ticket->quantity, 2) }}</span>
                                     </div>
                                     <div class="flex gap-2">
                                         <button onclick='openEditTicketModal(@json($ticket))'
@@ -267,7 +268,7 @@
         </div>
     </div>
 
-    @if(session('success'))
+    @if (session('success'))
         <script type="module">
             Toast.fire({
                 icon: 'success',
@@ -276,7 +277,7 @@
         </script>
     @endif
 
-    @if($errors->any())
+    @if ($errors->any())
         <script type="module">
             Toast.fire({
                 icon: 'error',
@@ -304,6 +305,7 @@
                 }
             })
         }
+
         function openAddTicketModal() {
             document.getElementById('ticketForm').reset();
             document.getElementById('ticketModalTitle').textContent = 'Add Ticket Type';
@@ -322,7 +324,8 @@
             document.getElementById('ticketModalTitle').textContent = 'Edit Ticket Type';
             document.getElementById('ticketSubmitBtn').textContent = 'Update Ticket Type';
             document.getElementById('ticketId').value = ticket.id;
-            document.getElementById('ticketFormMethod').value = 'POST'; // Keep POST because store method handles creation/updating, but if it requires PUT, the backend should be checked. The form in add-ticket uses POST.
+            document.getElementById('ticketFormMethod').value =
+                'POST'; // Keep POST because store method handles creation/updating, but if it requires PUT, the backend should be checked. The form in add-ticket uses POST.
 
             document.getElementById('ticketName').value = ticket.name || '';
             document.getElementById('ticketType').value = ticket.type || '';
@@ -335,12 +338,13 @@
                 setTicketColorForEdit(ticket.color);
             }
 
-            document.getElementById('ticketForm').action = "{{ route(auth()->user()->routePrefix() . '.events.tickets.store', $event->slug) }}";
+            document.getElementById('ticketForm').action =
+                "{{ route(auth()->user()->routePrefix() . '.events.tickets.store', $event->slug) }}";
             document.getElementById('ticketModal').classList.add('active');
         }
 
         // Close modal when clicking outside
-        document.addEventListener('click', function (event) {
+        document.addEventListener('click', function(event) {
             const modal = document.getElementById('ticketModal');
             if (modal && modal.classList.contains('active') && event.target === modal) {
                 closeTicketModal();

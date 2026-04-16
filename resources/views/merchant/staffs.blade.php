@@ -99,7 +99,7 @@
                                 </div>
                             </div>
                             <p class="text-gray-400 text-sm mb-1">Total Staff</p>
-                            <h3 class="text-3xl font-bold text-white">{{ $users->count() }}</h3>
+                            <h3 class="text-3xl font-bold text-white">{{ $total_staffs }}</h3>
                         </div>
                     </div>
 
