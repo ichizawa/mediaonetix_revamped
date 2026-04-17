@@ -35,17 +35,56 @@
                             <!-- Image Side -->
                             <div
                                 class="relative aspect-[4/3] md:aspect-auto rounded-2xl overflow-hidden bg-gradient-to-br from-purple-600 to-blue-600">
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <div class="text-center text-white">
-                                        <svg class="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 opacity-50" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                                d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3">
-                                            </path>
-                                        </svg>
-                                        <p class="text-sm opacity-75">Event Image</p>
+                                @if (!empty($event->event_image))
+                                    @php
+                                        $hasCrop =
+                                            !is_null($event->crop_x) &&
+                                            !is_null($event->crop_y) &&
+                                            !is_null($event->crop_width) &&
+                                            !is_null($event->crop_height) &&
+                                            !empty($event->crop_natural_width) &&
+                                            !empty($event->crop_natural_height) &&
+                                            $event->crop_width > 0 &&
+                                            $event->crop_height > 0;
+
+                                        $cropImageStyle = 'width: 100%; height: 100%; object-fit: cover;';
+
+                                        if ($hasCrop) {
+                                            $widthPercent = ($event->crop_natural_width / $event->crop_width) * 100;
+                                            $heightPercent = ($event->crop_natural_height / $event->crop_height) * 100;
+
+                                            $leftPercent = -($event->crop_x / $event->crop_width) * 100;
+                                            $topPercent = -($event->crop_y / $event->crop_height) * 100;
+
+                                            $cropImageStyle = sprintf(
+                                                'width: %.6f%%; height: %.6f%%; max-width: none; max-height: none; left: %.6f%%; top: %.6f%%;',
+                                                $widthPercent,
+                                                $heightPercent,
+                                                $leftPercent,
+                                                $topPercent
+                                            );
+                                        }
+                                    @endphp
+
+                                    <img src="{{ asset('images/events/' . $event->event_image) }}"
+                                        alt="{{ $event->event_name }}"
+                                        class="absolute"
+                                        style="{{ $cropImageStyle }}"
+                                        loading="lazy">
+                                    <div class="absolute inset-0 bg-black/20"></div>
+                                @else
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="text-center text-white">
+                                            <svg class="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 opacity-50" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                    d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3">
+                                                </path>
+                                            </svg>
+                                            <p class="text-sm opacity-75">Event Image</p>
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                                 <!-- Hot Badge -->
                                 <div
                                     class="absolute top-4 right-4 px-3 py-1.5 bg-red-500 rounded-full text-white text-xs font-bold flex items-center gap-1">
@@ -70,8 +109,9 @@
                                         <h3 class="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-2">
                                             {{ $event->event_name }}
                                         </h3>
-                                        <p class="text-gray-400 text-sm sm:text-base">
-                                            {{ $event->description }}
+                                        <p class="text-gray-400 text-sm sm:text-base"
+                                            style="display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
+                                            {{ trim(preg_replace('/\s+/', ' ', strip_tags($event->description ?? ''))) }}
                                         </p>
                                     </div>
 

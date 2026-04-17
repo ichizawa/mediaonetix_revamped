@@ -1602,7 +1602,7 @@
 
         {{-- ─── HERO ─── --}}
         <div class="hero">
-            <a class="hero__back" href="{{ url()->previous() }}" aria-label="Go back">
+            <a class="hero__back" href="{{ route('public') }}" aria-label="Go back">
                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
