@@ -21,6 +21,9 @@ Route::prefix('merchant')->name('merchant.')->middleware('role.check:2')->group(
     //Events CRUD
     Route::get('events', [EventsController::class, 'index'])->name('events');
     Route::prefix('events')->name('events.')->group(function () {
+        Route::get('approval/{id}', [EventsController::class, 'approvalPage'])->name('approval');
+        Route::post('approval/{id}/documents', [EventsController::class, 'uploadApprovalDocuments'])->name('approval.documents.store');
+        Route::post('approval/{id}/documents/update', [EventsController::class, 'updateApprovalDocuments'])->name('approval.documents.update');
         Route::post('store', [EventsController::class, 'store'])->name('store');
         Route::get('edit/{id}', [EventsController::class, 'edit'])->name('edit');
         Route::put('update', [EventsController::class, 'update'])->name('update');

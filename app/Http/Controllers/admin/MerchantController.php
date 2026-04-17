@@ -83,9 +83,95 @@ class MerchantController extends Controller
 
     public function files($id)
     {
-        $files = MerchantFiles::where('merchant_id', $id)->paginate(10);
+        $merchant = User::findOrFail($id);
 
-        return view('admin.component.merchant.files.files', compact('files'));
+        $files = MerchantFiles::with(['merchant', 'event'])
+            ->where('merchant_id', $id)
+            ->whereNotNull('event_id')
+            ->latest()
+            ->get();
+
+        $submissions = $files
+            ->groupBy('event_id')
+            ->map(function ($group) {
+                $firstFile = $group->first();
+                $event = $firstFile?->event;
+                $merchant = $firstFile?->merchant;
+                $rawStatuses = $group->map(fn ($file) => (int) $file->getRawOriginal('status'));
+                $statusCode = $rawStatuses->contains(2)
+                    ? 2
+                    : ($rawStatuses->every(fn ($status) => $status === 1) ? 1 : 0);
+
+                return [
+                    'event_id' => $event?->id,
+                    'event_name' => $event?->event_name ?? 'Unknown Event',
+                    'event_date' => $event?->event_date,
+                    'merchant_name' => $merchant?->name ?? 'Unknown Merchant',
+                    'status_code' => $statusCode,
+                    'status' => MerchantFiles::STATUS[$statusCode] ?? MerchantFiles::STATUS[0],
+                    'rejection_reason' => $group->first(fn ($file) => filled($file->rejection_reason))?->rejection_reason,
+                    'file_count' => $group->count(),
+                    'files' => $group->values()->map(function ($file) {
+                        $extension = strtolower(pathinfo($file->file_name, PATHINFO_EXTENSION));
+
+                        return [
+                            'id' => $file->id,
+                            'title' => $file->document_title ?: $file->file_name,
+                            'file_name' => $file->file_name,
+                            'file_path' => asset($file->file_path),
+                            'extension' => $extension,
+                            'is_image' => in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']),
+                            'is_pdf' => $extension === 'pdf',
+                            'created_at' => $file->created_at?->format('Y-m-d H:i'),
+                        ];
+                    }),
+                ];
+            })
+            ->sortByDesc('event_id')
+            ->values();
+
+        $stats = [
+            'total' => $submissions->count(),
+            'pending' => $submissions->where('status_code', 0)->count(),
+            'approved' => $submissions->where('status_code', 1)->count(),
+            'rejected' => $submissions->where('status_code', 2)->count(),
+        ];
+
+        return view('admin.component.merchant.files.files', compact('merchant', 'submissions', 'stats'));
+    }
+
+    public function reviewSubmission(Request $request, $id, $eventId)
+    {
+        try {
+            $request->validate([
+                'action' => 'required|in:approve,reject',
+                'reason' => 'nullable|string|max:1000|required_if:action,reject',
+            ]);
+
+            $merchant = User::findOrFail($id);
+            $files = MerchantFiles::where('merchant_id', $merchant->id)
+                ->where('event_id', $eventId)
+                ->get();
+
+            if ($files->isEmpty()) {
+                abort(404);
+            }
+
+            $status = $request->input('action') === 'approve' ? 1 : 2;
+            $reason = $status === 2 ? trim((string) $request->input('reason')) : null;
+
+            foreach ($files as $file) {
+                $file->status = $status;
+                $file->rejection_reason = $reason;
+                $file->save();
+            }
+
+            return back()->with('success', $status === 1 ? 'Submission approved successfully.' : 'Submission rejected successfully.');
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     public function update(MerchantRequest $request, $id)
