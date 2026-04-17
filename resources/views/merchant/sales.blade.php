@@ -290,7 +290,7 @@
                                     customerName: '{{ addslashes($sale->customer_name) }}',
                                     customerEmail: '{{ addslashes($sale->customer_email) }}',
                                     eventName: '{{ addslashes($sale->event->event_name) }}',
-                                    ticketType: '{{ addslashes($sale->ticket->name) }}',
+                                    ticketType: '{{ addslashes($sale->ticket->name)}}',
                                     quantity: {{ $sale->quantity }},
                                     unitPrice: '{{ number_format($sale->ticket->price, 2) }}',
                                     totalAmount: '{{ number_format($sale->total_amount, 2) }}',

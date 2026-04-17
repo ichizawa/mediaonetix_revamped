@@ -34,12 +34,12 @@ class PublicController extends Controller
 
     public function index()
     {
-        $event = Events::upcomingWithShowcases()->first();
+        $event = Events::UpcomingWithShowcasesAndApproved()->first();
         return view('public.landing', compact('event'));
     }
     public function viewEvents(Request $request)
     {
-        $query = Events::getUpcoming()
+        $query = Events::UpcomingWithShowcasesAndApproved()
             ->withSum('tickets', 'quantity')
             ->withSum('tickets', 'original_qty')
             ->withMin('tickets', 'price');
@@ -73,7 +73,7 @@ class PublicController extends Controller
     public function events()
     {
         try {
-            $events = Events::upcomingWithShowcases()
+            $events = Events::UpcomingWithShowcasesAndApproved()
                 ->with([
 
                     'tickets'

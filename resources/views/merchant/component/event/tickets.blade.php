@@ -144,7 +144,7 @@
                         </div>
                         <p class="text-gray-400 text-sm mb-1">Total Revenue</p>
                         <h3 class="text-3xl font-bold text-white">
-                            ₱{{ number_format($tickets->sum(function ($ticket) {return $ticket->price * $ticket->quantity;}),2) }}
+                            ₱{{ number_format($tickets->sum(function ($ticket) use ($event) { return $ticket->price * $event->tickets_sold; }), 2) }}
                         </h3>
                     </div>
                     <div
@@ -227,7 +227,7 @@
                                     <div class="text-sm text-gray-400">
                                         Revenue:
                                         <span
-                                            class="text-white font-semibold">₱{{ number_format($ticket->price * $ticket->quantity, 2) }}</span>
+                                            class="text-white font-semibold">₱{{ number_format($ticket->price * $event->tickets_sold, 2) }}</span>
                                     </div>
                                     <div class="flex gap-2">
                                         <button onclick='openEditTicketModal(@json($ticket))'

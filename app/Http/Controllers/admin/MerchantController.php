@@ -160,4 +160,39 @@ class MerchantController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
+    public function uploadMerchantFiles(Request $request, $merchant_id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $request->validate([
+                'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            ]);
+
+            $file = $request->file('file');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/merchant_files'), $fileName);
+
+            MerchantFiles::create([
+                'file_name' => $fileName,
+                'file_path' => 'uploads/merchant_files/' . $fileName,
+                'merchant_id' => $merchant_id,
+                'status' => 0, // Pending by default
+            ]);
+
+            Log::info('Merchant File Uploaded Successfully');
+
+            DB::commit();
+            return back()->with('success', 'File Uploaded Successfully');
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return back()->withErrors($e->getMessage())->withInput();
+        }
+    }
 }

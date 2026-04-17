@@ -1,5 +1,5 @@
 <div>
-    @if ($events->count() > 0)
+    @if ($event->count() > 0)
         <section class="relative py-16 sm:py-20 md:py-24 lg:py-32 bg-[#111827]">
             <div class="container mx-auto px-4 sm:px-6 lg:px-12">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-12 sm:mb-16">
@@ -25,7 +25,7 @@
 
                 <!-- Events Grid -->
                 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                    @forelse($events as $event)
+                    @forelse($event as $event)
                         <div
                             class="purchase-btn group relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-{{ $event->statuslabel['color'] }}-500/50 transition-all duration-500 hover:shadow-xl hover:shadow-{{ $event->statuslabel['color'] }}-500/10 cursor-pointer"
                             data-event-id="{{ $event->id }}">
