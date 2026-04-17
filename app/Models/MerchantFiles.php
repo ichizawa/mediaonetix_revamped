@@ -40,4 +40,6 @@ class MerchantFiles extends Model
             'color' => 'grey'
         ];
     }
+
+    
 }

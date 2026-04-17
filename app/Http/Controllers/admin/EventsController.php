@@ -228,6 +228,7 @@ class EventsController extends Controller
     {
         $event = Events::find($event_id);
         $event->approved_at = now();
+        $event->status = 1;
         $event->save();
 
         return back()->with('success', 'Event approved successfully');

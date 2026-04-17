@@ -153,6 +153,7 @@ class SalesController extends Controller
             $completed_sales = Sales::getAllSalesByMerchant(Auth::user()->id)->where('status', 1)->count();
             $pending_sales = Sales::getAllSalesByMerchant(Auth::user()->id)->where('status', 0)->count();
         }
+        
 
 
 

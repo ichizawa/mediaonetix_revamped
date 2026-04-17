@@ -8,9 +8,13 @@ use Livewire\Component;
 class PublicEventThisWeekComponent extends Component
 {
     public $event;
-    public function mount(Events $event)
+    public function mount()
     {
-        $this->event = $event->getUpcoming()->withSum('tickets', 'quantity')->withMin('tickets', 'price')->first();
+        $this->event = \App\Models\Events::UpcomingWithShowcasesAndApproved()
+            ->withSum('tickets', 'quantity')
+            ->withSum('tickets as tickets_sum_original_qty', 'original_qty')
+            ->withMin('tickets', 'price')
+            ->first();
     }
     public function render()
     {

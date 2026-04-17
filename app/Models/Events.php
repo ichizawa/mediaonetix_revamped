@@ -90,9 +90,9 @@ class Events extends Model
         return $this->where('event_date', '>=', date('Y-m-d'));
     }
 
-    public function scopeUpcomingWithShowcases($query)
+    public function scopeUpcomingWithShowcasesAndApproved($query)
     {
-        return $query->where('event_date', '>=', date('Y-m-d'))
+        return $query->where('event_date', '>=', date('Y-m-d'))->where('approved_at', '!=', null)
             ->whereHas('showcases', function ($q) {
                 $q->whereNull('deleted_at');
             });

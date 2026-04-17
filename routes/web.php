@@ -5,6 +5,8 @@ use App\Http\Controllers\PublicController;
 use App\Models\Sales;
 use App\Models\Tickets;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -67,7 +69,7 @@ Route::get('/ticket-view', function () {
     $tickets = Tickets::find(7);
 
     $my_ticket = Sales::with(['ticket', 'customer_tickets'])
-        ->where('customer_email', auth()->user()->email)
+        ->where('customer_email', Auth::user()->email)
         ->first(); // 👈 single record, not collection
 
     if ($my_ticket && $my_ticket->customer_tickets) {
