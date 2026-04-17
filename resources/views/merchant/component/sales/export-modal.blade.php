@@ -64,17 +64,23 @@
                             class="flex-1 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl font-medium transition-all">
                             Cancel
                         </button>
-                        <button type="button" onclick="submitExport('{{ $exportPdfRoute ?? route('merchant.sales.export.pdf') }}')"
+                        <button type="button"
+                            onclick="submitExport('{{ $exportPdfRoute ?? route('merchant.sales.export.pdf') }}')"
                             class="flex-1 px-4 py-3 bg-red-600/20 text-red-400 hover:bg-red-600/30 border border-red-500/30 rounded-xl font-medium transition-all flex justify-center items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
                             </svg>
                             Export PDF
                         </button>
-                        <button type="button" onclick="submitExport('{{ $exportExcelRoute ?? route('merchant.sales.export.excel') }}')"
+                        <button type="button"
+                            onclick="submitExport('{{ $exportExcelRoute ?? route('merchant.sales.export.excel') }}')"
                             class="flex-1 px-4 py-3 bg-green-600/20 text-green-400 hover:bg-green-600/30 border border-green-500/30 rounded-xl font-medium transition-all flex justify-center items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
                             </svg>
                             Export Excel
                         </button>
@@ -86,13 +92,17 @@
 </div>
 
 <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('add') === '1' && typeof openExportSalesModal === 'function') {
+        setTimeout(() => openExportSalesModal(), 200);
+    }
 
     function openExportSalesModal() {
         const modal = document.getElementById('exportSalesModal');
         const content = document.getElementById('exportSalesModalContent');
-        
+
         modal.classList.remove('hidden');
-        
+
         // Timeout ensures the browser registers the display change before animating
         setTimeout(() => {
             modal.classList.remove('opacity-0');
@@ -104,11 +114,11 @@
     function closeExportSalesModal() {
         const modal = document.getElementById('exportSalesModal');
         const content = document.getElementById('exportSalesModalContent');
-        
+
         modal.classList.add('opacity-0');
         content.classList.remove('scale-100', 'opacity-100');
         content.classList.add('scale-95', 'opacity-0');
-        
+
         setTimeout(() => {
             modal.classList.add('hidden');
         }, 300); // 300ms matches the duration in the tailwind class
@@ -127,7 +137,7 @@
     function submitExport(url) {
         let actionUrl = new URL(url);
         const filter = document.getElementById('exportDateFilter').value;
-        
+
         const today = new Date();
         let startDate = '';
         let endDate = '';
@@ -138,7 +148,7 @@
         } else if (filter !== 'all_time') {
             const start = new Date();
             const end = new Date();
-            
+
             switch (filter) {
                 case 'today':
                     // already today
@@ -163,7 +173,7 @@
                     end.setDate(0);
                     break;
             }
-            
+
             startDate = start.toISOString().split('T')[0];
             endDate = end.toISOString().split('T')[0];
         }

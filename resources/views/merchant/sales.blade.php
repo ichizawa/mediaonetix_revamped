@@ -224,7 +224,7 @@
                     <!-- Top Selling Events -->
                     <div
                         class="bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-                        <h3 class="text-xl font-bold text-white mb-6">List of Events</h3>
+                        <h3 class="text-xl font-bold text-white mb-6">List of Recent Events</h3>
                         <div class="space-y-4">
                             @forelse($events as $event)
                                 <a href="{{ route('merchant.sales.edit', $event->slug) }}"

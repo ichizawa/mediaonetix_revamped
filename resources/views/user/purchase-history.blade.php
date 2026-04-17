@@ -454,7 +454,6 @@
             @php $isPaginated = method_exists($customerTickets, 'total'); @endphp
 
             @if (($isPaginated && $customerTickets->total() > 0) || (!$isPaginated && $customerTickets->count() > 0))
-
                 {{-- Section header --}}
                 <div class="orders-section-head">
                     <span class="orders-section-label">Orders</span>
@@ -465,7 +464,6 @@
                         </span>
                     @endif
                 </div>
-
                 {{-- Ticket cards --}}
                 @foreach ($isPaginated ? $customerTickets : $customerTickets as $customerTicket)
                     @php
@@ -497,7 +495,6 @@
                         data-modal-payment-type="{{ $customerTicket->sale->payment_method ?? 'N/A' }}"
                         data-modal-total="{{ $paymentTotal }}"
                     >
-
                         {{-- Stub / thumbnail --}}
                         <div class="tkt-stub">
                             @if(!empty($customerTicket->sale->event->event_image_url))
@@ -508,12 +505,10 @@
                                 <div class="tkt-stub-fallback">No&nbsp;Photo</div>
                             @endif
                         </div>
-
                         {{-- Body --}}
                         <div class="tkt-body">
                             <div class="tkt-shimmer"></div>
                             <div class="tkt-accent"></div>
-
                             <div class="tkt-top">
                                 <div class="tkt-event-text">
                                     <div class="tkt-event-name">
@@ -524,9 +519,7 @@
                                     </div>
                                 </div>
                             </div>
-
                             <hr class="tkt-divider">
-
                             <div class="tkt-meta">
                                 <div>
                                     <div class="tkt-meta-key">Reference</div>
@@ -562,14 +555,11 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 @endforeach
-
                 {{-- Pagination --}}
                 @if ($isPaginated && $customerTickets->hasPages())
                     <div class="orders-pagination">
-
                         @if ($customerTickets->onFirstPage())
                             <span class="orders-page-btn disabled">
                                 <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
@@ -581,7 +571,6 @@
                                 Prev
                             </a>
                         @endif
-
                         @foreach ($customerTickets->getUrlRange(1, $customerTickets->lastPage()) as $page => $url)
                             @if ($page == $customerTickets->currentPage())
                                 <span class="orders-page-num active">{{ $page }}</span>
@@ -589,7 +578,6 @@
                                 <a href="{{ $url }}" class="orders-page-num">{{ $page }}</a>
                             @endif
                         @endforeach
-
                         @if ($customerTickets->hasMorePages())
                             <a href="{{ $customerTickets->nextPageUrl() }}" class="orders-page-btn">
                                 Next
@@ -601,21 +589,16 @@
                                 <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                             </span>
                         @endif
-
                     </div>
-
                     <p class="orders-page-count">
                         Showing {{ $customerTickets->firstItem() }}–{{ $customerTickets->lastItem() }} of {{ $customerTickets->total() }} orders
                     </p>
                 @endif
-
             @else
-
                 <div class="orders-section-head">
                     <span class="orders-section-label">Orders</span>
                     <div class="orders-section-rule"></div>
                 </div>
-
                 <div class="orders-empty">
                     <div class="orders-empty-glow"></div>
                     <div class="orders-empty-icon">
@@ -623,16 +606,15 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                         </svg>
                     </div>
-                    <h2 class="orders-empty-title">No Orders Yet</h2>
+                    <h2 class="orders-empty-title">No Purchase History Yet</h2>
                     <p class="orders-empty-sub">You haven't purchased any tickets yet. Explore upcoming events and grab your spot.</p>
-                    <a href="{{ route('events.index') }}" class="orders-empty-btn">
+                    <a href="{{ route('user.dashboard') }}" class="orders-empty-btn">
                         <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                         </svg>
                         Browse Events
                     </a>
                 </div>
-
             @endif
 
             </div>
