@@ -22,14 +22,22 @@ class MerchantFiles extends Model
     ];
     protected $fillable = [
         'file_name',
+        'document_title',
         'file_path',
         'merchant_id',
+        'event_id',
         'status',
+        'rejection_reason',
     ];
 
     public function merchant()
     {
         return $this->belongsTo(User::class, 'merchant_id');
+    }
+
+    public function event()
+    {
+        return $this->belongsTo(Events::class, 'event_id');
     }
 
     public function getStatusAttribute()

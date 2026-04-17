@@ -55,6 +55,7 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
     Route::prefix('merchants')->name('merchants.')->group(function () {
         Route::post('store', [MerchantController::class, 'store'])->name('store');
         Route::get('files/{id}', [MerchantController::class, 'files'])->name('files');
+        Route::post('files/{id}/review/{eventId}', [MerchantController::class, 'reviewSubmission'])->name('files.review');
         Route::put('update/{id}', [MerchantController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [MerchantController::class, 'destroy'])->name('delete');
     });

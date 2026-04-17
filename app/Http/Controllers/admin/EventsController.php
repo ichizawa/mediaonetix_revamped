@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Events;
+use App\Models\MerchantFiles;
 use App\Models\ShowCases;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -221,6 +222,191 @@ class EventsController extends Controller
                 'data' => null,
                 'message' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function approvalPage($event_id)
+    {
+        $event = Events::with('tickets')->findOrFail($event_id);
+
+        if (!Auth::user()->isAdmin() && (int) $event->created_by !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        $submittedFiles = MerchantFiles::query()
+            ->where('merchant_id', Auth::id())
+            ->where('event_id', $event->id)
+            ->latest()
+            ->get();
+
+        $submissionStatusCode = 0;
+        if ($submittedFiles->isNotEmpty()) {
+            $rawStatuses = $submittedFiles->map(fn ($file) => (int) $file->getRawOriginal('status'));
+
+            if ($rawStatuses->contains(2)) {
+                $submissionStatusCode = 2;
+            } elseif ($rawStatuses->every(fn ($status) => $status === 1)) {
+                $submissionStatusCode = 1;
+            }
+        }
+
+        $submissionSummary = [
+            'has_submission' => $submittedFiles->isNotEmpty(),
+            'status_code' => $submissionStatusCode,
+            'status' => MerchantFiles::STATUS[$submissionStatusCode] ?? MerchantFiles::STATUS[0],
+            'can_edit' => $submittedFiles->isNotEmpty() && $submissionStatusCode === 0,
+            'rejection_reason' => $submittedFiles->first(fn ($file) => filled($file->rejection_reason))?->rejection_reason,
+            'documents' => $submittedFiles
+                ->groupBy(fn ($file) => $file->document_title ?: 'Document')
+                ->map(function ($group, $title) {
+                    return [
+                        'title' => $title,
+                        'count' => $group->count(),
+                        'files' => $group->values()->map(function ($file) {
+                            $extension = strtolower(pathinfo($file->file_path, PATHINFO_EXTENSION));
+
+                            return [
+                                'id' => $file->id,
+                                'title' => $file->document_title ?: $file->file_name,
+                                'url' => asset($file->file_path),
+                                'extension' => $extension,
+                                'is_image' => in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']),
+                                'is_pdf' => $extension === 'pdf',
+                            ];
+                        }),
+                    ];
+                })
+                ->values(),
+        ];
+
+        return view('merchant.approval-event', [
+            'event' => $event,
+            'submissionSummary' => $submissionSummary,
+        ]);
+    }
+
+    public function uploadApprovalDocuments(Request $request, $event_id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $event = Events::findOrFail($event_id);
+            if (!Auth::user()->isAdmin() && (int) $event->created_by !== (int) Auth::id()) {
+                abort(403);
+            }
+
+            $request->validate([
+                'documents' => 'required|array|min:3',
+                'documents.*.title' => 'required|string|max:255',
+                'documents.*.images' => 'required|array|min:1|max:3',
+                'documents.*.images.*' => 'required|file|image|mimes:jpg,jpeg,png,webp|max:20480',
+            ]);
+
+            $documents = $request->input('documents', []);
+            $firstTitle = trim((string) ($documents[0]['title'] ?? ''));
+            if (strcasecmp($firstTitle, 'Business Permit') !== 0) {
+                return back()->withErrors([
+                    'documents.0.title' => 'The first document type must be Business Permit.',
+                ])->withInput();
+            }
+
+            $destination = public_path('uploads/merchant_files');
+            if (!is_dir($destination)) {
+                mkdir($destination, 0755, true);
+            }
+
+            $uploadedDocuments = $request->file('documents', []);
+            foreach ($documents as $index => $document) {
+                $title = trim((string) ($document['title'] ?? ''));
+                $images = $uploadedDocuments[$index]['images'] ?? [];
+
+                foreach ($images as $image) {
+                    $storedName = time() . '_' . Str::random(8) . '_' . $image->getClientOriginalName();
+                    $image->move($destination, $storedName);
+
+                    MerchantFiles::create([
+                        'file_name' => $storedName,
+                        'document_title' => $title,
+                        'file_path' => 'uploads/merchant_files/' . $storedName,
+                        'merchant_id' => Auth::id(),
+                        'event_id' => $event->id,
+                        'status' => 0,
+                    ]);
+                }
+            }
+
+            DB::commit();
+            return back()->with('success', 'Documents uploaded successfully.');
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors($e->getMessage())->withInput();
+        }
+    }
+
+    public function updateApprovalDocuments(Request $request, $event_id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $event = Events::findOrFail($event_id);
+            if (!Auth::user()->isAdmin() && (int) $event->created_by !== (int) Auth::id()) {
+                abort(403);
+            }
+
+            $request->validate([
+                'replacements' => 'nullable|array',
+                'replacements.*' => 'required|file|image|mimes:jpg,jpeg,png,webp|max:20480',
+            ]);
+
+            $submittedFiles = MerchantFiles::query()
+                ->where('merchant_id', Auth::id())
+                ->where('event_id', $event->id)
+                ->where('status', 0)
+                ->get();
+
+            if ($submittedFiles->isEmpty()) {
+                return back()->withErrors(['submission' => 'This submission is no longer editable.']);
+            }
+
+            $replacementFiles = $request->file('replacements', []);
+            $destination = public_path('uploads/merchant_files');
+            if (!is_dir($destination)) {
+                mkdir($destination, 0755, true);
+            }
+
+            foreach ($replacementFiles as $fileId => $replacement) {
+                $merchantFile = $submittedFiles->firstWhere('id', (int) $fileId);
+                if (! $merchantFile) {
+                    continue;
+                }
+
+                $storedName = time() . '_' . Str::random(8) . '_' . $replacement->getClientOriginalName();
+                $replacement->move($destination, $storedName);
+
+                $oldPath = public_path($merchantFile->file_path);
+                if (is_file($oldPath)) {
+                    @unlink($oldPath);
+                }
+
+                $merchantFile->file_name = $storedName;
+                $merchantFile->file_path = 'uploads/merchant_files/' . $storedName;
+                $merchantFile->status = 0;
+                $merchantFile->rejection_reason = null;
+                $merchantFile->save();
+            }
+
+            DB::commit();
+
+            return back()->with('success', 'Submission updated successfully.');
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors($e->getMessage())->withInput();
         }
     }
 
