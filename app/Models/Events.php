@@ -56,7 +56,13 @@ class Events extends Model
         'crop_height',
         'crop_natural_width',
         'crop_natural_height',
+        'performers',
     ];
+
+    protected $casts = [
+        'performers' => 'array',
+    ];
+
     protected $appends = ['status_label', 'percentage', 'total_tickets_left', 'event_image_url', 'seat_plan_url'];
 
     public function getStatusLabelAttribute()

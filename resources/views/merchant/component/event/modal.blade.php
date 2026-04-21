@@ -3,7 +3,7 @@
 
 <div id="eventModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/70 backdrop-blur-sm p-4">
 
-    <div
+    <div id="eventModalPanel"
         class="modal-content w-full max-w-4xl bg-gradient-to-br from-[#1a2332] to-[#0c1222] border border-white/10 rounded-2xl p-5 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-500/50 [&::-webkit-scrollbar-thumb]:rounded-full">
         <div class="flex items-center justify-between mb-4 gap-3">
             <h3 id="modalTitle" class="text-xl sm:text-2xl font-bold text-white pr-2">Add New Event</h3>
@@ -164,9 +164,8 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div class="rounded-xl border border-white/10 bg-white/5 p-3">
-                            <label class="inline-flex px-2.5 py-1 text-xs rounded-lg bg-white/10 text-gray-300">Date
-                                &amp; Time</label>
-                            <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <label class="inline-flex px-2.5 py-1 text-xs rounded-lg bg-white/10 text-gray-300">Date &amp; Time</label>
+                            <div class="mt-2 grid grid-cols-2 gap-2">
                                 <input type="date" id="eventDate" name="date"
                                     class="w-full px-0 py-1.5 bg-transparent border-0 text-white focus:outline-none focus:ring-0"
                                     required style="color-scheme:dark;">
@@ -176,8 +175,7 @@
                             </div>
                         </div>
                         <div class="rounded-xl border border-white/10 bg-white/5 p-3">
-                            <label
-                                class="inline-flex px-2.5 py-1 text-xs rounded-lg bg-white/10 text-gray-300">Location</label>
+                            <label class="inline-flex px-2.5 py-1 text-xs rounded-lg bg-white/10 text-gray-300">Location</label>
                             <input type="text" id="eventLocation" name="location"
                                 class="mt-2 w-full px-0 py-1.5 bg-transparent border-0 text-white placeholder-gray-500 focus:outline-none focus:ring-0"
                                 placeholder="Write location..." required>
@@ -185,8 +183,8 @@
                     </div>
                 </div>
 
-                <div class="space-y-3 flex flex-col h-full">
-                    <div class="rounded-xl border border-white/10 bg-white/5 p-3 h-[120px] sm:h-[140px]">
+                <div class="relative space-y-3 flex flex-col h-full">
+                    <div class="rounded-xl border border-white/10 bg-white/5 p-3 h-52 sm:h-64 flex flex-col">
                         <div class="flex items-center justify-between mb-2">
                             <label
                                 class="inline-flex px-2.5 py-1 text-xs rounded-lg bg-white/10 text-gray-300">Description</label>
@@ -200,7 +198,7 @@
                             </button>
                         </div>
                         <textarea id="eventDescription" name="description" rows="4"
-                            class="h-[60px] sm:h-[76px] w-full resize-none bg-transparent border-0 text-white placeholder-gray-500 focus:outline-none focus:ring-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-500/50 [&::-webkit-scrollbar-thumb]:rounded-full text-sm"
+                            class="w-full flex-1 min-h-0 resize-none bg-transparent border-0 text-white placeholder-gray-500 focus:outline-none focus:ring-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-500/50 [&::-webkit-scrollbar-thumb]:rounded-full text-sm"
                             placeholder="Write event details..." required></textarea>
                     </div>
 
@@ -241,22 +239,134 @@
                         </div>
                     </div>
 
-                    <div class="mt-1 grid grid-cols-1 gap-2">
-                        <button type="submit" id="submitBtn"
-                            class="w-full h-12 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-blue-500/25">
-                            Create Event
-                        </button>
-
-                        <button type="button" onclick="closeModal()"
-                            class="w-full h-10 px-4 bg-white/[0.04] hover:bg-white/10 text-gray-300 hover:text-white rounded-xl font-medium transition-all border border-white/10">
-                            Cancel
-                        </button>
+                    <div id="lineupPanel" class="hidden rounded-xl border border-white/10 bg-white/5 p-3">
+                        <div class="flex items-center justify-between gap-3">
+                            <label class="inline-flex px-2.5 py-1 text-xs rounded-lg bg-white/10 text-gray-300">Lineup
+                                Details</label>
+                            <span class="text-xs text-gray-500">Expanded</span>
+                        </div>
+                        <div class="mt-3 space-y-2">
+                            <input type="text"
+                                class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none"
+                                placeholder="Artist / performer name">
+                            <input type="text"
+                                class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none"
+                                placeholder="Role, set time, or note">
+                            <button type="button"
+                                class="w-full rounded-lg border border-white/10 bg-white/10 px-3 py-2 text-sm font-medium text-white transition-all hover:bg-white/15">
+                                Add to Lineup
+                            </button>
+                        </div>
                     </div>
+
                 </div>
             </div>
+
+            {{-- ===== PERFORMERS SECTION ===== --}}
+            <input type="hidden" name="performers" id="performersData" value="[]">
+
+            <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+                <div class="flex items-center justify-between mb-2.5">
+                    <label class="inline-flex px-2.5 py-1 text-xs rounded-lg bg-white/10 text-gray-300">Performers</label>
+                    <span id="performerCount" class="text-xs text-gray-500 hidden">0 added</span>
+                </div>
+
+                <div id="performersList" class="mt-4 flex flex-wrap gap-3 items-center">
+                    <button type="button" id="addPerformerBtn" onclick="openAddPerformer()"
+                        class="flex flex-col items-center gap-1.5 group outline-none">
+                        <div class="w-14 h-14 rounded-full border-2 border-dashed border-white/20 group-hover:border-blue-500/50 bg-white/[0.03] group-hover:bg-blue-600/5 flex items-center justify-center" style="transition:border-color .15s,background .15s;">
+                            <svg class="w-5 h-5 text-gray-500 group-hover:text-blue-400" style="transition:color .15s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs text-gray-500 group-hover:text-blue-400" style="transition:color .15s;">Add performer</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-3 grid grid-cols-1 gap-2">
+                <button type="submit" id="submitBtn"
+                    class="w-full h-12 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-blue-500/25">
+                    Create Event
+                </button>
+
+                <button type="button" onclick="closeModal()"
+                    class="w-full h-10 px-4 bg-white/[0.04] hover:bg-white/10 text-gray-300 hover:text-white rounded-xl font-medium transition-all border border-white/10">
+                    Cancel
+                </button>
+            </div>
+            {{-- ===== END PERFORMERS SECTION ===== --}}
+
         </form>
     </div>
 </div>
+
+
+{{-- ===== PERFORMER MODAL ===== --}}
+<div id="performerModal" class="hidden fixed inset-0 items-center justify-center p-4"
+    style="z-index:100000; background:rgba(0,0,0,0.80); backdrop-filter:blur(14px);">
+
+    <div id="performerModalPanel"
+        class="w-full max-w-xs bg-gradient-to-br from-[#1a2332] to-[#0c1222] border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+
+        <div class="flex items-center justify-between px-4 py-3 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-purple-600/20 border border-purple-500/30 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                </div>
+                <span class="text-white font-semibold" id="performerModalTitle">Add Performer</span>
+            </div>
+            <button type="button" onclick="closePerformerModal()"
+                class="p-1.5 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="p-4 space-y-4">
+
+            {{-- Circular Photo Upload --}}
+            <div class="flex flex-col items-center gap-3">
+                <div class="relative group cursor-pointer" onclick="document.getElementById('performerImageInput').click()">
+                    <div id="performerAvatarRing"
+                        class="w-24 h-24 rounded-full border-2 border-dashed border-white/30 group-hover:border-blue-500/60 transition-all duration-200 overflow-hidden flex items-center justify-center bg-white/5 group-hover:bg-blue-600/5">
+                        <div id="performerAvatarPlaceholder" class="flex flex-col items-center justify-center text-gray-500 group-hover:text-blue-400 transition-colors duration-200">
+                            <svg class="w-7 h-7 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                        </div>
+                        <img id="performerAvatarPreview" src="" alt="" class="hidden w-full h-full object-cover">
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500">Click to upload photo</p>
+                <input id="performerImageInput" type="file" accept="image/*" class="hidden" onchange="handlePerformerImage(this)">
+            </div>
+
+            {{-- Name Field --}}
+            <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+                <label class="inline-flex px-2.5 py-1 text-xs rounded-lg bg-white/10 text-gray-300">Performer Name</label>
+                <input type="text" id="performerNameInput"
+                    class="mt-2 w-full px-0 py-1.5 bg-transparent border-0 text-white placeholder-gray-500 focus:outline-none focus:ring-0 text-sm"
+                    placeholder="Enter performer name...">
+            </div>
+        </div>
+
+        <div class="flex gap-2 px-4 pb-4">
+            <button type="button" onclick="closePerformerModal()"
+                class="flex-1 h-10 px-4 bg-white/[0.04] hover:bg-white/10 text-gray-300 hover:text-white rounded-xl font-medium transition-all border border-white/10 text-sm">
+                Cancel
+            </button>
+            <button type="button" onclick="savePerformer()"
+                class="flex-1 h-10 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-all text-sm shadow-lg hover:shadow-blue-500/25">
+                Save
+            </button>
+        </div>
+    </div>
+</div>
+{{-- ===== END PERFORMER MODAL ===== --}}
 
 
 <div id="imageCropperModal" class="hidden fixed inset-0 items-center justify-center p-4"
@@ -266,7 +376,6 @@
         class="w-full max-w-2xl bg-gradient-to-br from-[#1a2332] to-[#0c1222] border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
         style="max-height:calc(100vh - 2rem);">
 
-        {{-- Header --}}
         <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 shrink-0">
             <div class="flex items-center gap-3">
                 <div
@@ -290,7 +399,6 @@
             </button>
         </div>
 
-        {{-- Toolbar --}}
         <div class="flex items-center gap-1 px-4 py-2.5 border-b border-white/10 bg-white/[0.02] flex-wrap shrink-0">
             <span class="text-xs text-gray-500 mr-1">Ratio</span>
             <button type="button" onclick="setCropAspect(16/9)" id="cropBtn-16-9"
@@ -348,7 +456,6 @@
             </button>
         </div>
 
-        {{-- ✅ Cropper canvas (was missing!) --}}
         <div class="flex-1 overflow-hidden min-h-0 flex items-center justify-center bg-black/40"
             style="max-height:420px;">
             <div style="width:100%;height:100%;max-height:420px;overflow:hidden;position:relative;">
@@ -357,7 +464,6 @@
             </div>
         </div>
 
-        {{-- Footer --}}
         <div
             class="flex flex-col gap-3 px-5 py-4 border-t border-white/10 shrink-0 sm:flex-row sm:items-center sm:justify-between">
 
@@ -543,161 +649,62 @@
 
 <style>
     @keyframes cropperIn {
-        from {
-            opacity: 0;
-            transform: scale(0.92) translateY(20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
+        from { opacity: 0; transform: scale(0.92) translateY(20px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
     }
-
     @keyframes cropperOut {
-        from {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-
-        to {
-            opacity: 0;
-            transform: scale(0.92) translateY(20px);
-        }
+        from { opacity: 1; transform: scale(1) translateY(0); }
+        to { opacity: 0; transform: scale(0.92) translateY(20px); }
     }
-
     @keyframes backdropIn {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
-
     @keyframes backdropOut {
-        from {
-            opacity: 1;
-        }
-
-        to {
-            opacity: 0;
-        }
+        from { opacity: 1; }
+        to { opacity: 0; }
     }
 
-    #imageCropperModal.cropper-opening {
-        animation: backdropIn 0.2s ease forwards;
-    }
-
-    #imageCropperModal.cropper-closing {
-        animation: backdropOut 0.2s ease forwards;
-    }
-
-    #imageCropperModal.cropper-opening #imageCropperPanel {
-        animation: cropperIn 0.28s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
-    }
-
-    #imageCropperModal.cropper-closing #imageCropperPanel {
-        animation: cropperOut 0.2s ease forwards;
-    }
+    #imageCropperModal.cropper-opening { animation: backdropIn 0.2s ease forwards; }
+    #imageCropperModal.cropper-closing { animation: backdropOut 0.2s ease forwards; }
+    #imageCropperModal.cropper-opening #imageCropperPanel { animation: cropperIn 0.28s cubic-bezier(0.34, 1.2, 0.64, 1) forwards; }
+    #imageCropperModal.cropper-closing #imageCropperPanel { animation: cropperOut 0.2s ease forwards; }
 
     .crop-ratio-btn.active {
         background: rgba(37, 99, 235, 0.3);
         border-color: rgba(59, 130, 246, 0.6);
         color: #93c5fd;
     }
+    .cropper-view-box { outline-color: #3b82f6; }
+    .cropper-point { background-color: #3b82f6; }
+    .cropper-line { background-color: rgba(59, 130, 246, 0.6); }
+    .cropper-face { background-color: rgba(59, 130, 246, 0.05); }
 
-    .cropper-view-box {
-        outline-color: #3b82f6;
-    }
-
-    .cropper-point {
-        background-color: #3b82f6;
-    }
-
-    .cropper-line {
-        background-color: rgba(59, 130, 246, 0.6);
-    }
-
-    .cropper-face {
-        background-color: rgba(59, 130, 246, 0.05);
-    }
-
-    .cropper-footer-secondary-btn {
-        width: 100%;
-    }
-
+    .cropper-footer-secondary-btn { width: 100%; }
     @media (min-width: 640px) {
-        .cropper-footer-secondary-btn {
-            width: 190px !important;
-            min-width: 190px;
-        }
+        .cropper-footer-secondary-btn { width: 190px !important; min-width: 190px; }
     }
 
-    @keyframes descBackdropIn {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    @keyframes descBackdropOut {
-        from {
-            opacity: 1;
-        }
-
-        to {
-            opacity: 0;
-        }
-    }
-
+    @keyframes descBackdropIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes descBackdropOut { from { opacity: 1; } to { opacity: 0; } }
     @keyframes descPanelIn {
-        from {
-            opacity: 0;
-            transform: scale(0.92) translateY(20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
+        from { opacity: 0; transform: scale(0.92) translateY(20px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
     }
-
     @keyframes descPanelOut {
-        from {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-
-        to {
-            opacity: 0;
-            transform: scale(0.92) translateY(20px);
-        }
+        from { opacity: 1; transform: scale(1) translateY(0); }
+        to { opacity: 0; transform: scale(0.92) translateY(20px); }
     }
 
-    #descriptionExpandOverlay.desc-opening {
-        animation: descBackdropIn 0.22s ease forwards;
-    }
+    #descriptionExpandOverlay.desc-opening { animation: descBackdropIn 0.22s ease forwards; }
+    #descriptionExpandOverlay.desc-closing { animation: descBackdropOut 0.22s ease forwards; }
+    #descriptionExpandOverlay.desc-opening #descriptionExpandPanel { animation: descPanelIn 0.28s cubic-bezier(0.34, 1.2, 0.64, 1) forwards; }
+    #descriptionExpandOverlay.desc-closing #descriptionExpandPanel { animation: descPanelOut 0.2s ease forwards; }
 
-    #descriptionExpandOverlay.desc-closing {
-        animation: descBackdropOut 0.22s ease forwards;
-    }
+    #eventModalPanel { transition: max-width 0.28s ease, transform 0.28s ease; }
+    #eventModal.lineup-expanded #eventModalPanel { max-width: 72rem !important; }
 
-    #descriptionExpandOverlay.desc-opening #descriptionExpandPanel {
-        animation: descPanelIn 0.28s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
-    }
-
-    #descriptionExpandOverlay.desc-closing #descriptionExpandPanel {
-        animation: descPanelOut 0.2s ease forwards;
-    }
-
-    .fmt-btn:active {
-        transform: scale(0.9);
-    }
+    .fmt-btn:active { transform: scale(0.9); }
 
     .wysiwyg-editor:empty:before {
         content: attr(data-placeholder);
@@ -705,71 +712,27 @@
         pointer-events: none;
         display: block;
     }
+    .wysiwyg-editor h1 { font-size: 1.4em; font-weight: 700; color: #fff; margin: .6em 0 .3em; }
+    .wysiwyg-editor h2 { font-size: 1.1em; font-weight: 600; color: #e2e8f0; margin: .5em 0 .2em; }
+    .wysiwyg-editor strong, .wysiwyg-editor b { font-weight: 700; color: #fff; }
+    .wysiwyg-editor em, .wysiwyg-editor i { font-style: italic; color: #cbd5e1; }
+    .wysiwyg-editor u { text-decoration: underline; text-underline-offset: 2px; }
+    .wysiwyg-editor ul { list-style: disc; padding-left: 1.4em; margin: .3em 0; }
+    .wysiwyg-editor ol { list-style: decimal; padding-left: 1.4em; margin: .3em 0; }
+    .wysiwyg-editor li { margin: .15em 0; }
+    .wysiwyg-editor blockquote { border-left: 3px solid #3b82f6; padding-left: .8em; color: #94a3b8; margin: .5em 0; font-style: italic; }
+    .wysiwyg-editor hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: .8em 0; }
+    .wysiwyg-editor p { margin: .2em 0; }
 
-    .wysiwyg-editor h1 {
-        font-size: 1.4em;
-        font-weight: 700;
-        color: #fff;
-        margin: .6em 0 .3em;
-    }
-
-    .wysiwyg-editor h2 {
-        font-size: 1.1em;
-        font-weight: 600;
-        color: #e2e8f0;
-        margin: .5em 0 .2em;
-    }
-
-    .wysiwyg-editor strong,
-    .wysiwyg-editor b {
-        font-weight: 700;
-        color: #fff;
-    }
-
-    .wysiwyg-editor em,
-    .wysiwyg-editor i {
-        font-style: italic;
-        color: #cbd5e1;
-    }
-
-    .wysiwyg-editor u {
-        text-decoration: underline;
-        text-underline-offset: 2px;
-    }
-
-    .wysiwyg-editor ul {
-        list-style: disc;
-        padding-left: 1.4em;
-        margin: .3em 0;
-    }
-
-    .wysiwyg-editor ol {
-        list-style: decimal;
-        padding-left: 1.4em;
-        margin: .3em 0;
-    }
-
-    .wysiwyg-editor li {
-        margin: .15em 0;
-    }
-
-    .wysiwyg-editor blockquote {
-        border-left: 3px solid #3b82f6;
-        padding-left: .8em;
-        color: #94a3b8;
-        margin: .5em 0;
-        font-style: italic;
-    }
-
-    .wysiwyg-editor hr {
-        border: none;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        margin: .8em 0;
-    }
-
-    .wysiwyg-editor p {
-        margin: .2em 0;
-    }
+    /* ===== PERFORMER STYLES ===== */
+    .pc { display:flex; flex-direction:column; align-items:center; gap:5px; position:relative; cursor:pointer; contain:layout; }
+    .pc:hover .pa { border-color:rgba(59,130,246,.55); }
+    .pa { width:56px; height:56px; border-radius:50%; border:2px solid rgba(255,255,255,.15); overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.05); }
+    .pa img { width:100%; height:100%; object-fit:cover; display:block; }
+    .pn { font-size:11px; color:#9ca3af; text-align:center; max-width:64px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .pr { position:absolute; top:-3px; right:-3px; width:17px; height:17px; background:#dc2626; border-radius:50%; display:flex; align-items:center; justify-content:center; visibility:hidden; border:1.5px solid #0c1222; cursor:pointer; }
+    .pc:hover .pr { visibility:visible; }
+    /* ===== END PERFORMER STYLES ===== */
 </style>
 
 
@@ -849,14 +812,10 @@
         document.getElementById('cropNaturalWidth').value = natW;
         document.getElementById('cropNaturalHeight').value = natH;
 
-        // Show container FIRST so offsetWidth/offsetHeight are non-zero
-        // when applyFocalPreview reads them for the background-size calculation.
         const previewContainer = document.getElementById('eventPreviewContainer');
         previewContainer.classList.remove('hidden');
         document.getElementById('eventImagePlaceholder').classList.add('hidden');
 
-        // Use requestAnimationFrame to guarantee the browser has painted the
-        // container (and thus computed its layout dimensions) before we calculate.
         requestAnimationFrame(() => applyFocalPreview(crop, natW, natH));
 
         closeCropper();
@@ -871,8 +830,6 @@
         const containerW = container.offsetWidth;
         const containerH = container.offsetHeight;
 
-        // In edit mode the container may still be hidden on first call.
-        // Re-run after layout is ready so dimensions are non-zero.
         if (!containerW || !containerH) {
             requestAnimationFrame(() => applyFocalPreview(crop, natW, natH));
             return;
@@ -971,6 +928,237 @@
         if (el) el.classList.add('active');
     }
 
+    /* ===== PERFORMER LOGIC ===== */
+    let performers = [];
+    let performerStateByContext = {};
+    let currentPerformerContext = 'new-event';
+    let editingPerformerIndex = null;
+    let performerImageDataUrl = null;
+
+    function sanitizePerformerImageForSubmit(imageValue) {
+        if (typeof imageValue !== 'string') return null;
+        const cleaned = imageValue.trim();
+        if (!cleaned) return null;
+        return cleaned;
+    }
+
+    function performerImageSrc(imageValue) {
+        if (typeof imageValue !== 'string') return '';
+        const cleaned = imageValue.trim();
+        if (!cleaned) return '';
+        if (cleaned.startsWith('data:') || cleaned.startsWith('http://') || cleaned.startsWith('https://') || cleaned.startsWith('/')) {
+            return cleaned;
+        }
+        return `{{ asset('images/events/performers') }}/${cleaned}`;
+    }
+
+    function normalizePerformer(raw) {
+        if (!raw || typeof raw !== 'object') return null;
+        const name = (raw.name || '').trim();
+        if (!name) return null;
+        return {
+            id: raw.id ?? null,
+            name,
+            image: raw.image || null,
+        };
+    }
+
+    function renderPerformerCards() {
+        const list = document.getElementById('performersList');
+        if (!list) return;
+        list.querySelectorAll('.pc').forEach(card => card.remove());
+        performers.forEach((_, index) => addPerformerCard(index));
+    }
+
+    function setCurrentPerformerContext(contextKey, initialPerformers = [], forceReset = false) {
+        currentPerformerContext = contextKey || 'new-event';
+        if (forceReset || !Array.isArray(performerStateByContext[currentPerformerContext])) {
+            performerStateByContext[currentPerformerContext] = (initialPerformers || [])
+                .map(normalizePerformer)
+                .filter(Boolean);
+        }
+
+        performers = performerStateByContext[currentPerformerContext].map(p => ({ ...p }));
+        editingPerformerIndex = null;
+        performerImageDataUrl = null;
+        renderPerformerCards();
+        syncPerformersData();
+        updatePerformerCount();
+    }
+
+    function openAddPerformer() {
+        editingPerformerIndex = null;
+        performerImageDataUrl = null;
+        document.getElementById('performerNameInput').value = '';
+        document.getElementById('performerAvatarPreview').src = '';
+        document.getElementById('performerAvatarPreview').classList.add('hidden');
+        document.getElementById('performerAvatarPlaceholder').classList.remove('hidden');
+        document.getElementById('performerImageInput').value = '';
+        document.getElementById('performerModalTitle').textContent = 'Add Performer';
+        const modal = document.getElementById('performerModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => document.getElementById('performerNameInput').focus(), 60);
+    }
+
+    function closePerformerModal() {
+        const modal = document.getElementById('performerModal');
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+    }
+
+    function handlePerformerImage(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            performerImageDataUrl = e.target.result;
+            const preview = document.getElementById('performerAvatarPreview');
+            preview.src = performerImageDataUrl;
+            preview.classList.remove('hidden');
+            document.getElementById('performerAvatarPlaceholder').classList.add('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function savePerformer() {
+        const name = document.getElementById('performerNameInput').value.trim();
+        if (!name) {
+            const inp = document.getElementById('performerNameInput');
+            inp.style.outline = '1px solid #f87171';
+            inp.focus();
+            setTimeout(() => inp.style.outline = '', 1400);
+            return;
+        }
+        const existingId = editingPerformerIndex !== null ? (performers[editingPerformerIndex]?.id ?? null) : null;
+        const performer = { id: existingId, name, image: performerImageDataUrl || null };
+        if (editingPerformerIndex !== null) {
+            performers[editingPerformerIndex] = performer;
+            updatePerformerCard(editingPerformerIndex);
+        } else {
+            performers.push(performer);
+            addPerformerCard(performers.length - 1);
+        }
+        syncPerformersData();
+        updatePerformerCount();
+        closePerformerModal();
+    }
+
+    const PLACEHOLDER_SVG = `<svg style="width:22px;height:22px;color:#6b7280" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>`;
+
+    function addPerformerCard(index) {
+        const list = document.getElementById('performersList');
+        const addBtn = document.getElementById('addPerformerBtn');
+        if (!list || !addBtn) return;
+        const p = performers[index];
+
+        const card = document.createElement('div');
+        card.className = 'pc';
+        card.dataset.pidx = index;
+        card.onclick = () => editPerformer(index);
+
+        const avatar = document.createElement('div');
+        avatar.className = 'pa';
+        if (p.image) {
+            const img = document.createElement('img');
+            img.src = performerImageSrc(p.image);
+            img.alt = p.name;
+            avatar.appendChild(img);
+        } else {
+            avatar.innerHTML = PLACEHOLDER_SVG;
+        }
+
+        const nameEl = document.createElement('span');
+        nameEl.className = 'pn';
+        nameEl.textContent = p.name;
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'pr';
+        removeBtn.title = 'Remove';
+        removeBtn.innerHTML = `<svg style="width:9px;height:9px" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>`;
+        removeBtn.onclick = e => { e.stopPropagation(); removePerformer(index); };
+
+        card.appendChild(avatar);
+        card.appendChild(nameEl);
+        card.appendChild(removeBtn);
+        list.insertBefore(card, addBtn);
+    }
+
+    function updatePerformerCard(index) {
+        const list = document.getElementById('performersList');
+        if (!list) return;
+        const card = list.querySelector(`[data-pidx="${index}"]`);
+        if (!card) return;
+        const p = performers[index];
+        const avatar = card.querySelector('.pa');
+        avatar.innerHTML = '';
+        if (p.image) {
+            const img = document.createElement('img');
+            img.src = performerImageSrc(p.image);
+            img.alt = p.name;
+            avatar.appendChild(img);
+        } else {
+            avatar.innerHTML = PLACEHOLDER_SVG;
+        }
+        card.querySelector('.pn').textContent = p.name;
+    }
+
+    function removePerformer(index) {
+        performers.splice(index, 1);
+        renderPerformerCards();
+        syncPerformersData();
+        updatePerformerCount();
+    }
+
+    function editPerformer(index) {
+        const p = performers[index];
+        editingPerformerIndex = index;
+        performerImageDataUrl = p.image || null;
+        document.getElementById('performerNameInput').value = p.name;
+        document.getElementById('performerModalTitle').textContent = 'Edit Performer';
+        const preview = document.getElementById('performerAvatarPreview');
+        if (p.image) {
+            preview.src = performerImageSrc(p.image);
+            preview.classList.remove('hidden');
+            document.getElementById('performerAvatarPlaceholder').classList.add('hidden');
+        } else {
+            preview.src = '';
+            preview.classList.add('hidden');
+            document.getElementById('performerAvatarPlaceholder').classList.remove('hidden');
+        }
+        document.getElementById('performerImageInput').value = '';
+        const modal = document.getElementById('performerModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => document.getElementById('performerNameInput').focus(), 60);
+    }
+
+    function syncPerformersData() {
+        const serialized = performers.map(p => ({
+            id: p.id ?? null,
+            name: p.name,
+            image: sanitizePerformerImageForSubmit(p.image),
+        }));
+        const hidden = document.getElementById('performersData');
+        if (hidden) hidden.value = JSON.stringify(serialized);
+
+        if (currentPerformerContext) {
+            performerStateByContext[currentPerformerContext] = serialized.map(p => ({ ...p }));
+        }
+    }
+
+    function updatePerformerCount() {
+        const el = document.getElementById('performerCount');
+        if (performers.length > 0) {
+            el.textContent = performers.length + ' added';
+            el.classList.remove('hidden');
+        } else {
+            el.classList.add('hidden');
+        }
+    }
+    /* ===== END PERFORMER LOGIC ===== */
+
     document.addEventListener('DOMContentLoaded', function () {
 
         document.getElementById('eventImage')?.addEventListener('change', function () {
@@ -1026,12 +1214,27 @@
             if (e.target === document.getElementById('imageCropperModal')) closeCropper();
         });
 
+        document.getElementById('performerModal')?.addEventListener('click', e => {
+            if (e.target === document.getElementById('performerModal')) closePerformerModal();
+        });
+
+        // Enter key in performer name input saves
+        document.getElementById('performerNameInput')?.addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); savePerformer(); }
+        });
+
         document.addEventListener('keydown', e => {
             if (e.key !== 'Escape') return;
+            const pm = document.getElementById('performerModal');
+            if (pm && pm.classList.contains('flex')) { closePerformerModal(); return; }
             const cm = document.getElementById('imageCropperModal');
             if (cm && !cm.classList.contains('hidden')) { closeCropper(); return; }
             const dm = document.getElementById('descriptionExpandOverlay');
             if (dm && !dm.classList.contains('hidden')) closeDescriptionExpand();
+            const lineupPanel = document.getElementById('lineupPanel');
+            if (lineupPanel && !lineupPanel.classList.contains('hidden')) {
+                toggleLineupPanel(false);
+            }
         });
 
         const seatPlanInput = document.getElementById('seatPlanImage');
@@ -1079,6 +1282,8 @@
             seatPlanInput.files = dt.files;
             seatPlanInput.dispatchEvent(new Event('change'));
         });
+
+        setCurrentPerformerContext('new-event', [], true);
     });
 
     function applyFormat(command) {
@@ -1129,6 +1334,32 @@
     }
 
     function applyDescriptionExpand() { syncWysiwygToTextarea(); closeDescriptionExpand(); }
+
+    function toggleLineupPanel(forceOpen = null) {
+        const panel = document.getElementById('lineupPanel');
+        const modal = document.getElementById('eventModal');
+        const icon = document.getElementById('lineupToggleIcon');
+        const hint = document.getElementById('lineupToggleHint');
+        const button = document.getElementById('lineupToggleBtn');
+        const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : panel?.classList.contains('hidden');
+
+        if (!panel || !modal) return;
+
+        if (shouldOpen) {
+            panel.classList.remove('hidden');
+            modal.classList.add('lineup-expanded');
+            if (icon) icon.textContent = '−';
+            if (hint) hint.textContent = 'Click to collapse the right panel';
+            if (button) button.setAttribute('aria-expanded', 'true');
+            return;
+        }
+
+        panel.classList.add('hidden');
+        modal.classList.remove('lineup-expanded');
+        if (icon) icon.textContent = '+';
+        if (hint) hint.textContent = 'Click to expand the right panel';
+        if (button) button.setAttribute('aria-expanded', 'false');
+    }
 
     function updateDescCharCount(text) {
         const len = (text || '').replace(/\s/g, '').length;

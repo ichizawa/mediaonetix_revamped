@@ -462,6 +462,7 @@
             document.getElementById('submitBtn').textContent = 'Create Event';
             document.getElementById('eventId').value = '';
             document.getElementById('formMethod').value = 'POST';
+            document.getElementById('eventForm').action = "{{ route('merchant.events.store') }}";
 
             // Fully reset image state (clears crop fields, background, src, etc.)
             clearImageState();
@@ -478,6 +479,10 @@
             document.getElementById('eventCategory').value = 'Music';
             const categoryLabel = document.querySelector('[data-target="eventCategory"] .custom-select-label');
             if (categoryLabel) categoryLabel.textContent = categoryLabel.getAttribute('data-default-text') || 'Category';
+
+            if (typeof setCurrentPerformerContext === 'function') {
+                setCurrentPerformerContext('new-event', [], true);
+            }
 
             // Show modal with animation
             const eventModal = document.getElementById('eventModal');
@@ -678,6 +683,35 @@
             } else {
                 if (seatPlanPreviewContainer) seatPlanPreviewContainer.classList.add('hidden');
                 if (seatPlanPlaceholder) seatPlanPlaceholder.classList.remove('hidden');
+            }
+
+            const initialPerformers = [];
+            if (event.performers) {
+                let rawPerformers = event.performers;
+                if (typeof rawPerformers === 'string') {
+                    try {
+                        rawPerformers = JSON.parse(rawPerformers);
+                    } catch (_) {
+                        rawPerformers = [];
+                    }
+                }
+
+                if (Array.isArray(rawPerformers)) {
+                    rawPerformers.forEach((item) => {
+                        if (!item || typeof item !== 'object') return;
+                        const name = (item.name || '').toString().trim();
+                        if (!name) return;
+                        initialPerformers.push({
+                            id: item.id ?? null,
+                            name,
+                            image: item.image || null,
+                        });
+                    });
+                }
+            }
+
+            if (typeof setCurrentPerformerContext === 'function') {
+                setCurrentPerformerContext(`event-${event.id || 'unknown'}`, initialPerformers, true);
             }
 
             // Show edit modal with animation

@@ -128,7 +128,20 @@ class DashboardController extends Controller
         
         $recent_sales = (clone $salesQuery)->latest()->take(5)->get();
 
-        return view(Auth::user()->routePrefix() . '.dashboard', compact('total_sales', 'tickets_sold', 'active_events', 'total_users', 'recent_events', 'recent_sales', 'sales_percent', 'tickets_percent', 'active_events_additional','total_staffs', 'recent_events_all'));
+        $currentTicketSale = null;
+        $currentTicketSales = collect();
+        if ($user->role?->type === 'user') {
+            $currentTicketSales = Sales::with(['event', 'ticket'])
+                ->where('status', 1)
+                ->where('customer_email', $user->email)
+                ->latest()
+                ->take(12)
+                ->get();
+
+            $currentTicketSale = $currentTicketSales->first();
+        }
+
+        return view(Auth::user()->routePrefix() . '.dashboard', compact('total_sales', 'tickets_sold', 'active_events', 'total_users', 'recent_events', 'recent_sales', 'sales_percent', 'tickets_percent', 'active_events_additional','total_staffs', 'recent_events_all', 'currentTicketSale', 'currentTicketSales'));
         
     }
 }

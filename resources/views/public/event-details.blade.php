@@ -565,6 +565,189 @@
             letter-spacing: .02em;
         }
 
+        /* ─── PERFORMERS (modern carousel) ─── */
+        .performers-card {
+            margin-top: 14px;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+
+        .performers-title {
+            font-family: 'Space Mono', monospace;
+            font-size: .62rem;
+            font-weight: 700;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--muted2);
+            margin-bottom: 16px;
+        }
+
+        .performers-track-wrap {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .performers-track-wrap::before,
+        .performers-track-wrap::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 48px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .performers-track-wrap::before {
+            left: 0;
+            background: linear-gradient(to right, var(--bg), transparent);
+        }
+
+        .performers-track-wrap::after {
+            right: 0;
+            background: linear-gradient(to left, var(--bg), transparent);
+        }
+
+        .performers-carousel {
+            display: flex;
+            gap: 12px;
+            padding: 8px 4px 12px;
+            width: max-content;
+            will-change: transform;
+            animation: performersMarquee 28s linear infinite;
+            user-select: none;
+            cursor: grab;
+        }
+
+        .performers-carousel.is-dragging {
+            cursor: grabbing;
+            animation-play-state: paused;
+        }
+
+        .performers-carousel__group {
+            display: flex;
+            gap: 12px;
+            flex: 0 0 auto;
+        }
+
+        .performers-track-wrap:hover .performers-carousel,
+        .performers-track-wrap:focus-within .performers-carousel,
+        .performers-carousel.is-paused {
+            animation-play-state: paused;
+        }
+
+        /* Override paused state when dragging so JS controls transform directly */
+        .performers-carousel.is-dragging {
+            animation-play-state: paused !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .performers-carousel {
+                animation: none;
+            }
+        }
+
+        @keyframes performersMarquee {
+            from {
+                transform: translate3d(0, 0, 0);
+            }
+
+            to {
+                transform: translate3d(calc(-1 * var(--performers-loop-distance, 0px)), 0, 0);
+            }
+        }
+
+        /* Static layout for < 4 performers (no carousel, no duplication) */
+        .performers-static {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 8px 4px 12px;
+        }
+
+        .performer-chip {
+            flex: 0 0 auto;
+            width: 120px;
+            background: var(--card);
+            border: 1px solid var(--rim);
+            border-radius: 20px;
+            padding: 18px 12px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+            cursor: default;
+            transition: border-color .25s, transform .25s, box-shadow .25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .performer-chip::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(56, 189, 248, .08), transparent 70%);
+            opacity: 0;
+            transition: opacity .25s;
+            pointer-events: none;
+        }
+
+        .performer-chip:hover {
+            transform: translateY(-4px);
+            border-color: rgba(56, 189, 248, .3);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, .4), 0 0 0 1px rgba(56, 189, 248, .12);
+        }
+
+        .performer-chip:hover::before {
+            opacity: 1;
+        }
+
+        .performer-avatar {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(56, 189, 248, .25);
+            background: rgba(56, 189, 248, .08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: .85rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .performer-avatar::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 1.5px rgba(56, 189, 248, .18);
+        }
+
+        .performer-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .performer-name {
+            font-size: .82rem;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.25;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         .show-more-btn svg {
             transition: transform .2s;
         }
@@ -606,7 +789,6 @@
             padding: 8px 10px;
         }
 
-        /* toolbar buttons */
         #editor-wrap .ql-toolbar.ql-snow .ql-formats {
             margin-right: 10px;
         }
@@ -616,7 +798,6 @@
             color: var(--muted2) !important;
         }
 
-        /* SVG strokes/fills inside toolbar icons */
         #editor-wrap .ql-toolbar .ql-stroke {
             stroke: var(--muted2) !important;
         }
@@ -629,7 +810,6 @@
             stroke: var(--muted2) !important;
         }
 
-        /* hover */
         #editor-wrap .ql-toolbar button:hover .ql-stroke,
         #editor-wrap .ql-toolbar .ql-picker-label:hover .ql-stroke {
             stroke: var(--accent) !important;
@@ -645,7 +825,6 @@
             color: var(--accent) !important;
         }
 
-        /* active/selected */
         #editor-wrap .ql-toolbar button.ql-active .ql-stroke,
         #editor-wrap .ql-toolbar .ql-picker-label.ql-active .ql-stroke,
         #editor-wrap .ql-toolbar .ql-picker-item.ql-selected .ql-stroke {
@@ -662,7 +841,6 @@
             color: var(--accent) !important;
         }
 
-        /* header dropdown */
         #editor-wrap .ql-toolbar .ql-picker-options {
             background: #1e1a38;
             border: 1px solid var(--rim2) !important;
@@ -679,7 +857,6 @@
             background: rgba(56, 189, 248, .06);
         }
 
-        /* ── Quill editor area ── */
         #editor-wrap .ql-container.ql-snow {
             border: 1px solid var(--rim2);
             border-top: none;
@@ -703,12 +880,10 @@
             left: 16px;
         }
 
-        /* links inside editor */
         #editor-wrap .ql-editor a {
             color: var(--accent);
         }
 
-        /* tooltip/link input */
         #editor-wrap .ql-tooltip {
             background: #1e1a38 !important;
             border: 1px solid var(--rim2) !important;
@@ -1472,7 +1647,6 @@
                 gap: 32px;
             }
 
-            /* About column: sticky so it stays visible while scrolling tickets */
             .col-left {
                 flex: 1 1 0;
                 min-width: 0;
@@ -1481,7 +1655,6 @@
                 align-self: flex-start;
             }
 
-            /* Seating + tickets column */
             .col-right {
                 flex: 1 1 0;
                 min-width: 0;
@@ -1757,6 +1930,107 @@
                         @endif
                     </div>
 
+                    @php
+                        $eventPerformers = [];
+                        $rawPerformers = $event->performers ?? [];
+
+                        if (is_string($rawPerformers)) {
+                            $decoded = json_decode($rawPerformers, true);
+                            $rawPerformers = is_array($decoded) ? $decoded : [];
+                        }
+
+                        if (is_array($rawPerformers)) {
+                            foreach ($rawPerformers as $performer) {
+                                if (!is_array($performer)) {
+                                    continue;
+                                }
+
+                                $name = trim((string) ($performer['name'] ?? ''));
+                                if ($name === '') {
+                                    continue;
+                                }
+
+                                $eventPerformers[] = [
+                                    'name' => $name,
+                                    'image' => trim((string) ($performer['image'] ?? '')),
+                                ];
+                            }
+                        }
+                    @endphp
+
+                    @if (count($eventPerformers))
+                        @php $useCarousel = count($eventPerformers) >= 4; @endphp
+                        <div class="performers-card fade-up">
+                            <div class="performers-title">Performers</div>
+
+                            @if ($useCarousel)
+                                {{-- ── Infinite-scroll carousel (4+ performers) ── --}}
+                                <div class="performers-track-wrap">
+                                    <div class="performers-carousel" data-auto-carousel="true" aria-label="Performers carousel">
+                                        @for ($loopIndex = 0; $loopIndex < 2; $loopIndex++)
+                                            <div class="performers-carousel__group" aria-hidden="{{ $loopIndex === 1 ? 'true' : 'false' }}">
+                                                @foreach ($eventPerformers as $performer)
+                                                    @php
+                                                        $performerImage = $performer['image'];
+                                                        if (
+                                                            $performerImage !== '' &&
+                                                            !str_starts_with($performerImage, 'http://') &&
+                                                            !str_starts_with($performerImage, 'https://') &&
+                                                            !str_starts_with($performerImage, 'data:') &&
+                                                            !str_starts_with($performerImage, '/')
+                                                        ) {
+                                                            $performerImage = asset('images/events/performers/' . $performerImage);
+                                                        }
+                                                        $initials = strtoupper(substr($performer['name'], 0, 1));
+                                                    @endphp
+                                                    <div class="performer-chip">
+                                                        <div class="performer-avatar">
+                                                            @if ($performerImage !== '')
+                                                                <img src="{{ $performerImage }}" alt="{{ $performer['name'] }}">
+                                                            @else
+                                                                <span>{{ $initials }}</span>
+                                                            @endif
+                                                        </div>
+                                                        <div class="performer-name">{{ $performer['name'] }}</div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endfor
+                                    </div>
+                                </div>
+                            @else
+                                {{-- ── Static flex row (< 4 performers, no duplication) ── --}}
+                                <div class="performers-static" aria-label="Performers">
+                                    @foreach ($eventPerformers as $performer)
+                                        @php
+                                            $performerImage = $performer['image'];
+                                            if (
+                                                $performerImage !== '' &&
+                                                !str_starts_with($performerImage, 'http://') &&
+                                                !str_starts_with($performerImage, 'https://') &&
+                                                !str_starts_with($performerImage, 'data:') &&
+                                                !str_starts_with($performerImage, '/')
+                                            ) {
+                                                $performerImage = asset('images/events/performers/' . $performerImage);
+                                            }
+                                            $initials = strtoupper(substr($performer['name'], 0, 1));
+                                        @endphp
+                                        <div class="performer-chip">
+                                            <div class="performer-avatar">
+                                                @if ($performerImage !== '')
+                                                    <img src="{{ $performerImage }}" alt="{{ $performer['name'] }}">
+                                                @else
+                                                    <span>{{ $initials }}</span>
+                                                @endif
+                                            </div>
+                                            <div class="performer-name">{{ $performer['name'] }}</div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    @endif
+
                     {{-- RULES --}}
                     @if ($event->rules ?? null)
                         <div class="rules-card" id="rulesCard" style="display:none;">
@@ -1930,8 +2204,6 @@
                     </svg>
                 </a>
                 <script>
-                    // ...existing code...
-                    // Redirect to purchase page with ticket and quantity
                     document.getElementById('buyTicketsBtn')?.addEventListener('click', function(e) {
                         e.preventDefault();
                         const selectedTicket = document.querySelector('.tkt.selected');
@@ -1944,8 +2216,6 @@
                     });
                 </script>
         </div>
-
-
 
         {{-- ─── LIGHTBOX ─── --}}
         @if ($event->seat_plan)
@@ -2041,7 +2311,6 @@
             document.getElementById('modalQty').textContent = selQty + ' ticket' + (selQty > 1 ? 's' : '');
             document.getElementById('modalUnit').textContent = '₱' + selPrice.toLocaleString('en-PH');
             document.getElementById('modalTotal').textContent = '₱' + (selPrice * selQty).toLocaleString('en-PH');
-            // Set hidden ticket and quantity fields
             const selectedTicket = document.querySelector('.tkt.selected');
             if (selectedTicket) {
                 const ticketId = selectedTicket.getAttribute('data-id') || selectedTicket.getAttribute('data-ticket-id') ||
@@ -2062,12 +2331,10 @@
             if (e.target === this) closeModal();
         });
 
-        // Ensure hidden fields are set before form submission
         document.addEventListener('DOMContentLoaded', function() {
             const purchaseForm = document.querySelector('form[action*="public.sales.store"]');
             if (purchaseForm) {
                 purchaseForm.addEventListener('submit', function(e) {
-                    // Set ticket and quantity fields again just before submit for safety
                     const selectedTicket = document.querySelector('.tkt.selected');
                     if (selectedTicket) {
                         const ticketId = selectedTicket.getAttribute('data-id') || selectedTicket
@@ -2157,14 +2424,124 @@
                 document.getElementById('cardCvc').required = false;
             }
         }
+
+        /* ─── PERFORMERS INFINITE CAROUSEL (only for 4+ performers) ─── */
+        function initPerformersAutoCarousel() {
+            const wrap = document.querySelector('.performers-track-wrap');
+            const carousel = document.querySelector('.performers-carousel[data-auto-carousel="true"]');
+            // Exit early if no carousel (< 4 performers uses static layout) or reduced motion
+            if (!carousel || !wrap) return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+            // ── Measure first group to set the CSS loop-distance variable ──
+            const group = carousel.querySelector('.performers-carousel__group');
+            if (group) {
+                const chips = group.querySelectorAll('.performer-chip');
+                let totalWidth = 0;
+                chips.forEach(chip => {
+                    // offsetWidth + the 12px gap defined in CSS
+                    totalWidth += chip.offsetWidth + 12;
+                });
+                carousel.style.setProperty('--performers-loop-distance', totalWidth + 'px');
+            }
+
+            // ── Pause on hover / focus ──
+            wrap.addEventListener('mouseenter', () => {
+                if (!isDragging) carousel.classList.add('is-paused');
+            });
+            wrap.addEventListener('mouseleave', () => {
+                if (!isDragging) carousel.classList.remove('is-paused');
+            });
+            wrap.addEventListener('focusin',  () => carousel.classList.add('is-paused'));
+            wrap.addEventListener('focusout', () => carousel.classList.remove('is-paused'));
+
+            // ── Drag / swipe helpers ──
+            let isDragging   = false;
+            let startX       = 0;
+            let startOffset  = 0;
+            let currentX     = 0;
+
+            /** Read the live translateX the browser is currently rendering */
+            function getLiveTranslateX() {
+                const matrix = new DOMMatrix(window.getComputedStyle(carousel).transform);
+                return matrix.m41;
+            }
+
+            function dragStart(x) {
+                isDragging  = true;
+                startX      = x;
+                startOffset = getLiveTranslateX();
+                currentX    = startOffset;
+
+                // Freeze animation and take over with JS transform
+                carousel.style.animationPlayState = 'paused';
+                carousel.style.transform = `translateX(${startOffset}px)`;
+                carousel.classList.add('is-dragging', 'is-paused');
+            }
+
+            function dragMove(x) {
+                if (!isDragging) return;
+                const delta = x - startX;
+                currentX = startOffset + delta;
+                carousel.style.transform = `translateX(${currentX}px)`;
+            }
+
+            function dragEnd() {
+                if (!isDragging) return;
+                isDragging = false;
+                carousel.classList.remove('is-dragging');
+
+                // Resume CSS animation from the visual position we're at now
+                const loopDist = parseFloat(
+                    carousel.style.getPropertyValue('--performers-loop-distance') ||
+                    getComputedStyle(carousel).getPropertyValue('--performers-loop-distance')
+                ) || 0;
+
+                if (loopDist > 0) {
+                    // Normalise currentX into the range [-loopDist, 0]
+                    let norm = currentX % loopDist;
+                    if (norm > 0) norm -= loopDist;   // keep it negative (scrolling left)
+                    const duration = 28; // seconds — must match CSS animation duration
+                    const progress = Math.abs(norm) / loopDist; // 0..1
+
+                    // Clear the JS-controlled transform and let CSS animation take over
+                    carousel.style.transform = '';
+                    carousel.style.animationDelay = `-${(progress * duration).toFixed(4)}s`;
+                    carousel.style.animationPlayState = '';
+                }
+
+                // Re-enable hover-pause only if the mouse has left the wrap
+                // (mouseleave may have fired while dragging — check pointer position)
+                carousel.classList.remove('is-paused');
+            }
+
+            // ── Mouse drag ──
+            carousel.addEventListener('mousedown', e => {
+                e.preventDefault();
+                dragStart(e.clientX);
+            });
+            window.addEventListener('mousemove', e => {
+                if (isDragging) dragMove(e.clientX);
+            });
+            window.addEventListener('mouseup', () => {
+                if (isDragging) dragEnd();
+            });
+
+            // ── Touch swipe ──
+            carousel.addEventListener('touchstart', e => {
+                dragStart(e.touches[0].clientX);
+            }, { passive: true });
+
+            carousel.addEventListener('touchmove', e => {
+                dragMove(e.touches[0].clientX);
+            }, { passive: true });
+
+            carousel.addEventListener('touchend', () => {
+                dragEnd();
+            }, { passive: true });
+        }
+
+        document.addEventListener('DOMContentLoaded', initPerformersAutoCarousel);
     </script>
 
-
-    {{-- @include('public.component.ticket.modal') --}} <!-- Removed admin modal include from public page -->
-
-
-
-    <script>
-        // Removed duplicate openBuyModal and closeModal for ticketModal (admin modal)
-    </script>
 @endsection

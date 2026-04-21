@@ -7,13 +7,112 @@ use App\Models\Events;
 use App\Models\MerchantFiles;
 use App\Models\ShowCases;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class EventsController extends Controller
 {
+    private function resolveUploadExtension(UploadedFile $file): string
+    {
+        $extension = $file->guessExtension()
+            ?: $file->extension()
+            ?: $file->getClientOriginalExtension();
+
+        $extension = strtolower((string) $extension);
+
+        if ($extension === '' || !preg_match('/^[a-z0-9]+$/', $extension)) {
+            return 'jpg';
+        }
+
+        return $extension;
+    }
+
+    private function storePerformerImageIfNeeded(?string $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+        if ($trimmed === '') {
+            return null;
+        }
+
+        if (!Str::startsWith($trimmed, 'data:image/')) {
+            return $trimmed;
+        }
+
+        if (!preg_match('/^data:image\/([a-zA-Z0-9.+-]+);base64,(.*)$/s', $trimmed, $matches)) {
+            return null;
+        }
+
+        $mimeSubtype = strtolower($matches[1]);
+        $rawBase64 = str_replace(' ', '+', $matches[2]);
+        $binary = base64_decode($rawBase64, true);
+        if ($binary === false || $binary === '') {
+            return null;
+        }
+
+        $extension = match ($mimeSubtype) {
+            'jpeg', 'jpg' => 'jpg',
+            'png' => 'png',
+            'gif' => 'gif',
+            'webp' => 'webp',
+            'svg+xml', 'svg' => 'svg',
+            default => 'jpg',
+        };
+
+        File::ensureDirectoryExists(public_path('images/events/performers'));
+        $fileName = 'pf_' . Str::uuid()->toString() . '.' . $extension;
+        file_put_contents(public_path('images/events/performers/' . $fileName), $binary);
+
+        return $fileName;
+    }
+
+    private function normalizePerformerImage(?string $value): ?string
+    {
+        return $this->storePerformerImageIfNeeded($value);
+    }
+
+    private function normalizePerformersPayload(?string $performersJson): array
+    {
+        if ($performersJson === null || trim($performersJson) === '') {
+            return [];
+        }
+
+        $decoded = json_decode($performersJson, true);
+        if (!is_array($decoded)) {
+            return [];
+        }
+
+        $normalized = [];
+        foreach ($decoded as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+
+            $name = trim((string) ($item['name'] ?? ''));
+            if ($name === '') {
+                continue;
+            }
+
+            $id = isset($item['id']) && $item['id'] !== '' ? (int) $item['id'] : null;
+            $image = $this->normalizePerformerImage(isset($item['image']) ? (string) $item['image'] : null);
+
+            $normalized[] = [
+                'id' => $id,
+                'name' => $name,
+                'image' => $image,
+            ];
+        }
+
+        return $normalized;
+    }
+
     public function index()
     {
 
@@ -54,28 +153,33 @@ class EventsController extends Controller
                 'date'               => 'required|date',
                 'time'               => 'required|string',
                 'status'             => 'required|string',
-                'image'              => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:15360',
-                'seat_plan'          => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:15360',
+                'image'              => 'nullable|image|mimetypes:image/jpeg,image/png,image/gif,image/svg+xml,image/webp|max:15360',
+                'seat_plan'          => 'nullable|image|mimetypes:image/jpeg,image/png,image/gif,image/svg+xml,image/webp|max:15360',
                 'crop_x'             => 'nullable|numeric',
                 'crop_y'             => 'nullable|numeric',
                 'crop_width'         => 'nullable|numeric',
                 'crop_height'        => 'nullable|numeric',
                 'crop_natural_width'  => 'nullable|numeric',
                 'crop_natural_height' => 'nullable|numeric',
+                'performers'         => 'nullable|string',
             ]);
+
+            $normalizedPerformers = $this->normalizePerformersPayload($request->input('performers'));
 
             $imageName = '';
 
             if ($request->hasFile('image')) {
+                File::ensureDirectoryExists(public_path('images/events'));
                 $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $imageName = Str::uuid()->toString() . '.' . $this->resolveUploadExtension($image);
                 $image->move(public_path('images/events'), $imageName);
             }
 
             $seatPlanName = null;
             if ($request->hasFile('seat_plan')) {
+                File::ensureDirectoryExists(public_path('images/events/seat_plan'));
                 $seatPlan = $request->file('seat_plan');
-                $seatPlanName = 'sp_' . time() . '.' . $seatPlan->getClientOriginalExtension();
+                $seatPlanName = 'sp_' . Str::uuid()->toString() . '.' . $this->resolveUploadExtension($seatPlan);
                 $seatPlan->move(public_path('images/events/seat_plan'), $seatPlanName);
             }
 
@@ -99,6 +203,7 @@ class EventsController extends Controller
             $event->crop_height = $request->crop_height;
             $event->crop_natural_width = $request->crop_natural_width;
             $event->crop_natural_height = $request->crop_natural_height;
+            $event->performers = !empty($normalizedPerformers) ? json_encode($normalizedPerformers) : null;
             // $event->slug = Str::slug($request->name);
             $event->save();
 
@@ -127,29 +232,34 @@ class EventsController extends Controller
                 'date'               => 'required|date',
                 'time'               => 'required|string',
                 'status'             => 'required|string',
-                'image'              => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:15360',
-                'seat_plan'          => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:15360',
+                'image'              => 'nullable|image|mimetypes:image/jpeg,image/png,image/gif,image/svg+xml,image/webp|max:15360',
+                'seat_plan'          => 'nullable|image|mimetypes:image/jpeg,image/png,image/gif,image/svg+xml,image/webp|max:15360',
                 'crop_x'             => 'nullable|numeric',
                 'crop_y'             => 'nullable|numeric',
                 'crop_width'         => 'nullable|numeric',
                 'crop_height'        => 'nullable|numeric',
                 'crop_natural_width'  => 'nullable|numeric',
                 'crop_natural_height' => 'nullable|numeric',
+                'performers'         => 'nullable|string',
             ]);
+
+            $normalizedPerformers = $this->normalizePerformersPayload($request->input('performers'));
 
             $event = Events::find($request->id);
             $event->event_name = $request->name;
             $event->category = $request->category;
             $event->description = $request->description;
             if ($request->hasFile('image')) {
+                File::ensureDirectoryExists(public_path('images/events'));
                 $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $imageName = Str::uuid()->toString() . '.' . $this->resolveUploadExtension($image);
                 $image->move(public_path('images/events'), $imageName);
                 $event->event_image = $imageName;
             }
             if ($request->hasFile('seat_plan')) {
+                File::ensureDirectoryExists(public_path('images/events/seat_plan'));
                 $seatPlan = $request->file('seat_plan');
-                $seatPlanName = 'sp_' . time() . '.' . $seatPlan->getClientOriginalExtension();
+                $seatPlanName = 'sp_' . Str::uuid()->toString() . '.' . $this->resolveUploadExtension($seatPlan);
                 $seatPlan->move(public_path('images/events/seat_plan'), $seatPlanName);
                 $event->seat_plan = $seatPlanName;
             }
@@ -164,6 +274,7 @@ class EventsController extends Controller
             $event->crop_height = $request->crop_height;
             $event->crop_natural_width = $request->crop_natural_width;
             $event->crop_natural_height = $request->crop_natural_height;
+            $event->performers = !empty($normalizedPerformers) ? json_encode($normalizedPerformers) : null;
 
             if ($request->filled('approved_at')) {
                 $event->approved_at = now();

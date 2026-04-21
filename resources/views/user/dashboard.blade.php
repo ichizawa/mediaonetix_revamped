@@ -1,262 +1,584 @@
 @extends('layouts')
 
 @section('content')
-    <main class="lg:ml-64 pt-20 min-h-screen bg-[#0c1222] overflow-x-hidden">
-        
-        <section class="relative min-h-[calc(100vh-5rem)] flex items-center overflow-hidden pb-12">
-            <div class="absolute inset-0 mesh-gradient"></div>
-            <div
-                class="absolute top-10 left-5 w-40 h-40 md:w-72 md:h-72 bg-blue-500 rounded-full filter blur-[80px] md:blur-[120px] opacity-20 pulse-slow">
-            </div>
-            <div class="absolute bottom-10 right-5 w-48 h-48 md:w-96 md:h-96 bg-blue-400 rounded-full filter blur-[80px] md:blur-[120px] opacity-20 pulse-slow"
-                style="animation-delay: 2s;"></div>
+    @php
+        $sales = $currentTicketSales ?? collect();
+    @endphp
 
-            <div class="relative container mx-auto px-4 sm:px-6 lg:px-12 py-8 w-full">
-                <div class="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center justify-items-center">
+    <main class="lg:ml-64 pt-20 min-h-screen bg-slate-950 tickets-page">
 
-                    <div
-                        class="hero-content space-y-4 sm:space-y-6 md:space-y-8 order-2 lg:order-1 w-full max-w-xl lg:max-w-none hidden lg:flex flex-col items-start">
-
-                        <div
-                            class="event-badge inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-500/10 border border-blue-500/20 rounded-full backdrop-blur-sm">
-                            <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-                            <span class="text-blue-300 text-sm font-medium" id="event-category">Featured Event</span>
-                        </div>
-
-                        <div class="event-title">
-                            <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight text-white mb-6">
-                                <span class="title-line-1 block"></span>
-                                <span class="title-line-2 gradient-text block"></span>
-                            </h1>
-                        </div>
-
-                        <div class="event-details space-y-3 sm:space-y-4 mb-6 sm:mb-8 w-full">
-                            <div class="flex items-center gap-3 sm:gap-4 text-gray-300">
-                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 flex-shrink-0" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                    </path>
-                                </svg>
-                                <span class="text-lg font-semibold" id="event-date"></span>
-                            </div>
-
-                            <div class="flex items-center gap-3 sm:gap-4 text-gray-300">
-                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 flex-shrink-0" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                    </path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                <span class="text-lg font-semibold" id="event-venue"></span>
-                            </div>
-
-                            <div class="flex items-center gap-3 sm:gap-4">
-                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 flex-shrink-0" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                                    </path>
-                                </svg>
-                                <span class="text-4xl font-bold text-blue-400" id="event-price"></span>
-                            </div>
-                        </div>
-
-                        <button
-                            class="cta-button purchase-btn group w-full lg:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-bold text-base sm:text-lg shadow-lg hover:shadow-blue-500/50 transition-all hover:scale-105 inline-flex items-center justify-center gap-2 sm:gap-3 text-white"
-                            data-event-id="{{ $event->id ?? '' }}" id="main-purchase-btn">
-                            Get Tickets Now
-                            <input type="hidden" class="event-id-holder" value="{{ $event->id ?? '' }}">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                            </svg>
-                        </button>
-
-                        <div class="slider-controls flex items-center gap-4 sm:gap-6 mt-6 sm:mt-8">
-                            <button
-                                class="slider-prev w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center hover:bg-blue-500/20 hover:border-blue-500/50 transition-all backdrop-blur-sm"
-                                aria-label="Previous event">
-                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
-                                    </path>
-                                </svg>
-                            </button>
-
-                            <div class="slider-dots flex gap-2 sm:gap-3">
-                                <span
-                                    class="dot w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-blue-400 transition-all cursor-pointer"
-                                    data-index="0"></span>
-                                <span
-                                    class="dot w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-white/30 transition-all cursor-pointer"
-                                    data-index="1"></span>
-                                <span
-                                    class="dot w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-white/30 transition-all cursor-pointer"
-                                    data-index="2"></span>
-                            </div>
-
-                            <button
-                                class="slider-next w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center hover:bg-blue-500/20 hover:border-blue-500/50 transition-all backdrop-blur-sm"
-                                aria-label="Next event">
-                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                                    </path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div
-                        class="hero-visual relative order-1 lg:order-2 w-full max-w-md lg:max-w-none h-auto flex flex-col items-center gap-6">
-                        <div class="poster-container relative w-full h-[60vh] sm:h-[65vh] lg:h-[70vh]">
-                            <div class="relative h-full w-full group">
-                                <div
-                                    class="poster-main relative h-full overflow-hidden rounded-3xl border-4 border-blue-500/30 shadow-2xl shadow-blue-500/20 transition-all duration-500 group-hover:border-blue-500/50 group-hover:shadow-blue-500/30">
-                                    <div id="poster-bg"
-                                        class="h-full flex flex-col items-center justify-between relative overflow-hidden p-6 lg:p-10"
-                                        style="background: linear-gradient(135deg, #1e40af, #3b82f6, #06b6d4); background-size: cover; background-position: center;">
-
-                                        <div class="absolute inset-0 opacity-10">
-                                            <div class="absolute top-0 left-0 w-full h-full"
-                                                style="background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px);">
-                                            </div>
-                                        </div>
-
-                                        <div class="relative z-10 w-full text-center flex-shrink-0">
-                                            <div
-                                                class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur-xl rounded-full border-2 border-white/30">
-                                                <span class="text-white font-bold text-sm lg:text-base"
-                                                    id="poster-category"></span>
-                                            </div>
-                                        </div>
-
-                                        <div class="relative z-10 text-center flex-1 flex flex-col justify-center">
-                                            <h2
-                                                class="text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-3 drop-shadow-lg poster-title-1">
-                                            </h2>
-                                            <h2
-                                                class="text-5xl lg:text-6xl xl:text-7xl font-black text-white drop-shadow-lg poster-title-2">
-                                            </h2>
-                                        </div>
-
-                                        <div class="relative z-10 w-full space-y-3 sm:space-y-4 flex-shrink-0">
-                                            <div
-                                                class="bg-white/10 backdrop-blur-xl rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-white/20 poster-details">
-                                                <div
-                                                    class="flex items-center justify-between mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-white/20">
-                                                    <div class="flex items-center gap-2 sm:gap-3">
-                                                        <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white flex-shrink-0"
-                                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                                            </path>
-                                                        </svg>
-                                                        <span class="text-white font-bold text-base sm:text-lg" id="poster-date"></span>
-                                                    </div>
-                                                </div>
-
-                                                <div
-                                                    class="flex items-center justify-between mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-white/20">
-                                                    <div class="flex items-center gap-2 sm:gap-3">
-                                                        <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white flex-shrink-0"
-                                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                                            </path>
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                        </svg>
-                                                        <span class="text-white font-bold text-base sm:text-lg" id="poster-venue"></span>
-                                                    </div>
-                                                </div>
-
-                                                <div class="flex items-center justify-between">
-                                                    <span class="text-white/80 font-medium text-base sm:text-lg">Starting from</span>
-                                                    <span class="text-4xl sm:text-5xl font-black text-white poster-price"
-                                                        id="poster-price"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div
-                                            class="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-24 h-24 sm:w-32 sm:h-32 bg-blue-500 rounded-full filter blur-[60px] sm:blur-[80px] opacity-40 poster-glow-1">
-                                </div>
-                                <div
-                                    class="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 w-28 h-28 sm:w-40 sm:h-40 bg-cyan-400 rounded-full filter blur-[60px] sm:blur-[80px] opacity-40 poster-glow-2">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="w-full lg:hidden px-4">
-                            <button
-                                class="cta-button purchase-btn group w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl font-bold text-lg shadow-lg hover:shadow-blue-500/50 transition-all hover:scale-105 inline-flex items-center justify-center gap-3 text-white"
-                                data-event-id="" id="mobile-purchase-btn">
-                                Get Tickets Now
-                                <input type="hidden" id="mobile-event-id-holder" value="{{ $event->id ?? '' }}">
-                                <svg class="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                                </svg>
-                            </button>
-                        </div>
-
-                        <div class="slider-controls flex items-center gap-6 lg:hidden">
-                            <button
-                                class="slider-prev w-12 h-12 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center hover:bg-blue-500/20 hover:border-blue-500/50 transition-all backdrop-blur-sm"
-                                aria-label="Previous event">
-                                <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 19l-7-7 7-7">
-                                    </path>
-                                </svg>
-                            </button>
-
-                            <div class="slider-dots flex gap-3">
-                                <span class="dot w-3 h-3 rounded-full bg-blue-400 transition-all cursor-pointer"
-                                    data-index="0"></span>
-                                <span class="dot w-3 h-3 rounded-full bg-white/30 transition-all cursor-pointer"
-                                    data-index="1"></span>
-                                <span class="dot w-3 h-3 rounded-full bg-white/30 transition-all cursor-pointer"
-                                    data-index="2"></span>
-                            </div>
-
-                            <button
-                                class="slider-next w-12 h-12 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center hover:bg-blue-500/20 hover:border-blue-500/50 transition-all backdrop-blur-sm"
-                                aria-label="Next event">
-                                <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                                    </path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <div class="relative z-10 pb-16">
-            <livewire:public-event-this-week-component />
-            <livewire:public-events-component />
+        {{-- Ambient background --}}
+        <div class="pointer-events-none fixed inset-0 lg:left-64 overflow-hidden" aria-hidden="true">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="grain"></div>
         </div>
 
+        <section class="relative px-4 sm:px-6 lg:px-10 py-10 sm:py-16">
+            <div class="mx-auto w-full max-w-6xl">
+
+                {{-- Header --}}
+                <header class="mb-10 sm:mb-14">
+                    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                        <div class="space-y-3">
+                            <span class="badge">
+                                <span class="badge-dot"></span>
+                                My Tickets
+                            </span>
+                            <h1 class="page-title">Your Current<br class="hidden sm:block"> Tickets</h1>
+                            <p class="page-sub">All your upcoming event tickets, at a glance.</p>
+                        </div>
+
+                        @if ($sales->isNotEmpty())
+                            <a href="{{ route('user.purchase-history') }}" class="btn-ghost self-start sm:self-auto">
+                                <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                                </svg>
+                                Purchase History
+                            </a>
+                        @endif
+                    </div>
+
+                    @if ($sales->isNotEmpty())
+                        <div class="mt-6 divider"></div>
+                        <p class="tickets-count">
+                            {{ $sales->count() }} {{ Str::plural('ticket', $sales->count()) }} found
+                        </p>
+                    @endif
+                </header>
+
+                {{-- Ticket Grid --}}
+                @if ($sales->isNotEmpty())
+                    <div class="ticket-grid mt-6">
+                        @foreach ($sales as $index => $sale)
+                            @php
+                                $event  = $sale?->event;
+                                $ticket = $sale?->ticket;
+                            @endphp
+
+                            @if ($event && $ticket)
+                                <article class="ticket-card" style="--delay: {{ $index * 60 }}ms">
+
+                                    {{-- Image / Hero --}}
+                                    <div class="ticket-hero">
+                                        @if ($event->event_image)
+                                            <img
+                                                src="{{ asset('images/events/' . $event->event_image) }}"
+                                                alt="{{ $event->event_name }}"
+                                                class="ticket-hero__img"
+                                                loading="lazy"
+                                            >
+                                        @else
+                                            <div class="ticket-hero__fallback" aria-hidden="true"></div>
+                                        @endif
+
+                                        {{-- Gradient overlay --}}
+                                        <div class="ticket-hero__overlay" aria-hidden="true"></div>
+
+                                        {{-- Date badge --}}
+                                        <div class="ticket-date-badge" aria-label="Event date">
+                                            <span class="ticket-date-badge__month">{{ \Carbon\Carbon::parse($event->event_date)->format('M') }}</span>
+                                            <span class="ticket-date-badge__day">{{ \Carbon\Carbon::parse($event->event_date)->format('d') }}</span>
+                                        </div>
+
+                                        {{-- Event name --}}
+                                        <div class="ticket-hero__label">
+                                            <h2 class="ticket-hero__title" title="{{ $event->event_name }}">
+                                                {{ $event->event_name }}
+                                            </h2>
+                                        </div>
+                                    </div>
+
+                                    {{-- Perforated divider --}}
+                                    <div class="ticket-perforation" aria-hidden="true">
+                                        <span class="ticket-perforation__circle ticket-perforation__circle--left"></span>
+                                        <span class="ticket-perforation__line"></span>
+                                        <span class="ticket-perforation__circle ticket-perforation__circle--right"></span>
+                                    </div>
+
+                                    {{-- Body --}}
+                                    <div class="ticket-body">
+                                        <div class="ticket-meta">
+                                            <div class="ticket-meta__item">
+                                                <span class="ticket-meta__label">Time</span>
+                                                <span class="ticket-meta__value">
+                                                    {{ $event->event_time ? \Carbon\Carbon::parse($event->event_time)->format('h:i A') : '-' }}
+                                                </span>
+                                            </div>
+                                            <div class="ticket-meta__sep" aria-hidden="true"></div>
+                                            <div class="ticket-meta__item ticket-meta__item--right">
+                                                <span class="ticket-meta__label">Type</span>
+                                                <span class="ticket-meta__value ticket-meta__value--accent">{{ $ticket->name }}</span>
+                                            </div>
+                                        </div>
+
+                                        <a
+                                            href="{{ route('user.purchase-history') }}"
+                                            class="ticket-cta"
+                                            aria-label="View ticket details for {{ $event->event_name }}"
+                                        >
+                                            <span>View Details</span>
+                                            <svg class="ticket-cta__icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M7.22 4.22a.75.75 0 011.06 0l5.25 5.25a.75.75 0 010 1.06l-5.25 5.25a.75.75 0 11-1.06-1.06L11.94 10 7.22 5.28a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </article>
+                            @endif
+                        @endforeach
+
+                        <a
+                            href="{{ url('/') }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="buy-ticket-card"
+                            aria-label="Buy tickets on landing page"
+                        >
+                            <span class="buy-ticket-card__eyebrow">Need More?</span>
+                            <h2 class="buy-ticket-card__title">Buy Tickets</h2>
+                            <p class="buy-ticket-card__text">Open the landing page and get seats for upcoming events.</p>
+                            <span class="buy-ticket-card__link">
+                                Go to Landing Page
+                                <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M7.22 4.22a.75.75 0 011.06 0l5.25 5.25a.75.75 0 010 1.06l-5.25 5.25a.75.75 0 11-1.06-1.06L11.94 10 7.22 5.28a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                        </a>
+                    </div>
+
+                @else
+                    {{-- Empty state --}}
+                    <div class="empty-state">
+                        <div class="empty-state__icon" aria-hidden="true">
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 18a6 6 0 0112 0v12a6 6 0 01-12 0V18z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M30 18a6 6 0 0112 0v12a6 6 0 01-12 0V18z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M18 24h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 3"/>
+                                <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4"/>
+                            </svg>
+                        </div>
+                        <h2 class="empty-state__title">No tickets yet</h2>
+                        <p class="empty-state__text">Once you purchase a ticket, it'll show up right here.</p>
+                        <a href="{{ route('user.purchase-history') }}" class="btn-primary">
+                            Browse Purchase History
+                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M7.22 4.22a.75.75 0 011.06 0l5.25 5.25a.75.75 0 010 1.06l-5.25 5.25a.75.75 0 11-1.06-1.06L11.94 10 7.22 5.28a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </div>
+                @endif
+
+            </div>
+        </section>
     </main>
 
-    <script src="{{ asset('js/event-slider.js') }}"></script>
-    <script src="{{ asset('js/landing-animations.js') }}"></script>
-    <script src="{{ asset('js/tickets.js') }}"></script>
+    <style>
+        /* ─── Tokens ─────────────────────────────────────────── */
+        .tickets-page {
+            --cyan:     #22d3ee;
+            --cyan-dim: #0e7490;
+            --card-bg:  rgba(255,255,255,0.04);
+            --card-border: rgba(255,255,255,0.08);
+            font-family: 'Syne', 'DM Sans', sans-serif;
+        }
+
+        /* Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap');
+
+        /* ─── Ambient Orbs ───────────────────────────────────── */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: .18;
+            pointer-events: none;
+        }
+        .orb-1 {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, #06b6d4, transparent 70%);
+            top: -200px; right: -100px;
+            animation: drift 14s ease-in-out infinite alternate;
+        }
+        .orb-2 {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, #3b82f6, transparent 70%);
+            bottom: 0; left: 10%;
+            animation: drift 18s ease-in-out infinite alternate-reverse;
+        }
+        .grain {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");
+            opacity: .4;
+        }
+        @keyframes drift {
+            from { transform: translate(0, 0) scale(1); }
+            to   { transform: translate(30px, 20px) scale(1.05); }
+        }
+
+        /* ─── Header ─────────────────────────────────────────── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            border: 1px solid rgba(34,211,238,.3);
+            background: rgba(34,211,238,.08);
+            border-radius: 99px;
+            padding: .3rem .85rem;
+            font-size: .65rem;
+            font-weight: 700;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: #67e8f9;
+        }
+        .badge-dot {
+            display: block;
+            width: 6px; height: 6px;
+            background: var(--cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--cyan);
+        }
+        .page-title {
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.1;
+            letter-spacing: -.02em;
+        }
+        .page-sub {
+            font-size: .83rem;
+            color: #94a3b8;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,.12) 0%, transparent 100%);
+        }
+        .tickets-count {
+            display: inline-flex;
+            align-items: center;
+            margin-top: .75rem;
+            padding: .4rem .7rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148,163,184,.25);
+            background: rgba(15,23,42,.65);
+            color: #cbd5e1;
+            font-size: .7rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ─── Ghost button ───────────────────────────────────── */
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            border: 1px solid rgba(255,255,255,.14);
+            background: rgba(255,255,255,.04);
+            border-radius: .75rem;
+            padding: .55rem 1.1rem;
+            font-size: .78rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: border-color .2s, background .2s, color .2s;
+            white-space: nowrap;
+        }
+        .btn-ghost:hover {
+            border-color: rgba(34,211,238,.4);
+            background: rgba(34,211,238,.07);
+            color: #e2f8ff;
+        }
+
+        /* ─── Ticket Grid ────────────────────────────────────── */
+        .ticket-grid {
+            display: grid;
+            gap: 1.25rem;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        }
+        @media (min-width: 640px)  { .ticket-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .ticket-grid { grid-template-columns: repeat(4, 1fr); } }
+
+        /* ─── Ticket Card ────────────────────────────────────── */
+        .ticket-card {
+            position: relative;
+            border-radius: 1.25rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0,0,0,.35);
+            animation: card-in .5s ease both;
+            animation-delay: var(--delay, 0ms);
+            cursor: default;
+        }
+        @keyframes card-in {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── Ticket Hero ────────────────────────────────────── */
+        .ticket-hero {
+            position: relative;
+            height: 7.5rem;
+            overflow: hidden;
+        }
+        .ticket-hero__img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        .ticket-hero__fallback {
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0e7490 0%, #1d4ed8 50%, #4338ca 100%);
+        }
+        .ticket-hero__overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(2,8,23,.95) 0%, rgba(2,8,23,.3) 60%, transparent 100%);
+        }
+        .ticket-hero__label {
+            position: absolute;
+            left: .75rem; right: .75rem; bottom: .6rem;
+        }
+        .ticket-hero__title {
+            font-size: .82rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.25;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Date badge */
+        .ticket-date-badge {
+            position: absolute;
+            top: .6rem; right: .6rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(2,8,23,.75);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(34,211,238,.25);
+            border-radius: .6rem;
+            padding: .25rem .55rem;
+            line-height: 1;
+        }
+        .ticket-date-badge__month {
+            font-size: .55rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--cyan);
+        }
+        .ticket-date-badge__day {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #fff;
+            margin-top: .1rem;
+        }
+
+        /* ─── Perforation ────────────────────────────────────── */
+        .ticket-perforation {
+            display: flex;
+            align-items: center;
+            padding: 0 -.75rem;
+            gap: 0;
+        }
+        .ticket-perforation__circle {
+            display: block;
+            width: 14px; height: 14px;
+            background: #020817; /* matches page bg */
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin: 0 -7px;
+            border: 1px solid var(--card-border);
+            position: relative;
+            z-index: 1;
+        }
+        .ticket-perforation__line {
+            flex: 1;
+            height: 1px;
+            background: repeating-linear-gradient(
+                90deg,
+                rgba(255,255,255,.12) 0px,
+                rgba(255,255,255,.12) 5px,
+                transparent 5px,
+                transparent 9px
+            );
+        }
+
+        /* ─── Ticket Body ────────────────────────────────────── */
+        .ticket-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: .6rem;
+            padding: .65rem .75rem .75rem;
+        }
+
+        /* Meta row */
+        .ticket-meta {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+        .ticket-meta__item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: .15rem;
+        }
+        .ticket-meta__item--right {
+            align-items: flex-end;
+            text-align: right;
+        }
+        .ticket-meta__label {
+            font-size: .58rem;
+            font-weight: 600;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: #64748b;
+        }
+        .ticket-meta__value {
+            font-size: .78rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        .ticket-meta__value--accent { color: var(--cyan); }
+        .ticket-meta__sep {
+            width: 1px; height: 1.8rem;
+            background: rgba(255,255,255,.1);
+            flex-shrink: 0;
+        }
+
+        /* CTA link */
+        .ticket-cta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .5rem;
+            background: rgba(34,211,238,.08);
+            border: 1px solid rgba(34,211,238,.2);
+            border-radius: .65rem;
+            padding: .5rem .75rem;
+            font-size: .75rem;
+            font-weight: 600;
+            color: #a5f3fc;
+            text-decoration: none;
+        }
+        .ticket-cta__icon {
+            width: 14px; height: 14px;
+            flex-shrink: 0;
+        }
+
+        .buy-ticket-card {
+            border: 2px dashed rgba(34,211,238,.45);
+            border-radius: 1.25rem;
+            background: rgba(34,211,238,.06);
+            min-height: 14.5rem;
+            padding: 1rem;
+            color: #e2f8ff;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: .5rem;
+        }
+        .buy-ticket-card__eyebrow {
+            font-size: .65rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: #67e8f9;
+        }
+        .buy-ticket-card__title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            line-height: 1.1;
+            color: #ecfeff;
+        }
+        .buy-ticket-card__text {
+            font-size: .82rem;
+            color: #bae6fd;
+            max-width: 16rem;
+        }
+        .buy-ticket-card__link {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            margin-top: .2rem;
+            font-size: .78rem;
+            font-weight: 700;
+            color: #a5f3fc;
+        }
+
+        /* ─── Empty State ────────────────────────────────────── */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 1rem;
+            border: 1px dashed rgba(255,255,255,.1);
+            border-radius: 1.5rem;
+            background: rgba(255,255,255,.02);
+            padding: 4rem 2rem;
+            animation: card-in .5s ease both;
+        }
+        .empty-state__icon {
+            width: 72px; height: 72px;
+            color: #334155;
+            margin-bottom: .5rem;
+        }
+        .empty-state__title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #f1f5f9;
+            letter-spacing: -.01em;
+        }
+        .empty-state__text {
+            font-size: .88rem;
+            color: #64748b;
+            max-width: 28rem;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        /* Primary button */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: var(--cyan);
+            border-radius: .85rem;
+            padding: .65rem 1.4rem;
+            font-size: .85rem;
+            font-weight: 700;
+            color: #020817;
+            text-decoration: none;
+            margin-top: .5rem;
+            transition: background .2s, transform .2s, box-shadow .2s;
+            box-shadow: 0 0 0 0 rgba(34,211,238,0);
+        }
+        .btn-primary:hover {
+            background: #67e8f9;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(34,211,238,.25);
+        }
+
+        /* ─── Reduced motion ─────────────────────────────────── */
+        @media (prefers-reduced-motion: reduce) {
+            .ticket-card, .empty-state { animation: none; }
+            .orb-1, .orb-2, .badge-dot { animation: none; }
+        }
+    </style>
 @endsection
