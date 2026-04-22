@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\UserScanner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
@@ -37,8 +38,22 @@ class AdminController extends Controller
         if ($request->password) {
             $user->password = Hash::make($request->password);
         }
+
+
+        if ($request->security_pin) {
+            UserScanner::updateOrCreate(
+                ['user_id' => $user->id],
+                ['security_pin' => Hash::make($request->security_pin)]
+            );
+        }
+
         $user->save();
 
-        return redirect()->route('user.profile')->with('success', 'Profile updated successfully.');
+        // Redirect to correct profile route based on user role
+        if ($user->role?->type === 'staff') {
+            return redirect()->route('staff.profile')->with('success', 'Profile updated successfully.');
+        } else {
+            return redirect()->route('user.profile')->with('success', 'Profile updated successfully.');
+        }
     }
 }

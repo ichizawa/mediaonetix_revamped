@@ -24,6 +24,7 @@ class ControlPanelController extends Controller
     {
         switch ($request->quick_action) {
             case 'restart':
+                Artisan::call('app:restart-command');
                 return back()->with('success', 'Services restarted successfully.');
 
             case 'clear-cache':

@@ -92,11 +92,6 @@
 </div>
 
 <script>
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('add') === '1' && typeof openExportSalesModal === 'function') {
-        setTimeout(() => openExportSalesModal(), 200);
-    }
-
     function openExportSalesModal() {
         const modal = document.getElementById('exportSalesModal');
         const content = document.getElementById('exportSalesModalContent');
@@ -109,6 +104,11 @@
             content.classList.remove('scale-95', 'opacity-0');
             content.classList.add('scale-100', 'opacity-100');
         }, 10);
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('add') === '2' && typeof openExportSalesModal === 'function') {
+        setTimeout(() => openExportSalesModal(), 200);
     }
 
     function closeExportSalesModal() {

@@ -261,7 +261,7 @@ class PublicController extends Controller
 
         // Check if promo code exists in the DB
         if (!empty($request['promo_code'])) {
-            $promoExists = PromoCodes::where('code', $request['promo_code'])->exists();
+            $promoExists = PromoCodes::where('slug', $request['promo_code'])->exists();
 
             if ($promoExists) {
                 if (in_array(strtoupper($ticket_name), ['PLATINUM', 'SVIP'])) {

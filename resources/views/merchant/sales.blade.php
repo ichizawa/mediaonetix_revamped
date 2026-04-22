@@ -63,7 +63,8 @@
                             <button onclick="openSalesModal()"
                                 class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white font-medium transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4"></path>
                                 </svg>
                                 <span class="text-sm sm:text-base">Add Sale</span>
                             </button>
@@ -94,7 +95,8 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div
                                     class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
                                         </path>
@@ -123,7 +125,8 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div
                                     class="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-400 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
                                         </path>
@@ -152,7 +155,8 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div
                                     class="w-12 h-12 bg-gradient-to-br from-green-600 to-green-400 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
@@ -180,14 +184,16 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div
                                     class="w-12 h-12 bg-gradient-to-br from-orange-600 to-orange-400 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                 </div>
                                 <span class="text-yellow-400 text-sm font-semibold flex items-center gap-1">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M20 12H4">
                                         </path>
                                     </svg>
                                     158
@@ -290,13 +296,14 @@
                                     customerName: '{{ addslashes($sale->customer_name) }}',
                                     customerEmail: '{{ addslashes($sale->customer_email) }}',
                                     eventName: '{{ addslashes($sale->event->event_name) }}',
-                                    ticketType: '{{ addslashes($sale->ticket->name)}}',
+                                    ticketType: '{{ addslashes($sale->ticket->name) }}',
                                     quantity: {{ $sale->quantity }},
                                     unitPrice: '{{ number_format($sale->ticket->price, 2) }}',
                                     totalAmount: '{{ number_format($sale->total_amount, 2) }}',
                                     paymentMethod: '{{ addslashes($sale->payment_method ?? 'N/A') }}',
                                     date: '{{ $sale->created_at->format('M d, Y • h:i A') }}'
-                                })" class="bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer hover:bg-white/10 transition-all">
+                                })"
+                                class="bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer hover:bg-white/10 transition-all">
                                 <div class="flex items-start justify-between gap-3 mb-3">
                                     <p class="text-white font-mono text-xs break-all">{{ $sale->reference_number }}</p>
                                     <span
@@ -321,7 +328,8 @@
                                     </div>
                                     <div>
                                         <p class="text-gray-400">Ticket</p>
-                                        <p class="text-white mt-0.5">{{ $sale->ticket->name }} x {{ $sale->quantity }}</p>
+                                        <p class="text-white mt-0.5">{{ $sale->ticket->name }} x {{ $sale->quantity }}
+                                        </p>
                                     </div>
                                     <div>
                                         <p class="text-gray-400">Date</p>
@@ -330,9 +338,13 @@
                                 </div>
 
                                 <div class="flex gap-2">
-                                    <button onclick="event.stopPropagation()" class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    <button onclick="event.stopPropagation()"
+                                        class="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
+                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                            </path>
                                         </svg>
                                     </button>
                                 </div>
@@ -372,9 +384,11 @@
                                                     totalAmount: '{{ number_format($sale->total_amount, 2) }}',
                                                     paymentMethod: '{{ addslashes($sale->payment_method ?? 'N/A') }}',
                                                     date: '{{ $sale->created_at->format('M d, Y • h:i A') }}'
-                                                })" class="border-b border-white/5 hover:bg-white/10 transition-all cursor-pointer">
+                                                })"
+                                        class="border-b border-white/5 hover:bg-white/10 transition-all cursor-pointer">
                                         <td class="py-4 px-4">
-                                            <span class="text-white font-mono text-sm">{{ $sale->reference_number }}</span>
+                                            <span
+                                                class="text-white font-mono text-sm">{{ $sale->reference_number }}</span>
                                         </td>
                                         <td class="py-4 px-4">
                                             <div>
@@ -404,7 +418,7 @@
                                                 {{ $sale->status_label['label'] }}
                                             </span>
                                         </td>
-                                      
+
                                     </tr>
                                 @empty
                                     <tr>
@@ -442,7 +456,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script>
-// --- Revenue Chart ---
+        // --- Revenue Chart ---
         const ctx = document.getElementById('revenueChart');
         const isMobileViewport = window.matchMedia('(max-width: 640px)').matches;
         const revenuePeriods = @json($chartData ?? []);
@@ -506,7 +520,9 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false },
+                        legend: {
+                            display: false
+                        },
                         tooltip: {
                             backgroundColor: 'rgba(17, 24, 39, 0.9)',
                             padding: isMobileViewport ? 10 : 12,
@@ -516,7 +532,7 @@
                             borderWidth: 1,
                             displayColors: false,
                             callbacks: {
-                                label: function (context) {
+                                label: function(context) {
                                     return '₱' + context.parsed.y.toLocaleString();
                                 }
                             }
@@ -525,22 +541,34 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                drawBorder: false
+                            },
                             ticks: {
                                 color: '#9ca3af',
                                 maxTicksLimit: isMobileViewport ? 5 : 8,
-                                font: { size: isMobileViewport ? 10 : 12 },
-                                callback: function (value) { return '₱' + value.toLocaleString(); }
+                                font: {
+                                    size: isMobileViewport ? 10 : 12
+                                },
+                                callback: function(value) {
+                                    return '₱' + value.toLocaleString();
+                                }
                             }
                         },
                         x: {
-                            grid: { display: false, drawBorder: false },
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
                             ticks: {
                                 color: '#9ca3af',
                                 maxRotation: 0,
                                 autoSkip: true,
                                 maxTicksLimit: isMobileViewport ? 4 : 7,
-                                font: { size: isMobileViewport ? 10 : 12 }
+                                font: {
+                                    size: isMobileViewport ? 10 : 12
+                                }
                             }
                         }
                     }
@@ -548,7 +576,7 @@
             });
 
             revenuePeriodButtons.forEach((button) => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', function() {
                     updateRevenueChart(this.dataset.revenuePeriod);
                 });
             });
@@ -556,25 +584,57 @@
             setActiveRevenuePeriod('week');
         }
 
-          // Open Add Event modal if ?add=1 is in the URL
-            const params = new URLSearchParams(window.location.search);
-            if (params.get('add') === '1' && typeof openSalesModal === 'function') {
-                setTimeout(() => openSalesModal(), 200);
-            }
+        // Open Add Event modal if ?add=1 is in the URL
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('add') === '1' && typeof openSalesModal === 'function') {
+            setTimeout(() => openSalesModal(), 200);
+        } else if (params.get('add') === '2' && typeof openExportSalesModal === 'function') {
+            setTimeout(() => openExportSalesModal(), 200);
+        }
+
+
+
 
         // --- "New Sale" Modal Functions ---
         function openSalesModal() {
             document.getElementById('salesModal').classList.add('active');
-            
+
         }
-      
+
+        function openExportSalesModal() {
+            const modal = document.getElementById('exportSalesModal');
+            const content = document.getElementById('exportSalesModalContent');
+
+            modal.classList.remove('hidden');
+
+            // Timeout ensures the browser registers the display change before animating
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeExportSalesModal() {
+            const modal = document.getElementById('exportSalesModal');
+            const content = document.getElementById('exportSalesModalContent');
+
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300); // 300ms matches the duration in the tailwind class
+        }
+
 
         function closeSalesModal() {
             document.getElementById('salesModal').classList.remove('active');
         }
 
 
-            // function updateTicketPrice() {
+        // function updateTicketPrice() {
         //     const select = document.getElementById('ticketSelect');
         //     const price = select.value;
         //     document.getElementById('ticketPrice').textContent = price ? parseFloat(price).toFixed(2) : '0.00';
@@ -588,7 +648,7 @@
         //     document.getElementById('totalPrice').textContent = total.toFixed(2);
         // }
     </script>
-@include('merchant.component.sales.modal')
-@include('merchant.component.sales.view-sales')
-@include('merchant.component.sales.export-modal')
+    @include('merchant.component.sales.modal')
+    @include('merchant.component.sales.view-sales')
+    @include('merchant.component.sales.export-modal')
 @endsection

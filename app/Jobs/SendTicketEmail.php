@@ -57,6 +57,7 @@ class SendTicketEmail implements ShouldQueue
             $pdf->getDomPDF()->getOptions()->set('margin_right', 0);
             $pdf->getDomPDF()->getOptions()->set('margin_bottom', 0);
             $pdf->getDomPDF()->getOptions()->set('margin_left', 0);
+            $pdf->getDomPDF()->getOptions()->set('isRemoteEnabled', true);
 
             $pdfContent = $pdf->output();
 

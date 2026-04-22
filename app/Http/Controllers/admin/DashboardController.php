@@ -13,9 +13,25 @@ class DashboardController extends Controller
 {
     public function index()
     {
-
-        // Filter sales per merchant or auth
+        // Get user first
         $user = Auth::user();
+        // Ensure $user is an instance of App\Models\User
+        if (!($user instanceof \App\Models\User)) {
+            $user = \App\Models\User::find($user->id);
+        }
+        // Calculate tickets scanned (redeemed) for the merchant/organizer
+        $tickets_scanned_query = \App\Models\CustomerTicket::where('is_redeemed', true);
+        if ($user->isMerchant()) {
+            $tickets_scanned_query->whereHas('sale.event', function ($q) use ($user) {
+                $q->where('created_by', $user->id);
+            });
+        } elseif ($user->isOrganizer() && $user->binded_merchant_id) {
+            $tickets_scanned_query->whereHas('sale.event', function ($q) use ($user) {
+                $q->where('created_by', $user->binded_merchant_id);
+            });
+        }
+        $tickets_scanned = $tickets_scanned_query->count();
+        // Filter sales per merchant or auth
         $salesQuery = Sales::where('status', 1);
         if ($user->isMerchant()) {
             // Join with events and filter by created_by (merchant)
@@ -58,7 +74,7 @@ class DashboardController extends Controller
         } else {
             $sales_percent = 0;
         }
-        
+
 
         $tickets_sold = $salesQuery->sum('quantity');
 
@@ -120,15 +136,35 @@ class DashboardController extends Controller
             $total_staffs = User::staffs()->count(); // Admin or fallback
         }
 
-    
+
         $recent_events_all = Events::where('status', 1)->take(5)->get();
 
 
         $recent_events = Events::where('created_by', $user->id)->latest()->take(5)->get();
-        
+
+        $recent_events_under_merchant = Events::where('created_by', $user->binded_merchant_id)->latest()->take(5)->get();
+        $active_events_under_merchant = Events::where('created_by', $user->binded_merchant_id)->where('status', 1)->count();
+
         $recent_sales = (clone $salesQuery)->latest()->take(5)->get();
 
-        return view(Auth::user()->routePrefix() . '.dashboard', compact('total_sales', 'tickets_sold', 'active_events', 'total_users', 'recent_events', 'recent_sales', 'sales_percent', 'tickets_percent', 'active_events_additional','total_staffs', 'recent_events_all'));
-        
+
+
+        // Staff
+
+        // Tickets scanned today by this staff (scanner)
+        $scanned_tickets_today = \App\Models\CustomerTicket::where('is_redeemed', true)
+            ->where('scanned_by', $user->id)
+            ->whereDate('updated_at', now()->toDateString())
+            ->count();
+
+
+        $scanned_tickets_by_event = \App\Models\CustomerTicket::selectRaw('events.event_name as event_name, COUNT(customer_tickets.id) as scanned_count')
+            ->join('sales', 'customer_tickets.sale_id', '=', 'sales.id')
+            ->join('events', 'sales.event_id', '=', 'events.id')
+            ->where('customer_tickets.is_redeemed', true)
+            ->groupBy('events.id')
+            ->count();
+
+        return view($user->routePrefix() . '.dashboard', compact('total_sales', 'tickets_sold', 'active_events', 'total_users', 'recent_events', 'recent_sales', 'sales_percent', 'tickets_percent', 'active_events_additional', 'total_staffs', 'recent_events_all', 'recent_events_under_merchant', 'tickets_scanned', 'active_events_under_merchant', 'scanned_tickets_today', 'scanned_tickets_by_event'));
     }
 }

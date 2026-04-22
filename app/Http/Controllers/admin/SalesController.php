@@ -153,7 +153,7 @@ class SalesController extends Controller
             $completed_sales = Sales::getAllSalesByMerchant(Auth::user()->id)->where('status', 1)->count();
             $pending_sales = Sales::getAllSalesByMerchant(Auth::user()->id)->where('status', 0)->count();
         }
-        
+
 
 
 
@@ -538,7 +538,7 @@ class SalesController extends Controller
 
         // Check if promo code exists in the DB
         if (!empty($request['promo_code'])) {
-            $promoExists = PromoCodes::where('code', $request['promo_code'])->exists();
+            $promoExists = PromoCodes::where('slug', $request['promo_code'])->exists();
 
             if ($promoExists) {
                 if (in_array(strtoupper($ticket_name), ['PLATINUM', 'SVIP'])) {
@@ -869,6 +869,16 @@ class SalesController extends Controller
                         'ticket_type' => $resp->ticket->ticket_type ?? $resp->ticket->type,
                         'event_date' => $resp->event->event_date,
                         'qrcode' => $qrcode,
+                        'event_name' => $resp->event->event_name,
+                        'event_date' => $resp->event->event_date,
+                        'event_category' => $resp->event->category ?? 'General',
+                        'event_image' => $resp->event->event_image,
+                        'crop_x' => $resp->event->crop_x,
+                        'crop_y' => $resp->event->crop_y,
+                        'crop_width' => $resp->event->crop_width,
+                        'crop_height' => $resp->event->crop_height,
+                        'crop_natural_width' => $resp->event->crop_natural_width,
+                        'crop_natural_height' => $resp->event->crop_natural_height,
                     ];
                 }
 

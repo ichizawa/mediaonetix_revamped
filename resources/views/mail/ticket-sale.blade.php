@@ -3,7 +3,7 @@
 
     <p>
         <strong>Name:</strong> {{ $sale->customer_name }}<br>
-        <strong>Admission Type:</strong> {{ $sale->ticket->ticket_type }}<br>
+        <strong>Admission Type:</strong> {{ $sale->ticket->type }}<br>
         <strong>Event Name:</strong> {{ $sale->event->event_name }}<br>
         <strong>Event Date:</strong> {{ $sale->event->event_date }} at {{ $sale->event->event_time }}<br>
         <strong>Event Venue:</strong> {{ $sale->event->event_venue }}

@@ -268,7 +268,7 @@
                         </button>
 
                         <button
-                            class="flex flex-col items-center justify-center p-6 bg-gradient-to-br from-blue-600/20 to-blue-400/10 border border-blue-500/30 rounded-xl hover:border-blue-500/50 transition-all group" onclick="window.location.href='{{ route('merchant.sales') }}'">
+                            class="flex flex-col items-center justify-center p-6 bg-gradient-to-br from-blue-600/20 to-blue-400/10 border border-blue-500/30 rounded-xl hover:border-blue-500/50 transition-all group" onclick="window.location.href='{{ route('merchant.sales') }}?add=2'">
                             <div
                                 class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
@@ -278,7 +278,7 @@
                                     </path>
                                 </svg>
                             </div>
-                            <span class="text-white font-semibold">View Sales Reports</span>
+                            <span class="text-white font-semibold">Export Report</span>
                         </button>
 
                         <button
