@@ -128,20 +128,29 @@ class DashboardController extends Controller
         
         $recent_sales = (clone $salesQuery)->latest()->take(5)->get();
 
+        $sort = request('sort', 'asc');
+        $validSorts = ['asc', 'desc'];
+        if (!in_array($sort, $validSorts)) {
+            $sort = 'asc';
+        }
+
         $currentTicketSale = null;
         $currentTicketSales = collect();
         if ($user->role?->type === 'user') {
-            $currentTicketSales = Sales::with(['event', 'ticket'])
-                ->where('status', 1)
-                ->where('customer_email', $user->email)
-                ->latest()
+            $currentTicketSales = Sales::select('sales.*')
+                ->join('events', 'sales.event_id', '=', 'events.id')
+                ->with(['event', 'ticket'])
+                ->where('sales.status', 1)
+                ->where('sales.customer_email', $user->email)
+                ->where('events.event_date', '>=', date('Y-m-d'))
+                ->orderBy('events.event_date', $sort)
                 ->take(12)
                 ->get();
 
             $currentTicketSale = $currentTicketSales->first();
         }
 
-        return view(Auth::user()->routePrefix() . '.dashboard', compact('total_sales', 'tickets_sold', 'active_events', 'total_users', 'recent_events', 'recent_sales', 'sales_percent', 'tickets_percent', 'active_events_additional','total_staffs', 'recent_events_all', 'currentTicketSale', 'currentTicketSales'));
+        return view(Auth::user()->routePrefix() . '.dashboard', compact('total_sales', 'tickets_sold', 'active_events', 'total_users', 'recent_events', 'recent_sales', 'sales_percent', 'tickets_percent', 'active_events_additional','total_staffs', 'recent_events_all', 'currentTicketSale', 'currentTicketSales', 'sort'));
         
     }
 }
