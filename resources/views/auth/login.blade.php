@@ -80,7 +80,7 @@
                                     class="w-4 h-4 rounded border-gray-600 bg-white/5 text-blue-500 focus:ring-blue-500/20 focus:ring-offset-0">
                                 <span class="text-gray-400 group-hover:text-gray-300 transition-colors">Remember me</span>
                             </label>
-                            <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors font-medium">Forgot
+                            <a href="{{ route('forget.password.get') }}" class="text-blue-400 hover:text-blue-300 transition-colors font-medium">Forgot
                                 password?</a>
                         </div>
 

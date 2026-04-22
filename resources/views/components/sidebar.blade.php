@@ -83,7 +83,7 @@
 
 
                 @if (auth()->user()->isAdmin())
-                    <a href="{{ route(auth()->user()->routePrefix() . '.merchants.merchant') }}"
+                    <a href="{{ route(auth()->user()->routePrefix() . '.merchants') }}"
                         class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs(auth()->user()->routePrefix() . '.merchants*') ? 'bg-blue-500/20 border border-blue-500/30 text-blue-400' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

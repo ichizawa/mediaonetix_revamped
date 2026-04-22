@@ -35,7 +35,7 @@ class EventsController extends Controller
     public function eventsPublic()
     {
         try {
-            $events = Events::upcomingWithShowcases()
+            $events = Events::UpcomingWithShowcasesAndApproved()
                 ->with([
 
                     'tickets'

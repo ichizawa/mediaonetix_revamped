@@ -85,7 +85,8 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div
                                     class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
                                         </path>
@@ -114,7 +115,8 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div
                                     class="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-400 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
                                         </path>
@@ -143,7 +145,8 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div
                                     class="w-12 h-12 bg-gradient-to-br from-green-600 to-green-400 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
@@ -171,14 +174,16 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div
                                     class="w-12 h-12 bg-gradient-to-br from-orange-600 to-orange-400 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                 </div>
                                 <span class="text-yellow-400 text-sm font-semibold flex items-center gap-1">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M20 12H4">
                                         </path>
                                     </svg>
                                     158
@@ -286,7 +291,8 @@
                                     totalAmount: '{{ number_format($sale->total_amount, 2) }}',
                                     paymentMethod: '{{ addslashes($sale->payment_method ?? 'N/A') }}',
                                     date: '{{ $sale->created_at->format('M d, Y • h:i A') }}'
-                                })" class="bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer hover:bg-white/10 transition-all">
+                                })"
+                                class="bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer hover:bg-white/10 transition-all">
                                 <div class="flex items-start justify-between gap-3 mb-3">
                                     <p class="text-white font-mono text-xs break-all">{{ $sale->reference_number }}</p>
                                     <span
@@ -311,7 +317,8 @@
                                     </div>
                                     <div>
                                         <p class="text-gray-400">Ticket</p>
-                                        <p class="text-white mt-0.5">{{ $sale->ticket?->name ?? 'N/A' }} x {{ $sale->quantity }}</p>
+                                        <p class="text-white mt-0.5">{{ $sale->ticket?->name ?? 'N/A' }} x
+                                            {{ $sale->quantity }}</p>
                                     </div>
                                     <div>
                                         <p class="text-gray-400">Date</p>
@@ -354,9 +361,11 @@
                                                     totalAmount: '{{ number_format($sale->total_amount, 2) }}',
                                                     paymentMethod: '{{ addslashes($sale->payment_method ?? 'N/A') }}',
                                                     date: '{{ $sale->created_at->format('M d, Y • h:i A') }}'
-                                                })" class="border-b border-white/5 hover:bg-white/10 transition-all cursor-pointer">
+                                                })"
+                                        class="border-b border-white/5 hover:bg-white/10 transition-all cursor-pointer">
                                         <td class="py-4 px-4">
-                                            <span class="text-white font-mono text-sm">{{ $sale->reference_number }}</span>
+                                            <span
+                                                class="text-white font-mono text-sm">{{ $sale->reference_number }}</span>
                                         </td>
                                         <td class="py-4 px-4">
                                             <div>
@@ -365,14 +374,17 @@
                                             </div>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <span class="text-white text-sm">{{ $sale->event?->event_name ?? 'N/A' }}</span>
+                                            <span
+                                                class="text-white text-sm">{{ $sale->event?->event_name ?? 'N/A' }}</span>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <span class="text-gray-400 text-sm">{{ $sale->created_at->format('M d, Y - h:i A') }}</span>
+                                            <span
+                                                class="text-gray-400 text-sm">{{ $sale->created_at->format('M d, Y - h:i A') }}</span>
                                         </td>
                                         <td class="py-4 px-4">
                                             <div>
-                                                <p class="text-white font-medium text-sm">{{ $sale->ticket?->name ?? 'N/A' }}</p>
+                                                <p class="text-white font-medium text-sm">
+                                                    {{ $sale->ticket?->name ?? 'N/A' }}</p>
                                                 <p class="text-gray-400 text-xs">x {{ $sale->quantity }}</p>
                                             </div>
                                         </td>
@@ -498,7 +510,7 @@
                             borderWidth: 1,
                             displayColors: false,
                             callbacks: {
-                                label: function (context) {
+                                label: function(context) {
                                     return '₱' + context.parsed.y.toLocaleString();
                                 }
                             }
@@ -517,7 +529,7 @@
                                 font: {
                                     size: isMobileViewport ? 10 : 12
                                 },
-                                callback: function (value) {
+                                callback: function(value) {
                                     return '₱' + value.toLocaleString();
                                 }
                             }
@@ -542,7 +554,7 @@
             });
 
             revenuePeriodButtons.forEach((button) => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', function() {
                     updateRevenueChart(this.dataset.revenuePeriod);
                 });
             });
@@ -574,6 +586,17 @@
         //     const total = price * quantity;
         //     document.getElementById('totalPrice').textContent = total.toFixed(2);
         // }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('add') === '1' && typeof openExportSalesModal === 'function') {
+                setTimeout(() => openExportSalesModal(), 200);
+            }
+
+            if (params.get('add') === '2' && typeof openSalesModal === 'function') {
+                setTimeout(() => openSalesModal(), 200);
+            }
+        });
     </script>
     @include('merchant.component.sales.export-modal', [
         'exportPdfRoute' => route('admin.sales.export.pdf'),

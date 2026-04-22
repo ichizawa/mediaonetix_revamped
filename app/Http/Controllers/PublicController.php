@@ -119,10 +119,10 @@ class PublicController extends Controller
                 ->where('created_at', '>=', now()->subMinutes(15))
                 ->count();
 
-            if ($recentAttempts >= 3) {
-                Log::warning("Fraud Alert: High velocity checkout attempts from email: " . $request->customer_email);
-                return back()->with('error', 'You are creating too many transactions. Please wait 15 minutes and try again.');
-            }
+            // if ($recentAttempts >= 3) {
+            //     Log::warning("Fraud Alert: High velocity checkout attempts from email: " . $request->customer_email);
+            //     return back()->with('error', 'You are creating too many transactions. Please wait 15 minutes and try again.');
+            // }
 
             DB::beginTransaction();
 
@@ -261,7 +261,7 @@ class PublicController extends Controller
 
         // Check if promo code exists in the DB
         if (!empty($request['promo_code'])) {
-            $promoExists = PromoCodes::where('code', $request['promo_code'])->exists();
+            $promoExists = PromoCodes::where('slug', $request['promo_code'])->exists();
 
             if ($promoExists) {
                 if (in_array(strtoupper($ticket_name), ['PLATINUM', 'SVIP'])) {
@@ -460,7 +460,7 @@ class PublicController extends Controller
             $latest_id = Sales::max('id');
             $nextId = is_null($latest_id) ? 1 : $latest_id + 1;
             $currentDate = date('y-m-d');
-            $password = 'M1TIX-' . bin2hex(random_bytes(6)) ;
+            $password = 'M1TIX-' . bin2hex(random_bytes(6));
 
             // Check if PayMongo says it's paid AND we haven't sent the email yet
             if ($status === 'paid' && $resp->is_email_sent == 0) {
@@ -521,6 +521,17 @@ class PublicController extends Controller
                         'ticket_type' => $resp->ticket->ticket_type ?? $resp->ticket->type,
                         'event_date' => $resp->event->event_date,
                         'qrcode' => $qrcode,
+
+                        'event_name' => $resp->event->event_name,
+                        'event_date' => $resp->event->event_date,
+                        'event_category' => $resp->event->category ?? 'General',
+                        'event_image' => $resp->event->event_image,
+                        'crop_x' => $resp->event->crop_x,
+                        'crop_y' => $resp->event->crop_y,
+                        'crop_width' => $resp->event->crop_width,
+                        'crop_height' => $resp->event->crop_height,
+                        'crop_natural_width' => $resp->event->crop_natural_width,
+                        'crop_natural_height' => $resp->event->crop_natural_height,
                     ];
                 }
 

@@ -207,14 +207,12 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @forelse($events as $event)
-                        <div data-status="{{ $event->status }}" onclick="setActiveEvent('{{ $event->slug }}')"
+                        <div data-status="{{ $event->status }}"
                             class="event-card bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm rounded-2xl overflow-hidden {{ $event->latestShowcase ? 'border border-green-400' : '' }}">
                             <div class="relative h-48 bg-gradient-to-br from-blue-600/20 to-purple-600/20">
-                                <div
-                                    class="event-card-media absolute inset-0 bg-cover bg-center opacity-40"
+                                <div class="event-card-media absolute inset-0 bg-cover bg-center opacity-40"
                                     data-image-url="{{ $event->event_image ? asset('images/events/' . $event->event_image) : '' }}"
-                                    data-crop-x="{{ $event->crop_x ?? '' }}"
-                                    data-crop-y="{{ $event->crop_y ?? '' }}"
+                                    data-crop-x="{{ $event->crop_x ?? '' }}" data-crop-y="{{ $event->crop_y ?? '' }}"
                                     data-crop-width="{{ $event->crop_width ?? '' }}"
                                     data-crop-height="{{ $event->crop_height ?? '' }}"
                                     data-crop-natural-width="{{ $event->crop_natural_width ?? '' }}"
@@ -329,17 +327,35 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        @if(is_null($event->approved_at))
-                                        <button onclick='openEditModal(@json($event))'
-                                            class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all"
-                                            title="Approve Event">
-                                            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </button>
+                                        @if (is_null($event->approved_at))
+                                            <button onclick='openEditModal(@json($event))'
+                                                class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all"
+                                                title="Approve Event">
+                                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </button>
                                         @endif
+
+                                        <button type="button"
+                                            class="relative w-12 h-6 flex items-center bg-gray-700 rounded-full focus:outline-none transition-all border border-gray-600 {{ $event->latestShowcase ? 'bg-green-500/30 border-green-400' : '' }}"
+                                            onclick="toggleShowcase(this, '{{ $event->slug }}')"
+                                            aria-pressed="{{ $event->latestShowcase ? 'true' : 'false' }}"
+                                            title="{{ $event->latestShowcase ? 'Remove from Showcase' : 'Add to Showcase' }}">
+                                            <span
+                                                class="absolute left-0 top-0 w-full h-full rounded-full transition-colors {{ $event->latestShowcase ? 'bg-green-400/30' : 'bg-gray-700' }}"></span>
+                                            <span
+                                                class="z-10 flex items-center justify-center w-6 h-6 rounded-full transition-all duration-200 {{ $event->latestShowcase ? 'translate-x-6 bg-green-400' : 'translate-x-0 bg-gray-400' }}">
+                                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                                </svg>
+                                            </span>
+                                        </button>
+                                       
 
                                         <a href="{{ route('admin.events.tickets.tickets', $event->slug) }}"
                                             class="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
@@ -903,5 +919,26 @@
                 }
             });
         });
+
+        function toggleShowcase(btn, eventSlug) {
+            btn.disabled = true;
+            setActiveEvent(eventSlug);
+            // Optimistic UI: toggle switch immediately
+            const pressed = btn.getAttribute('aria-pressed') === 'true';
+            btn.setAttribute('aria-pressed', !pressed);
+            btn.title = !pressed ? 'Remove from Showcase' : 'Add to Showcase';
+            btn.classList.toggle('bg-green-500/30', !pressed);
+            btn.classList.toggle('border-green-400', !pressed);
+            btn.querySelector('span').classList.toggle('bg-green-400/30', !pressed);
+            btn.querySelector('span').classList.toggle('bg-gray-700', pressed);
+            const knob = btn.querySelectorAll('span')[1];
+            knob.classList.toggle('translate-x-6', !pressed);
+            knob.classList.toggle('bg-green-400', !pressed);
+            knob.classList.toggle('translate-x-0', pressed);
+            knob.classList.toggle('bg-gray-400', pressed);
+            setTimeout(() => {
+                btn.disabled = false;
+            }, 600);
+        }
     </script>
 @endsection

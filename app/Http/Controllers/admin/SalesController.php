@@ -153,7 +153,7 @@ class SalesController extends Controller
             $completed_sales = Sales::getAllSalesByMerchant(Auth::user()->id)->where('status', 1)->count();
             $pending_sales = Sales::getAllSalesByMerchant(Auth::user()->id)->where('status', 0)->count();
         }
-        
+
 
 
 
@@ -312,14 +312,14 @@ class SalesController extends Controller
     {
         try {
             // Anti-fraud: Limit to 3 attempts per 15 minutes per email
-            $recentAttempts = Sales::where('customer_email', $request->customer_email)
-                ->where('created_at', '>=', now()->subMinutes(15))
-                ->count();
+            // $recentAttempts = Sales::where('customer_email', $request->customer_email)
+            //     ->where('created_at', '>=', now()->subMinutes(15))
+            //     ->count();
 
-            if ($recentAttempts >= 3) {
-                Log::warning("Fraud Alert: High velocity checkout attempts from email: " . $request->customer_email);
-                return back()->with('error', 'You are creating too many transactions. Please wait 15 minutes and try again.');
-            }
+            // if ($recentAttempts >= 3) {
+            //     Log::warning("Fraud Alert: High velocity checkout attempts from email: " . $request->customer_email);
+            //     return back()->with('error', 'You are creating too many transactions. Please wait 15 minutes and try again.');
+            // }
 
             DB::beginTransaction();
 
@@ -393,14 +393,14 @@ class SalesController extends Controller
     public function createSale(SalesRequest $request)
     {
         try {
-            $recentAttempts = Sales::where('customer_email', $request->customer_email)
-                ->where('created_at', '>=', now()->subMinutes(15))
-                ->count();
+            // $recentAttempts = Sales::where('customer_email', $request->customer_email)
+            //     ->where('created_at', '>=', now()->subMinutes(15))
+            //     ->count();
 
-            if ($recentAttempts >= 3) {
-                Log::warning("Fraud Alert: High velocity checkout attempts from email: " . $request->customer_email);
-                return back()->with('error', 'You are creating too many transactions. Please wait 15 minutes and try again.');
-            }
+            // if ($recentAttempts >= 3) {
+            //     Log::warning("Fraud Alert: High velocity checkout attempts from email: " . $request->customer_email);
+            //     return back()->with('error', 'You are creating too many transactions. Please wait 15 minutes and try again.');
+            // }
 
             DB::beginTransaction();
 
@@ -538,7 +538,7 @@ class SalesController extends Controller
 
         // Check if promo code exists in the DB
         if (!empty($request['promo_code'])) {
-            $promoExists = PromoCodes::where('code', $request['promo_code'])->exists();
+            $promoExists = PromoCodes::where('slug', $request['promo_code'])->exists();
 
             if ($promoExists) {
                 if (in_array(strtoupper($ticket_name), ['PLATINUM', 'SVIP'])) {
@@ -869,6 +869,16 @@ class SalesController extends Controller
                         'ticket_type' => $resp->ticket->ticket_type ?? $resp->ticket->type,
                         'event_date' => $resp->event->event_date,
                         'qrcode' => $qrcode,
+                        'event_name' => $resp->event->event_name,
+                        'event_date' => $resp->event->event_date,
+                        'event_category' => $resp->event->category ?? 'General',
+                        'event_image' => $resp->event->event_image,
+                        'crop_x' => $resp->event->crop_x,
+                        'crop_y' => $resp->event->crop_y,
+                        'crop_width' => $resp->event->crop_width,
+                        'crop_height' => $resp->event->crop_height,
+                        'crop_natural_width' => $resp->event->crop_natural_width,
+                        'crop_natural_height' => $resp->event->crop_natural_height,
                     ];
                 }
 

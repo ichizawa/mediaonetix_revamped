@@ -326,6 +326,17 @@
         </div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('add') === '1' && typeof openAddMerchantModal === 'function') {
+                setTimeout(() => openAddMerchantModal(), 200);
+            }
+
+    
+        });
+    </script>
+
 
     @include('admin.component.merchant.deletemodal')
     @include('admin.component.merchant.view')

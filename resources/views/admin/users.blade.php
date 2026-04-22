@@ -1,4 +1,3 @@
-
 @extends('layouts')
 @section('content')
     @include('admin.component.users.add')
@@ -278,7 +277,7 @@
                                                 </form>
 
 
-                
+
                                             </div>
                                         </td>
                                     </tr>
@@ -300,6 +299,17 @@
         </div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('add') === '1' && typeof openAddUserModal === 'function') {
+                setTimeout(() => openAddUserModal(), 200);
+            }
+
+
+        });
+    </script>
+
 
     @include('admin.component.users.deletemodal')
     @include('admin.component.users.view')
@@ -307,7 +317,4 @@
 
     @include('admin.component.event.modal')
     @include ('admin.component.event.view')
-
-
-    
 @endsection

@@ -51,9 +51,8 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
         Route::post('store', [PromoCodesController::class, 'store'])->name('store');
     });
 
-    // Route::get('merchants', [MerchantController::class, 'index'])->name('merchants');
+    Route::get('merchants', [MerchantController::class, 'index'])->name('merchants');
     Route::prefix('merchants')->name('merchants.')->group(function () {
-        Route::get('/', [MerchantController::class, 'index'])->name('merchant');
         Route::post('store', [MerchantController::class, 'store'])->name('store');
         Route::get('files/{id}', [MerchantController::class, 'files'])->name('files');
         Route::post('files/{id}/review/{eventId}', [MerchantController::class, 'reviewSubmission'])->name('files.review');

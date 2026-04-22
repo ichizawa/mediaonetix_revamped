@@ -2,11 +2,11 @@
 @section('content')
     <main class="min-h-screen bg-[#0c1222] overflow-x-hidden">
         <section class="relative min-h-screen flex items-center justify-center overflow-hidden py-12 px-4">
-   
+
             <div class="relative w-full max-w-3xl">
                 <!-- Card Container -->
                 <div
-class="backdrop-blur-xl bg-gradient-to-br from-blue-950/30 to-cyan-900/20 border-2 border-blue-500/20 rounded-3xl overflow-hidden shadow-2xl shadow-blue-500/10 transition-all duration-500 hover:border-blue-500/40 hover:shadow-blue-500/20">
+                    class="backdrop-blur-xl bg-gradient-to-br from-blue-950/30 to-cyan-900/20 border-2 border-blue-500/20 rounded-3xl overflow-hidden shadow-2xl shadow-blue-500/10 transition-all duration-500 hover:border-blue-500/40 hover:shadow-blue-500/20">
 
                     <div class="relative p-8 lg:p-12">
                         <!-- Header Section -->
@@ -15,11 +15,12 @@ class="backdrop-blur-xl bg-gradient-to-br from-blue-950/30 to-cyan-900/20 border
                             <p class="text-blue-300 text-lg">Manage your account information and preferences</p>
                         </div>
 
-                    
+
                         <!-- Form Section -->
-                        <form action="{{ route('user.profile.update') }}" method="POST" class="space-y-6" enctype="multipart/form-data">
+                        <form action="{{ route('user.profile.update') }}" method="POST" class="space-y-6"
+                            enctype="multipart/form-data">
                             @csrf
-                        
+
 
                             <!-- Name Fields -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -103,7 +104,7 @@ class="backdrop-blur-xl bg-gradient-to-br from-blue-950/30 to-cyan-900/20 border
                                             </button>
                                         </div>
                                     </div>
-                               
+
                                 </div>
                             </div>
 
