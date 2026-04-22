@@ -165,7 +165,6 @@ class DashboardController extends Controller
             ->groupBy('events.id')
             ->count();
 
-        return view($user->routePrefix() . '.dashboard', compact('total_sales', 'tickets_sold', 'active_events', 'total_users', 'recent_events', 'recent_sales', 'sales_percent', 'tickets_percent', 'active_events_additional', 'total_staffs', 'recent_events_all', 'recent_events_under_merchant', 'tickets_scanned', 'active_events_under_merchant', 'scanned_tickets_today', 'scanned_tickets_by_event'));
         $sort = request('sort', 'asc');
         $validSorts = ['asc', 'desc'];
         if (!in_array($sort, $validSorts)) {
@@ -188,7 +187,6 @@ class DashboardController extends Controller
             $currentTicketSale = $currentTicketSales->first();
         }
 
-        return view(Auth::user()->routePrefix() . '.dashboard', compact('total_sales', 'tickets_sold', 'active_events', 'total_users', 'recent_events', 'recent_sales', 'sales_percent', 'tickets_percent', 'active_events_additional','total_staffs', 'recent_events_all', 'currentTicketSale', 'currentTicketSales', 'sort'));
-        
+        return view($user->routePrefix() . '.dashboard', compact('total_sales', 'tickets_sold', 'active_events', 'total_users', 'recent_events', 'recent_sales', 'sales_percent', 'tickets_percent', 'active_events_additional', 'total_staffs', 'recent_events_all', 'recent_events_under_merchant', 'tickets_scanned', 'active_events_under_merchant', 'scanned_tickets_today', 'scanned_tickets_by_event', 'currentTicketSale', 'currentTicketSales', 'sort'));
     }
 }
