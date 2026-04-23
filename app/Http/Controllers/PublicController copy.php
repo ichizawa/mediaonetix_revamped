@@ -112,6 +112,7 @@ class PublicController extends Controller
         return view('shareable.coming-soon');
     }
 
+
     public function createSale(SalesRequest $request)
     {
         try {

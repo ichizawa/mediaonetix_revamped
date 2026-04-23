@@ -7,6 +7,8 @@ use App\Models\SystemSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class ControlPanelController extends Controller
 {
@@ -24,11 +26,12 @@ class ControlPanelController extends Controller
     {
         switch ($request->quick_action) {
             case 'restart':
-                Artisan::call('app:restart-command');
+                Artisan::call('queue:restart');
+
                 return back()->with('success', 'Services restarted successfully.');
 
             case 'clear-cache':
-                Artisan::call('app:clear-cache-command');
+                Artisan::call('cache:clear');
                 return back()->with('success', 'Cache cleared successfully.');
 
             case 'system-logs':
@@ -38,8 +41,16 @@ class ControlPanelController extends Controller
                 return back()->with('success', 'Reports exported successfully.');
 
             case 'backup':
-                return back()->with('success', 'Database backup completed.');
+                try {
+                    // Queue the Spatie backup command (requires spatie/laravel-backup to be installed)
+                    // We queue it so the UI doesn't hang while the database dumps
+                    Artisan::queue('backup:run', ['--only-db' => true]);
 
+                    return back()->with('success', 'Database backup has been queued and is processing in the background.');
+                } catch (\Exception $e) {
+                    Log::error('Backup Quick Action failed: ' . $e->getMessage());
+                    return back()->with('error', 'Failed to start database backup. Check system logs.');
+                }
             default:
                 return back()->withErrors('Invalid action.');
         }
@@ -122,6 +133,27 @@ class ControlPanelController extends Controller
             ]);
 
             $path = resource_path('views/shareable/coming-soon.blade.php');
+
+            File::put($path, $request->input('html'));
+
+            return response()->json(['message' => 'Saved successfully.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'data' => null,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function update_maintenance(Request $request)
+    {
+        try {
+            $request->validate([
+                'html' => ['required', 'string'],
+            ]);
+
+            $path = resource_path('views/shareable/maintenance.blade.php');
 
             File::put($path, $request->input('html'));
 

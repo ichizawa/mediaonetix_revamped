@@ -10,6 +10,7 @@ use App\Models\CustomerTicket;
 use App\Models\Events;
 use App\Models\PromoCodes;
 use App\Models\Sales;
+use App\Models\SystemSettings;
 use App\Models\Tickets;
 use App\Models\User;
 use App\Services\PayMongoService;
@@ -96,10 +97,17 @@ class PublicController extends Controller
 
     public function event_details($id)
     {
+        $ticketSales = SystemSettings::where('type', 'ticket_sales')->first();
+
         try {
             $event = Events::with(['showcases', 'tickets'])->findOrFail($id);
             Log::info('Event details retrieved successfully for event ID: ' . $id);
-            return view('public.event-details', compact('event'));
+
+            if (!$ticketSales || $ticketSales->value == 0) {
+                return redirect()->route('public')->with('error', 'Unable to buy tickets at the moment. Please check back later.');
+            } else {
+                return view('public.event-details', compact('event'));
+            }
         } catch (\Exception $e) {
             Log::error('Error fetching event details for event ID ' . $id . ': ' . $e->getMessage());
             return view('public.event-details')->with('event', null);
@@ -112,6 +120,11 @@ class PublicController extends Controller
         return view('shareable.coming-soon');
     }
 
+    public function maintenance()
+    {
+        return view('shareable.maintenance');
+    }
+
     public function createSale(SalesRequest $request)
     {
         try {
@@ -119,10 +132,10 @@ class PublicController extends Controller
                 ->where('created_at', '>=', now()->subMinutes(15))
                 ->count();
 
-            // if ($recentAttempts >= 3) {
-            //     Log::warning("Fraud Alert: High velocity checkout attempts from email: " . $request->customer_email);
-            //     return back()->with('error', 'You are creating too many transactions. Please wait 15 minutes and try again.');
-            // }
+            if ($recentAttempts >= 3) {
+                Log::warning("Fraud Alert: High velocity checkout attempts from email: " . $request->customer_email);
+                return back()->with('error', 'You are creating too many transactions. Please wait 15 minutes and try again.');
+            }
 
             DB::beginTransaction();
 

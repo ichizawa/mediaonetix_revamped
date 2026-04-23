@@ -466,4 +466,129 @@
     <script src="{{ asset('js/event-slider.js') }}"></script>
     <script src="{{ asset('js/landing-animations.js') }}"></script>
     <script src="{{ asset('js/tickets.js') }}"></script>
+
+    @if ($errors->any())
+        <script type="module">
+            swal.fire({
+                icon: 'error',
+                title: "{{ implode(' ', $errors->all()) }}"
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap');
+
+            .swal2-error-popup {
+                background: linear-gradient(145deg, rgba(15, 13, 28, 0.98), rgba(22, 10, 18, 0.97)) !important;
+                border-radius: 28px !important;
+                border: 1px solid rgba(220, 40, 60, 0.18) !important;
+                box-shadow:
+                    0 0 0 1px rgba(220, 40, 60, 0.06),
+                    0 32px 64px rgba(0, 0, 0, 0.6),
+                    0 0 80px rgba(220, 40, 60, 0.08) !important;
+                overflow: hidden !important;
+                padding: 0 !important;
+            }
+
+            .swal2-error-popup::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(ellipse at 50% 0%, rgba(220, 40, 60, 0.07) 0%, transparent 65%);
+                pointer-events: none;
+            }
+
+            .swal2-error-popup .swal2-html-container {
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+            }
+
+            .swal2-error-popup .swal2-actions {
+                padding: 0 28px 28px !important;
+                margin: 0 !important;
+            }
+
+            .swal2-error-confirm-btn {
+                width: 100% !important;
+                padding: 14px !important;
+                background: rgba(220, 40, 60, 0.08) !important;
+                border: 1px solid rgba(220, 40, 60, 0.22) !important;
+                color: #f8f0f2 !important;
+                font-family: 'Sora', sans-serif !important;
+                font-size: 0.95rem !important;
+                font-weight: 600 !important;
+                border-radius: 14px !important;
+                letter-spacing: 0.04em !important;
+                transition: all 0.25s ease !important;
+                box-shadow: none !important;
+            }
+
+            .swal2-error-confirm-btn:hover {
+                background: rgba(220, 40, 60, 0.18) !important;
+                border-color: rgba(220, 40, 60, 0.45) !important;
+                box-shadow: 0 4px 20px rgba(220, 40, 60, 0.15) !important;
+                transform: none !important;
+            }
+
+            @keyframes swal-pulse {
+                0% {
+                    opacity: 1;
+                    transform: scale(0.85);
+                }
+
+                100% {
+                    opacity: 0;
+                    transform: scale(1.1);
+                }
+            }
+
+            .swal-pulse-ring {
+                position: absolute;
+                border-radius: 50%;
+                border: 1.5px solid rgba(220, 40, 60, 0.3);
+                animation: swal-pulse 2.2s ease-out infinite;
+                pointer-events: none;
+            }
+        </style>
+
+        <script type="module">
+            Swal.fire({
+                html: `
+            <div style="height:3px;background:linear-gradient(90deg,transparent,rgba(255,60,80,0.6) 40%,rgba(255,80,120,0.8) 50%,rgba(255,60,80,0.6) 60%,transparent);margin-bottom:0;"></div>
+            <div style="padding:36px 28px 8px;font-family:'Sora',sans-serif;">
+
+                <div style="display:flex;justify-content:center;margin-bottom:24px;position:relative;height:80px;align-items:center;">
+                    <div class="swal-pulse-ring" style="width:80px;height:80px;animation-delay:0s;"></div>
+                    <div class="swal-pulse-ring" style="width:100px;height:100px;border-color:rgba(220,40,60,0.15);animation-delay:0.4s;"></div>
+                    <div class="swal-pulse-ring" style="width:120px;height:120px;border-color:rgba(220,40,60,0.07);animation-delay:0.8s;"></div>
+                    <div style="width:72px;height:72px;border-radius:50%;background:rgba(220,40,60,0.1);border:1.5px solid rgba(220,40,60,0.35);display:flex;align-items:center;justify-content:center;position:relative;z-index:1;box-shadow:0 0 28px rgba(220,40,60,0.2);">
+                        <svg width='32' height='32' fill='none' viewBox='0 0 24 24'>
+                            <path d='M12 8v5' stroke='#f43f5e' stroke-width='2.4' stroke-linecap='round'/>
+                            <circle cx='12' cy='16.5' r='1' fill='#f43f5e'/>
+                            <path d='M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z' stroke='#f43f5e' stroke-width='1.8' stroke-linejoin='round'/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div style="text-align:center;font-size:0.93rem;color:rgba(220,200,210,0.72);line-height:1.65;padding:0 4px;">{{ session('error') }}</div>
+
+                <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(255,60,80,0.12),transparent);margin:24px 0 0;"></div>
+            </div>
+        `,
+                background: 'transparent',
+                showConfirmButton: true,
+                confirmButtonText: 'Got it',
+                customClass: {
+                    popup: 'swal2-error-popup',
+                    confirmButton: 'swal2-error-confirm-btn',
+                },
+                focusConfirm: true,
+                allowOutsideClick: true,
+                allowEscapeKey: true,
+            });
+        </script>
+    @endif
 @endsection

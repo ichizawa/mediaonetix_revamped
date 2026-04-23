@@ -72,6 +72,7 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
         Route::post('control', [ControlPanelController::class, 'control'])->name('control');
         Route::post('quick-action', [ControlPanelController::class, 'quickAction'])->name('quick-action');
         Route::post('save-comming-soon', [ControlPanelController::class, 'update_coming_soon'])->name('update.coming.soon');
+        Route::post('save-maintenance', [ControlPanelController::class, 'update_maintenance'])->name('update.maintenance');
     });
 
     Route::get('profile', [AdminController::class, 'profile'])->name('profile');
