@@ -47,29 +47,35 @@ class SendTicketEmail implements ShouldQueue
     public function handle()
     {
         try {
-            Log::info('Generating PDF for: ' . $this->resp->customer_email);
+            // Check if email notifications are enabled before sending
+            $emailNotifications = \App\Models\SystemSettings::where('type', 'email_notifications')->value('value');
+            if ($emailNotifications) {
+                Log::info('Generating PDF for: ' . $this->resp->customer_email);
 
-            $pdf = Pdf::loadView('mail.ticket', ['tick' => $this->tick, 'sales' => $this->sales])
-                ->setPaper($this->pdf_size);
+                $pdf = Pdf::loadView('mail.ticket', ['tick' => $this->tick, 'sales' => $this->sales])
+                    ->setPaper($this->pdf_size);
 
-            // Set margins to zero
-            $pdf->getDomPDF()->getOptions()->set('margin_top', 0);
-            $pdf->getDomPDF()->getOptions()->set('margin_right', 0);
-            $pdf->getDomPDF()->getOptions()->set('margin_bottom', 0);
-            $pdf->getDomPDF()->getOptions()->set('margin_left', 0);
-            $pdf->getDomPDF()->getOptions()->set('isRemoteEnabled', true);
+                // Set margins to zero
+                $pdf->getDomPDF()->getOptions()->set('margin_top', 0);
+                $pdf->getDomPDF()->getOptions()->set('margin_right', 0);
+                $pdf->getDomPDF()->getOptions()->set('margin_bottom', 0);
+                $pdf->getDomPDF()->getOptions()->set('margin_left', 0);
+                $pdf->getDomPDF()->getOptions()->set('isRemoteEnabled', true);
 
-            $pdfContent = $pdf->output();
+                $pdfContent = $pdf->output();
 
-            // Pass the PDF directly into the Mailable. The Mailable handles attaching it.
-            $mail = new TicketSale($this->resp, $this->password, $pdfContent);
+                // Pass the PDF directly into the Mailable. The Mailable handles attaching it.
+                $mail = new TicketSale($this->resp, $this->password, $pdfContent);
 
-            Log::info('Attempting to send email to: ' . $this->resp->customer_email);
+                Log::info('Attempting to send email to: ' . $this->resp->customer_email);
 
-            // REMOVED ->attachData(...) from this line!
-            Mail::to($this->resp->customer_email)->send($mail);
+                // REMOVED ->attachData(...) from this line!
+                Mail::to($this->resp->customer_email)->send($mail);
 
-            Log::info('Email successfully sent to: ' . $this->resp->customer_email);
+                Log::info('Email successfully sent to: ' . $this->resp->customer_email);
+            } else {
+                Log::info('Email notifications are disabled. No email sent to: ' . $this->resp->customer_email);
+            }
         } catch (\Exception $e) {
             Log::error("Error sending email from jobs: " . $e->getMessage());
         }

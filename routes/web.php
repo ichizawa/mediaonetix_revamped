@@ -13,6 +13,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 Route::get('/', [PublicController::class, 'index'])->name('public');
 Route::get('show-case/events', [PublicController::class, 'events'])->name('public.events');
 Route::get('coming-soon', [PublicController::class, 'coming_soon'])->name('public.coming.soon');
+Route::get('maintenance', [PublicController::class, 'maintenance'])->name('public.maintenance');
 Route::get('event/{id}', [PublicController::class, 'event_details'])->name('public.event.details');
 Route::post('create-sale', [PublicController::class, 'createSale'])->name('create.sale');
 Route::post('create-payment', [PublicController::class, 'createPayment'])->name('create.payment');

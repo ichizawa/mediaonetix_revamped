@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\CheckComingSoon;
+use App\Http\Middleware\CheckMaintenance;
 use App\Http\Middleware\Cors;
 use App\Http\Middleware\ForceJsonResponse;
 use App\Http\Middleware\RoleCheck;
@@ -24,7 +25,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->web([
-            CheckComingSoon::class
+            CheckComingSoon::class, 
+            CheckMaintenance::class
         ]);
 
         $middleware->api([

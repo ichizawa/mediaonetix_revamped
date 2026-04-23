@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Models\SystemSettings;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -25,6 +26,11 @@ class AuthController extends Controller
     }
     public function register()
     {
+
+        $register = SystemSettings::where('type', 'user_registration')->first();
+        if (!$register || $register->value == 0) {
+            return redirect()->route('login')->with('error', 'User registration is currently disabled. Please check back later.');
+        }
         return view('auth.register');
     }
 
@@ -85,7 +91,11 @@ class AuthController extends Controller
                     ])->save();
 
                     if (!$user->hasVerifiedEmail()) {
-                        $user->sendEmailVerificationNotification();
+                        // Check if email notifications are enabled before sending verification email
+                        $emailNotifications = \App\Models\SystemSettings::where('type', 'email_notifications')->value('value');
+                        if ($emailNotifications) {
+                            $user->sendEmailVerificationNotification();
+                        }
                     }
 
                     DB::commit();
@@ -141,79 +151,82 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 
-     public function showForgetPasswordForm(): View
-      {
-         return view('auth.forgot-password');
-      }
-  
-      /**
-       * Write code on Method
-       *
-       * @return response()
-       */
-      public function submitForgetPasswordForm(Request $request): RedirectResponse
-      {
-          $request->validate([
-              'email' => 'required|email|exists:users',
-          ]);
-  
-          $token = Str::random(64);
-  
-          DB::table('password_reset_tokens')->insert([
-              'email' => $request->email, 
-              'token' => $token, 
-              'created_at' => Carbon::now()
-            ]);
-  
-          Mail::send('mail.forgot-password', ['token' => $token], function($message) use($request){
-              $message->to($request->email);
-              $message->subject('Reset Password');
-          });
-  
-          return back()->with('message', 'We have e-mailed your password reset link!');
-      }
+    public function showForgetPasswordForm(): View
+    {
+        return view('auth.forgot-password');
+    }
 
-      /**
-       * Write code on Method
-       *
-       * @return response()
-       */
-        public function showResetPasswordForm($token): View
-        {
-            // Always use the correct Blade file for the reset form
-            return view('auth.forgetPasswordLink', ['token' => $token]);
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function submitForgetPasswordForm(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users',
+        ]);
+
+        $token = Str::random(64);
+
+        DB::table('password_reset_tokens')->insert([
+            'email' => $request->email,
+            'token' => $token,
+            'created_at' => Carbon::now()
+        ]);
+
+        // Check if email notifications are enabled
+        $emailNotifications = \App\Models\SystemSettings::where('type', 'email_notifications')->value('value');
+        if ($emailNotifications) {
+            Mail::send('mail.forgot-password', ['token' => $token], function ($message) use ($request) {
+                $message->to($request->email);
+                $message->subject('Reset Password');
+            });
         }
-  
-      /**
-       * Write code on Method
-       *
-       * @return response()
-       */
-      public function submitResetPasswordForm(Request $request): RedirectResponse
-      {
-          $request->validate([
-              'email' => 'required|email|exists:users',
-              'password' => 'required|string|min:6|confirmed',
-              'password_confirmation' => 'required'
-          ]);
-  
-          $updatePassword = DB::table('password_reset_tokens')
-                              ->where([
-                                'email' => $request->email, 
-                                'token' => $request->token
-                              ])
-                              ->first();
-  
-          if(!$updatePassword){
-              return back()->withInput()->with('error', 'Invalid token!');
-          }
-  
-          $user = User::where('email', $request->email)
-                      ->update(['password' => Hash::make($request->password)]);
- 
-          DB::table('password_reset_tokens')->where(['email'=> $request->email])->delete();
-  
-            return redirect()->route('login')->with('success', 'Password reset successfully.');
-      }
 
+        return back()->with('message', 'We have e-mailed your password reset link!');
+    }
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function showResetPasswordForm($token): View
+    {
+        // Always use the correct Blade file for the reset form
+        return view('auth.forgetPasswordLink', ['token' => $token]);
+    }
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function submitResetPasswordForm(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users',
+            'password' => 'required|string|min:6|confirmed',
+            'password_confirmation' => 'required'
+        ]);
+
+        $updatePassword = DB::table('password_reset_tokens')
+            ->where([
+                'email' => $request->email,
+                'token' => $request->token
+            ])
+            ->first();
+
+        if (!$updatePassword) {
+            return back()->withInput()->with('error', 'Invalid token!');
+        }
+
+        $user = User::where('email', $request->email)
+            ->update(['password' => Hash::make($request->password)]);
+
+        DB::table('password_reset_tokens')->where(['email' => $request->email])->delete();
+
+        return redirect()->route('login')->with('success', 'Password reset successfully.');
+    }
 }
