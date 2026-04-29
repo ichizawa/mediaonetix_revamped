@@ -241,8 +241,8 @@
                                                 class="text-white font-semibold text-sm">{{ $merchant['events_count'] }}</span>
                                         </td>
                                         <td class="py-4 px-4">
-                                            <span class="text-white font-semibold">₱
-                                                {{ number_format($merchant['revenue']) }}</span>
+                                            <span class="text-white font-semibold">₱{{ number_format($revenue_by_merchant->sum('total_revenue'), 2) }}
+                                            </span>
                                         </td>
                                         <td class="py-4 px-4">
                                             <span
@@ -333,7 +333,7 @@
                 setTimeout(() => openAddMerchantModal(), 200);
             }
 
-    
+
         });
     </script>
 

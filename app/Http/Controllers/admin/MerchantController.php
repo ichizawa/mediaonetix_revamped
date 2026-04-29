@@ -21,7 +21,17 @@ class MerchantController extends Controller
         $active = User::active()->merchants()->count();
         $inactive = User::inactive()->merchants()->count();
         $pending = User::pending()->merchants()->count();
-        return view('admin.merchants', compact('users', 'active', 'inactive', 'pending'));
+
+        $revenue_by_merchant = User::merchants()
+            ->addSelect([
+                'total_revenue' => \App\Models\Sales::selectRaw('sum(total_amount)')
+                    ->join('events', 'sales.event_id', '=', 'events.id')
+                    ->whereColumn('events.created_by', 'users.id') // This forces the link to the specific Merchant
+            ])
+            ->orderByDesc('total_revenue')
+            ->take(5)
+            ->get();
+        return view('admin.merchants', compact('users', 'active', 'inactive', 'pending', 'revenue_by_merchant'));
     }
 
     public function store(MerchantRequest $request)
@@ -97,10 +107,10 @@ class MerchantController extends Controller
                 $firstFile = $group->first();
                 $event = $firstFile?->event;
                 $merchant = $firstFile?->merchant;
-                $rawStatuses = $group->map(fn ($file) => (int) $file->getRawOriginal('status'));
+                $rawStatuses = $group->map(fn($file) => (int) $file->getRawOriginal('status'));
                 $statusCode = $rawStatuses->contains(2)
                     ? 2
-                    : ($rawStatuses->every(fn ($status) => $status === 1) ? 1 : 0);
+                    : ($rawStatuses->every(fn($status) => $status === 1) ? 1 : 0);
 
                 return [
                     'event_id' => $event?->id,
@@ -109,7 +119,7 @@ class MerchantController extends Controller
                     'merchant_name' => $merchant?->name ?? 'Unknown Merchant',
                     'status_code' => $statusCode,
                     'status' => MerchantFiles::STATUS[$statusCode] ?? MerchantFiles::STATUS[0],
-                    'rejection_reason' => $group->first(fn ($file) => filled($file->rejection_reason))?->rejection_reason,
+                    'rejection_reason' => $group->first(fn($file) => filled($file->rejection_reason))?->rejection_reason,
                     'file_count' => $group->count(),
                     'files' => $group->values()->map(function ($file) {
                         $extension = strtolower(pathinfo($file->file_name, PATHINFO_EXTENSION));

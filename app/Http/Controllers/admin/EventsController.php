@@ -124,7 +124,7 @@ class EventsController extends Controller
 
         $events = $eventsQuery->get();
 
- 
+
         $tickets_sold = $events->sum('tickets_sold');
         $upcoming_events = $eventsQuery->getUpcoming()->count();
         $active_events = $eventsQuery->getActive()->count();
@@ -164,7 +164,7 @@ class EventsController extends Controller
                 'performers'         => 'nullable|string',
             ]);
 
-            $normalizedPerformers = $this->normalizePerformersPayload($request->input('performers'));
+            $event->performers = !empty($normalizedPerformers) ? $normalizedPerformers : null;
 
             $imageName = '';
 
@@ -274,8 +274,7 @@ class EventsController extends Controller
             $event->crop_height = $request->crop_height;
             $event->crop_natural_width = $request->crop_natural_width;
             $event->crop_natural_height = $request->crop_natural_height;
-            $event->performers = !empty($normalizedPerformers) ? json_encode($normalizedPerformers) : null;
-
+            $event->performers = !empty($normalizedPerformers) ? $normalizedPerformers : null;
             if ($request->filled('approved_at')) {
                 $event->approved_at = now();
             }
@@ -352,11 +351,11 @@ class EventsController extends Controller
 
         $submissionStatusCode = 0;
         if ($submittedFiles->isNotEmpty()) {
-            $rawStatuses = $submittedFiles->map(fn ($file) => (int) $file->getRawOriginal('status'));
+            $rawStatuses = $submittedFiles->map(fn($file) => (int) $file->getRawOriginal('status'));
 
             if ($rawStatuses->contains(2)) {
                 $submissionStatusCode = 2;
-            } elseif ($rawStatuses->every(fn ($status) => $status === 1)) {
+            } elseif ($rawStatuses->every(fn($status) => $status === 1)) {
                 $submissionStatusCode = 1;
             }
         }
@@ -366,9 +365,9 @@ class EventsController extends Controller
             'status_code' => $submissionStatusCode,
             'status' => MerchantFiles::STATUS[$submissionStatusCode] ?? MerchantFiles::STATUS[0],
             'can_edit' => $submittedFiles->isNotEmpty() && $submissionStatusCode === 0,
-            'rejection_reason' => $submittedFiles->first(fn ($file) => filled($file->rejection_reason))?->rejection_reason,
+            'rejection_reason' => $submittedFiles->first(fn($file) => filled($file->rejection_reason))?->rejection_reason,
             'documents' => $submittedFiles
-                ->groupBy(fn ($file) => $file->document_title ?: 'Document')
+                ->groupBy(fn($file) => $file->document_title ?: 'Document')
                 ->map(function ($group, $title) {
                     return [
                         'title' => $title,

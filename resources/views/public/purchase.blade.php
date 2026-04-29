@@ -310,6 +310,7 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
+
             .cancel-modal,
             .cancel-modal-card {
                 transition: none;
@@ -644,8 +645,10 @@
             <h3 class="cancel-modal-title" id="cancelModalTitle">Cancel payment?</h3>
             <p class="cancel-modal-text" id="cancelModalText">Are you sure you want to cancel the payment?</p>
             <div class="cancel-modal-actions">
-                <button type="button" class="cancel-modal-btn cancel-modal-btn-secondary" id="cancelStayBtn">No, stay here</button>
-                <button type="button" class="cancel-modal-btn cancel-modal-btn-primary" id="cancelConfirmBtn">Yes, cancel payment</button>
+                <button type="button" class="cancel-modal-btn cancel-modal-btn-secondary" id="cancelStayBtn">No, stay
+                    here</button>
+                <button type="button" class="cancel-modal-btn cancel-modal-btn-primary" id="cancelConfirmBtn">Yes, cancel
+                    payment</button>
             </div>
         </div>
     </div>
@@ -710,28 +713,37 @@
                             <input type="text" id="buyerCity" name="city" placeholder="City / Municipality" required
                                 value="{{ old('city') }}">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="position:relative;">
                             <label>Promo Code <span
                                     style="color:var(--muted); text-transform:none; letter-spacing:normal;">(Optional)</span></label>
-                            <input type="text" id="promoCode" name="promo_code" placeholder="Discount code"
-                                value="{{ old('promo_code') }}">
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <input type="text" id="promoCode" name="promo_code" placeholder="Discount code"
+                                    value="{{ old('promo_code') }}" style="flex:1;">
+                                <button type="button" id="applyPromoBtn"
+                                    style="padding:10px 16px;background:#38bdf8;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Apply</button>
+                            </div>
+                            <div id="promoFeedback" style="margin-top:6px;font-size:0.92em;color:#38bdf8;display:none;">
+                            </div>
                         </div>
+
                     </div>
 
                     <h3 style="margin-top: 16px;">Payment Method</h3>
                     <div class="form-group">
-                        <input type="hidden" name="payment_method" id="paymentMethod" value="{{ old('payment_method') }}"
-                            required>
+                        <input type="hidden" name="payment_method" id="paymentMethod"
+                            value="{{ old('payment_method') }}" required>
 
                         <div class="payment-select" id="paymentMethodSelect">
-                            <button class="payment-select-button" type="button" id="paymentMethodButton" aria-haspopup="listbox"
-                                aria-expanded="false">
+                            <button class="payment-select-button" type="button" id="paymentMethodButton"
+                                aria-haspopup="listbox" aria-expanded="false">
                                 <span class="payment-select-trigger-main">
-                                    <img class="payment-select-trigger-icon" id="paymentMethodIcon" src="" alt="" hidden>
-                                    <span class="payment-select-value" id="paymentMethodValue">Select Payment Method...</span>
+                                    <img class="payment-select-trigger-icon" id="paymentMethodIcon" src=""
+                                        alt="" hidden>
+                                    <span class="payment-select-value" id="paymentMethodValue">Select Payment
+                                        Method...</span>
                                 </span>
-                                <svg class="payment-select-caret" width="18" height="18" viewBox="0 0 16 16" fill="currentColor"
-                                    aria-hidden="true">
+                                <svg class="payment-select-caret" width="18" height="18" viewBox="0 0 16 16"
+                                    fill="currentColor" aria-hidden="true">
                                     <path
                                         d="M5.22 10.22a.75.75 0 0 1 1.06 0L8 11.94l1.72-1.72a.75.75 0 1 1 1.06 1.06l-2.25 2.25a.75.75 0 0 1-1.06 0l-2.25-2.25a.75.75 0 0 1 0-1.06ZM10.78 5.78a.75.75 0 0 1-1.06 0L8 4.06 6.28 5.78a.75.75 0 0 1-1.06-1.06l2.25-2.25a.75.75 0 0 1 1.06 0l2.25 2.25a.75.75 0 0 1 0 1.06Z" />
                                 </svg>
@@ -741,7 +753,8 @@
                                 <button type="button" class="payment-select-option" data-value="gcash"
                                     data-label="GCash" data-icon="{{ asset('images/payments/gcash.png') }}">
                                     <span class="payment-option-main">
-                                        <img class="payment-option-icon" src="{{ asset('images/payments/gcash.png') }}" alt="GCash logo">
+                                        <img class="payment-option-icon" src="{{ asset('images/payments/gcash.png') }}"
+                                            alt="GCash logo">
                                         <span class="payment-option-label">GCash</span>
                                     </span>
                                     <span class="payment-select-option-check">Selected</span>
@@ -749,7 +762,8 @@
                                 <button type="button" class="payment-select-option" data-value="paymaya"
                                     data-label="PayMaya" data-icon="{{ asset('images/payments/maya.png') }}">
                                     <span class="payment-option-main">
-                                        <img class="payment-option-icon" src="{{ asset('images/payments/maya.png') }}" alt="PayMaya logo">
+                                        <img class="payment-option-icon" src="{{ asset('images/payments/maya.png') }}"
+                                            alt="PayMaya logo">
                                         <span class="payment-option-label">PayMaya</span>
                                     </span>
                                     <span class="payment-select-option-check">Selected</span>
@@ -757,7 +771,8 @@
                                 <button type="button" class="payment-select-option" data-value="card"
                                     data-label="Credit / Debit Card" data-icon="{{ asset('images/payments/card.png') }}">
                                     <span class="payment-option-main">
-                                        <img class="payment-option-icon" src="{{ asset('images/payments/card.png') }}" alt="Card logo">
+                                        <img class="payment-option-icon" src="{{ asset('images/payments/card.png') }}"
+                                            alt="Card logo">
                                         <span class="payment-option-label">Credit / Debit Card</span>
                                     </span>
                                     <span class="payment-select-option-check">Selected</span>
@@ -765,23 +780,28 @@
                                 <button type="button" class="payment-select-option" data-value="dob_bdo"
                                     data-label="BDO Online Banking" data-icon="{{ asset('images/payments/bdo.png') }}">
                                     <span class="payment-option-main">
-                                        <img class="payment-option-icon" src="{{ asset('images/payments/bdo.png') }}" alt="BDO logo">
+                                        <img class="payment-option-icon" src="{{ asset('images/payments/bdo.png') }}"
+                                            alt="BDO logo">
                                         <span class="payment-option-label">BDO Online Banking</span>
                                     </span>
                                     <span class="payment-select-option-check">Selected</span>
                                 </button>
                                 <button type="button" class="payment-select-option" data-value="dob_landbank"
-                                    data-label="Landbank Online Banking" data-icon="{{ asset('images/payments/landbank.png') }}">
+                                    data-label="Landbank Online Banking"
+                                    data-icon="{{ asset('images/payments/landbank.png') }}">
                                     <span class="payment-option-main">
-                                        <img class="payment-option-icon" src="{{ asset('images/payments/landbank.png') }}" alt="Landbank logo">
+                                        <img class="payment-option-icon"
+                                            src="{{ asset('images/payments/landbank.png') }}" alt="Landbank logo">
                                         <span class="payment-option-label">Landbank Online Banking</span>
                                     </span>
                                     <span class="payment-select-option-check">Selected</span>
                                 </button>
                                 <button type="button" class="payment-select-option" data-value="dob_metrobank"
-                                    data-label="Metrobank Online Banking" data-icon="{{ asset('images/payments/metrobank.png') }}">
+                                    data-label="Metrobank Online Banking"
+                                    data-icon="{{ asset('images/payments/metrobank.png') }}">
                                     <span class="payment-option-main">
-                                        <img class="payment-option-icon" src="{{ asset('images/payments/metrobank.png') }}" alt="Metrobank logo">
+                                        <img class="payment-option-icon"
+                                            src="{{ asset('images/payments/metrobank.png') }}" alt="Metrobank logo">
                                         <span class="payment-option-label">Metrobank Online Banking</span>
                                     </span>
                                     <span class="payment-select-option-check">Selected</span>
@@ -795,9 +815,11 @@
                         <div class="form-group" style="position: relative;">
                             <label style="display: flex; justify-content: space-between; align-items: center;">
                                 <span>Card Number</span>
-                                <span id="cardTypeIndicator" style="color: var(--accent, #38bdf8); font-size: 0.75rem; font-weight: 600; text-transform: uppercase;"></span>
+                                <span id="cardTypeIndicator"
+                                    style="color: var(--accent, #38bdf8); font-size: 0.75rem; font-weight: 600; text-transform: uppercase;"></span>
                             </label>
-                            <input type="text" name="card_number" id="cardNumber" placeholder="4343 4343 4343 4345" autocomplete="cc-number">
+                            <input type="text" name="card_number" id="cardNumber" placeholder="4343 4343 4343 4345"
+                                autocomplete="cc-number">
                         </div>
                         <div class="form-row" style="margin-bottom: 0;">
                             <div class="form-group" style="margin-bottom: 0;">
@@ -1062,7 +1084,7 @@
             cardNumberInput.addEventListener('input', function(e) {
                 // Remove non-digits
                 var val = this.value.replace(/\D/g, '');
-                
+
                 // Format with spaces
                 var formatted = val.match(/.{1,4}/g);
                 this.value = formatted ? formatted.join(' ') : val;
@@ -1071,7 +1093,8 @@
                 var cardType = '';
                 if (/^4/.test(val)) {
                     cardType = 'Visa';
-                } else if (/^5[1-5]/.test(val) || /^2(2[2-9][1-9]|2[3-9][0-9]|[3-6][0-9]{2}|7[0-1][0-9]|720)/.test(val)) {
+                } else if (/^5[1-5]/.test(val) || /^2(2[2-9][1-9]|2[3-9][0-9]|[3-6][0-9]{2}|7[0-1][0-9]|720)/.test(
+                        val)) {
                     cardType = 'Mastercard';
                 } else if (/^3[47]/.test(val)) {
                     cardType = 'American Express';
@@ -1096,4 +1119,51 @@
             toggleCardFields(); // Check state on page load in case of old() input
         });
     </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const applyBtn = document.getElementById('applyPromoBtn');
+                const promoInput = document.getElementById('promoCode');
+                const eventId = document.querySelector('input[name="event"]').value;
+                const ticketId = document.querySelector('input[name="ticket"]').value;
+                const quantity = document.querySelector('input[name="quantity"]').value;
+                const feedback = document.getElementById('promoFeedback');
+
+                applyBtn.addEventListener('click', function() {
+                    const code = promoInput.value.trim();
+                    if (!code) {
+                        feedback.textContent = 'Please enter a promo code.';
+                        feedback.style.display = 'block';
+                        return;
+                    }
+                    feedback.textContent = 'Checking...';
+                    feedback.style.display = 'block';
+                    fetch(
+                            `/purchase?event=${eventId}&ticket=${ticketId}&quantity=${quantity}&promo_code=${encodeURIComponent(code)}`)
+                        .then(res => res.text())
+                        .then(html => {
+                            // Parse the returned HTML and update the summary
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const newSummary = doc.querySelector('.checkout-summary-col');
+                            const oldSummary = document.querySelector('.checkout-summary-col');
+                            if (newSummary && oldSummary) {
+                                oldSummary.innerHTML = newSummary.innerHTML;
+                                feedback.textContent = 'Promo applied!';
+                                feedback.style.color = '#38bdf8';
+                                feedback.style.display = 'block';
+                            } else {
+                                feedback.textContent = 'Could not apply promo.';
+                                feedback.style.color = '#f43f5e';
+                                feedback.style.display = 'block';
+                            }
+                        })
+                        .catch(() => {
+                            feedback.textContent = 'Error applying promo.';
+                            feedback.style.color = '#f43f5e';
+                            feedback.style.display = 'block';
+                        });
+                });
+            });
+        </script>
 @endsection

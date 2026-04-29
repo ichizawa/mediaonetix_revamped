@@ -12,6 +12,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
+/**
+ * Get the sales for the user (merchant).
+ */
+
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
@@ -97,21 +101,21 @@ class User extends Authenticatable implements MustVerifyEmail
         // $this->notify(new VerifyEmailNotification());
 
         // Only for development/testing, uncomment the above line and comment out the below code to use the default URL generation without dynamic base URL handling. 
-        $currentBaseUrl = request()->getSchemeAndHttpHost(); 
+        $currentBaseUrl = request()->getSchemeAndHttpHost();
 
         if (app()->runningInConsole()) {
             // Fallback to the .env APP_URL for artisan commands or cron jobs
-            $currentBaseUrl = config('app.url'); 
+            $currentBaseUrl = config('app.url');
         } else {
             // Grab the dynamic URL/IP from the active browser request
-            $currentBaseUrl = request()->getSchemeAndHttpHost(); 
+            $currentBaseUrl = request()->getSchemeAndHttpHost();
         }
-        
+
         // Pass it into the notification before it goes to the queue
         $this->notify(new VerifyEmailNotification($currentBaseUrl));
     }
 
-    
+
     public function role()
     {
         return $this->belongsTo(Role::class);
@@ -143,6 +147,19 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getGenderAttribute($value)
     {
         return self::GENDER[$value];
+    }
+
+    public function sales()
+    {
+        
+        return $this->hasManyThrough(
+            \App\Models\Sales::class,
+            \App\Models\Events::class,
+            'created_by', // Foreign key on Events table...
+            'event_id',   // Foreign key on Sales table...
+            'id',         // Local key on User table...
+            'id'          // Local key on Events table...
+        );
     }
     public function getStatusAttribute()
     {
@@ -198,9 +215,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->role?->name ?? 'user';
     }
-    
 
-        public function scopeUser($query)
+
+    public function scopeUser($query)
     {
         return $query->where('role_id', 4);
     }
@@ -209,5 +226,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->role?->type ?? 'admin';
     }
-
 }

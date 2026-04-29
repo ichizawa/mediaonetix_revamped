@@ -112,6 +112,8 @@
     <div class="min-h-screen bg-[#0c1222]">
         <div class="lg:ml-64">
 
+        
+
             <header class="sticky top-0 z-40 bg-[#0c1222]/80 backdrop-blur-xl border-b border-white/10">
                 <div class="px-4 sm:px-6 lg:px-8 py-4">
                     <div class="flex items-center justify-between">

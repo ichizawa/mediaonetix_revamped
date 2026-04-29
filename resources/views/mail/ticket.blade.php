@@ -279,7 +279,7 @@ $containerClass = $index < count($sales) - 1 ? 'container page-break' : 'contain
                     <div class="qrcode-container">
                         <img src="data:image/png;base64,{!! base64_encode($sale['qrcode']) !!}" alt="QR Code" />
                     </div>
-                    <h1>{{ $sale['ticket_price'] }} PHP</h1>
+                  
                 </div>
             </div>
         </div>

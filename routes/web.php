@@ -26,13 +26,28 @@ Route::get('purchase', function (\Illuminate\Http\Request $request) {
     $ticket = $event && $request->ticket ? $event->tickets->where('id', $request->ticket)->first() : null;
     $quantity = $request->quantity ?? 1;
     $unitPrice = $ticket ? $ticket->price : 0;
-    $total = $unitPrice * $quantity;
+
+    // Promo code logic
+    $promoCode = $request->promo_code ?? null;
+    $discountedUnitPrice = $unitPrice;
+    if ($promoCode && $ticket) {
+        $promoExists = \App\Models\PromoCodes::where('slug', $promoCode)->exists();
+        if ($promoExists) {
+            $ticketType = strtoupper($ticket->type ?? '');
+            if (in_array($ticketType, ['PLATINUM', 'SVIP', 'VIP'])) {
+                $discountedUnitPrice = number_format($unitPrice - ($unitPrice * 0.10), 2, '.', '');
+            } elseif (in_array($ticketType, ['GOLD', 'SILVER', 'BRONZE'])) {
+                $discountedUnitPrice = number_format($unitPrice - ($unitPrice * 0.05), 2, '.', '');
+            }
+        }
+    }
+    $total = $discountedUnitPrice * $quantity;  
     return view('public.purchase', [
         'event' => $event,
         'ticketType' => $ticket->type ?? null,
         'ticketId' => $ticket ? $ticket->id : '',
         'quantity' => $quantity,
-        'unitPrice' => $unitPrice,
+        'unitPrice' => $discountedUnitPrice,
         'total' => $total,
     ]);
 })->name('purchase.page');
@@ -98,3 +113,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     require base_path('routes/staff/staff.php');
     require base_path('routes/user/user.php');
 });
+
+// Merchant AJAX summary for manual/walk-in sale (promo code)
+Route::get('/merchant/sales/summary', [\App\Http\Controllers\admin\SalesController::class, 'ajaxSummary'])->name('merchant.sales.summary');

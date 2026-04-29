@@ -78,6 +78,7 @@ Route::prefix('admin')->name('admin.')->middleware('role.check:1')->group(functi
     Route::get('profile', [AdminController::class, 'profile'])->name('profile');
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::post('store', [AdminController::class, 'store'])->name('store');
+        Route::post('update', [AdminController::class, 'update'])->name('update');
     });
 
     //Settings CRUD

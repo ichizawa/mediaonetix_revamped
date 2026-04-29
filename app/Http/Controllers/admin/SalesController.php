@@ -344,11 +344,45 @@ class SalesController extends Controller
 
             $ticket->decrement('quantity', $request->quantity);
             $ticket->save();
+
             $currentDate = date('y-m-d');
 
             $sales = [];
 
-            $total_price = $request->quantity * $ticket->price;
+            $unitPrice = $ticket->price;
+            $promoCode = $request->promo_code ?? null;
+            $discountedUnitPrice = $unitPrice;
+
+            if ($promoCode) {
+                // Fetch the actual promo model instead of just checking if it exists
+                $promo = \App\Models\PromoCodes::where('slug', $promoCode)->first();
+
+                // Ensure it exists and has available quantity (Assuming your column is named 'quantity')
+                if ($promo && $promo->quantity > 0) {
+                    $ticketType = strtoupper($ticket->type ?? '');
+                    $discountApplied = false;
+
+                    if (in_array($ticketType, ['PLATINUM', 'SVIP', 'VIP'])) {
+                        $discountedUnitPrice = number_format($unitPrice - ($unitPrice * 0.10), 2, '.', '');
+                        $discountApplied = true;
+                    } elseif (in_array($ticketType, ['GOLD', 'SILVER', 'BRONZE'])) {
+                        $discountedUnitPrice = number_format($unitPrice - ($unitPrice * 0.05), 2, '.', '');
+                        $discountApplied = true;
+                    }
+
+                    // Decrease promo quantity by 1 for this transaction if successfully applied
+                    if ($discountApplied) {
+                        $promo->decrement('quantity', 1);
+                        // Note: If you want to decrement per ticket instead of per transaction, 
+                        // change the '1' above to '$request->quantity'
+                    }
+                } elseif ($promo && $promo->quantity <= 0) {
+                    // Stop the checkout if the promo code has run out of uses
+                    return back()->withErrors('The entered promo code has reached its usage limit.')->withInput();
+                }
+            }
+
+            $total_price = $request->quantity * $discountedUnitPrice;
 
             $event = Events::find($request->event);
             $event->increment('tickets_sold', $request->quantity);
@@ -423,8 +457,39 @@ class SalesController extends Controller
             $currentDate = date('y-m-d');
 
             $sales = [];
+            $unitPrice = $ticket->price;
+            $promoCode = $request->promo_code ?? null;
+            $discountedUnitPrice = $unitPrice;
 
-            $total_price = $request->quantity * $ticket->price;
+            if ($promoCode) {
+                // Fetch the actual promo model instead of just checking if it exists
+                $promo = \App\Models\PromoCodes::where('slug', $promoCode)->first();
+
+                // Ensure it exists and has available quantity (Assuming your column is named 'quantity')
+                if ($promo && $promo->quantity > 0) {
+                    $ticketType = strtoupper($ticket->type ?? '');
+                    $discountApplied = false;
+
+                    if (in_array($ticketType, ['PLATINUM', 'SVIP', 'VIP'])) {
+                        $discountedUnitPrice = number_format($unitPrice - ($unitPrice * 0.10), 2, '.', '');
+                        $discountApplied = true;
+                    } elseif (in_array($ticketType, ['GOLD', 'SILVER', 'BRONZE'])) {
+                        $discountedUnitPrice = number_format($unitPrice - ($unitPrice * 0.05), 2, '.', '');
+                        $discountApplied = true;
+                    }
+
+                    // Decrease promo quantity by 1 for this transaction if successfully applied
+                    if ($discountApplied) {
+                        $promo->decrement('quantity', 1);
+                        // Note: If you want to decrement per ticket instead of per transaction, 
+                        // change the '1' above to '$request->quantity'
+                    }
+                } elseif ($promo && $promo->quantity <= 0) {
+                    // Stop the checkout if the promo code has run out of uses
+                    return back()->withErrors('The entered promo code has reached its usage limit.')->withInput();
+                }
+            }
+            $total_price = $request->quantity * $discountedUnitPrice;
 
             $event = Events::find($request->event);
             $event->increment('tickets_sold', $request->quantity);
@@ -534,25 +599,10 @@ class SalesController extends Controller
         $ticket = Tickets::find($request['ticket']);
         $ticket_name = $ticket->ticket_type;
         $ticket_id = $ticket->id;
-        $ticket_price = floatval($ticket->price);
-
-        // Check if promo code exists in the DB
-        if (!empty($request['promo_code'])) {
-            $promoExists = PromoCodes::where('slug', $request['promo_code'])->exists();
-
-            if ($promoExists) {
-                if (in_array(strtoupper($ticket_name), ['PLATINUM', 'SVIP'])) {
-                    // 10% discount
-                    $ticket_price = number_format($ticket_price - ($ticket_price * 0.10), 2, '.', '');
-                } elseif (in_array(strtoupper($ticket_name), ['GOLD', 'SILVER'])) {
-                    // 20% discount
-                    $ticket_price = number_format($ticket_price - ($ticket_price * 0.20), 2, '.', '');
-                }
-            }
-        }
-
-        $total_price = floatval($request['quantity']) * $ticket_price;
+        $ticket_price = isset($request['unit_price']) ? floatval($request['unit_price']) : floatval($ticket->price);
+        $total_price = floatval($sale->total_amount);
         $payment_method_type = $request['payment_method'];
+
 
         // Handle cash payment: skip PayMongo, mark as paid, generate tickets, send email, redirect to success
         if ($payment_method_type === 'cash') {
@@ -812,6 +862,21 @@ class SalesController extends Controller
 
             // Check if PayMongo says it's paid AND we haven't sent the email yet
             if ($status === 'paid' && $resp->is_email_sent == 0) {
+                $promoCode = $resp->promo_code ?? null;
+                $unitPrice = $tick->price;
+                $discountedUnitPrice = $unitPrice;
+                if ($promoCode) {
+                    $promoExists = \App\Models\PromoCodes::where('slug', $promoCode)->exists();
+                    if ($promoExists) {
+                        $ticketType = strtoupper($tick->type ?? '');
+                        if (in_array($ticketType, ['PLATINUM', 'SVIP', 'VIP'])) {
+                            $discountedUnitPrice = number_format($unitPrice - ($unitPrice * 0.10), 2, '.', '');
+                        } elseif (in_array($ticketType, ['GOLD', 'SILVER', 'BRONZE'])) {
+                            $discountedUnitPrice = number_format($unitPrice - ($unitPrice * 0.05), 2, '.', '');
+                        }
+                    }
+                }
+                $resp->ticket->price = $discountedUnitPrice;
 
                 $resp->update([
                     'is_paid' => 1,

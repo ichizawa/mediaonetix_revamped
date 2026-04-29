@@ -735,6 +735,21 @@
                     class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500"></textarea>
             </div>
 
+
+            {{-- Promo Code --}}
+
+            <div class="form-group" style="position:relative;">
+                <label>Promo Code <span
+                        style="color:var(--muted); text-transform:none; letter-spacing:normal;">(Optional)</span></label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <input type="text" id="promoCode" name="promo_code" placeholder="Discount code"
+                        value="{{ old('promo_code') }}" style="flex:1;">
+                    <button type="button" id="applyPromoBtn"
+                        style="padding:10px 16px;background:#38bdf8;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Apply</button>
+                </div>
+                <div id="promoFeedback" style="margin-top:6px;font-size:0.92em;color:#38bdf8;display:none;"></div>
+            </div>
+
             <!-- Price Summary -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -897,6 +912,9 @@
     </div>
 </div>
 <script>
+    // 1. Initialize a global variable to track the active discount
+    let currentDiscount = 0;
+
     function resetTicketSelection(message = 'Select Ticket Type') {
         const ticketSelection = document.getElementById('ticket_selection');
         const quantityInput = document.getElementById('quantityInput');
@@ -909,6 +927,11 @@
         quantityInput.removeAttribute('max');
         quantityInput.disabled = true;
         ticketAvailability.textContent = '- left';
+
+        // Reset discount when ticket changes
+        currentDiscount = 0;
+        document.getElementById('promoFeedback').style.display = 'none';
+        document.getElementById('promoCode').value = '';
     }
 
     function setQuantityLimit(availableQty) {
@@ -1006,239 +1029,296 @@
 
         const ticketPrice = parseFloat(document.getElementById('ticketPrice').textContent) || 0;
 
-        const total = ticketPrice * quantity;
+        // 2. Apply the current discount multiplier to the math
+        const discountedPrice = ticketPrice - (ticketPrice * currentDiscount);
+        const total = discountedPrice * quantity;
+
         document.getElementById('totalPrice').textContent = total.toFixed(2);
+    }
 
+    // ---------------------------------------------------------
+    // UI INITIALIZATION FUNCTIONS (Moved OUT of updateTotalPrice)
+    // ---------------------------------------------------------
 
+    function toggleCardFields() {
+        var paymentMethod = document.getElementById('paymentMethod').value;
+        var cardFields = document.getElementById('cardFields');
+        var cardNumber = document.getElementById('cardNumber');
+        var expMonth = document.getElementById('expMonth');
+        var expYear = document.getElementById('expYear');
+        var cardCvc = document.getElementById('cardCvc');
 
-        function toggleCardFields() {
-            var paymentMethod = document.getElementById('paymentMethod').value;
-            var cardFields = document.getElementById('cardFields');
-            var cardNumber = document.getElementById('cardNumber');
-            var expMonth = document.getElementById('expMonth');
-            var expYear = document.getElementById('expYear');
-            var cardCvc = document.getElementById('cardCvc');
+        if (paymentMethod === 'card') {
+            cardFields.style.display = 'block';
+            if (cardNumber) cardNumber.required = true;
+            if (expMonth) expMonth.required = true;
+            if (expYear) expYear.required = true;
+            if (cardCvc) cardCvc.required = true;
+        } else {
+            cardFields.style.display = 'none';
+            if (cardNumber) cardNumber.required = false;
+            if (expMonth) expMonth.required = false;
+            if (expYear) expYear.required = false;
+            if (cardCvc) cardCvc.required = false;
+        }
+    }
 
-            if (paymentMethod === 'card') {
-                cardFields.style.display = 'block';
-                if (cardNumber) cardNumber.required = true;
-                if (expMonth) expMonth.required = true;
-                if (expYear) expYear.required = true;
-                if (cardCvc) cardCvc.required = true;
-            } else {
-                cardFields.style.display = 'none';
-                if (cardNumber) cardNumber.required = false;
-                if (expMonth) expMonth.required = false;
-                if (expYear) expYear.required = false;
-                if (cardCvc) cardCvc.required = false;
+    function initPaymentMethodSelect() {
+        var selectRoot = document.getElementById('paymentMethodSelect');
+        var hiddenInput = document.getElementById('paymentMethod');
+        var button = document.getElementById('paymentMethodButton');
+        var iconEl = document.getElementById('paymentMethodIcon');
+        var valueEl = document.getElementById('paymentMethodValue');
+        var optionButtons = document.querySelectorAll('.payment-select-option');
+        var cardFields = document.getElementById('cardFields');
+
+        if (!selectRoot || !hiddenInput || !button || !valueEl || !optionButtons.length) {
+            return;
+        }
+
+        function closeDropdown() {
+            selectRoot.classList.remove('open');
+            button.setAttribute('aria-expanded', 'false');
+
+            if (cardFields) {
+                cardFields.classList.remove('dropdown-obscured');
             }
         }
 
-        function initPaymentMethodSelect() {
-            var selectRoot = document.getElementById('paymentMethodSelect');
-            var hiddenInput = document.getElementById('paymentMethod');
-            var button = document.getElementById('paymentMethodButton');
-            var iconEl = document.getElementById('paymentMethodIcon');
-            var valueEl = document.getElementById('paymentMethodValue');
-            var optionButtons = document.querySelectorAll('.payment-select-option');
-            var cardFields = document.getElementById('cardFields');
+        function openDropdown() {
+            selectRoot.classList.add('open');
+            button.setAttribute('aria-expanded', 'true');
 
-            if (!selectRoot || !hiddenInput || !button || !valueEl || !optionButtons.length) {
-                return;
+            if (cardFields) {
+                cardFields.classList.add('dropdown-obscured');
             }
+        }
 
-            function closeDropdown() {
-                selectRoot.classList.remove('open');
-                button.setAttribute('aria-expanded', 'false');
+        function setValue(value) {
+            var selectedOption = null;
 
-                if (cardFields) {
-                    cardFields.classList.remove('dropdown-obscured');
+            optionButtons.forEach(function(option) {
+                var isActive = option.getAttribute('data-value') === value;
+                option.classList.toggle('active', isActive);
+                if (isActive) {
+                    selectedOption = option;
                 }
-            }
+            });
 
-            function openDropdown() {
-                selectRoot.classList.add('open');
-                button.setAttribute('aria-expanded', 'true');
+            hiddenInput.value = value;
 
-                if (cardFields) {
-                    cardFields.classList.add('dropdown-obscured');
-                }
-            }
+            if (selectedOption) {
+                valueEl.textContent = selectedOption.getAttribute('data-label') || 'Select Payment Method...';
 
-            function setValue(value) {
-                var selectedOption = null;
-
-                optionButtons.forEach(function(option) {
-                    var isActive = option.getAttribute('data-value') === value;
-                    option.classList.toggle('active', isActive);
-                    if (isActive) {
-                        selectedOption = option;
-                    }
-                });
-
-                hiddenInput.value = value;
-
-                if (selectedOption) {
-                    valueEl.textContent = selectedOption.getAttribute('data-label') || 'Select Payment Method...';
-
-                    if (iconEl) {
-                        var selectedIcon = selectedOption.getAttribute('data-icon');
-                        if (selectedIcon) {
-                            iconEl.src = selectedIcon;
-                            iconEl.alt = (selectedOption.getAttribute('data-label') || 'Payment method') + ' logo';
-                            iconEl.hidden = false;
-                        } else {
-                            iconEl.src = '';
-                            iconEl.alt = '';
-                            iconEl.hidden = true;
-                        }
-                    }
-                } else {
-                    valueEl.textContent = 'Select Payment Method...';
-
-                    if (iconEl) {
+                if (iconEl) {
+                    var selectedIcon = selectedOption.getAttribute('data-icon');
+                    if (selectedIcon) {
+                        iconEl.src = selectedIcon;
+                        iconEl.alt = (selectedOption.getAttribute('data-label') || 'Payment method') + ' logo';
+                        iconEl.hidden = false;
+                    } else {
                         iconEl.src = '';
                         iconEl.alt = '';
                         iconEl.hidden = true;
                     }
                 }
+            } else {
+                valueEl.textContent = 'Select Payment Method...';
+
+                if (iconEl) {
+                    iconEl.src = '';
+                    iconEl.alt = '';
+                    iconEl.hidden = true;
+                }
             }
-
-            setValue(hiddenInput.value || '');
-            toggleCardFields();
-
-            button.addEventListener('click', function() {
-                if (selectRoot.classList.contains('open')) {
-                    closeDropdown();
-                } else {
-                    openDropdown();
-                }
-            });
-
-            optionButtons.forEach(function(option) {
-                option.addEventListener('click', function() {
-                    closeDropdown();
-                    setValue(option.getAttribute('data-value'));
-                    toggleCardFields();
-                    button.focus();
-                });
-            });
-
-            document.addEventListener('click', function(event) {
-                if (!selectRoot.contains(event.target)) {
-                    closeDropdown();
-                }
-            });
-
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape') {
-                    closeDropdown();
-                }
-            });
         }
 
-        function initBackButtonConfirm() {
-            var backBtn = document.getElementById('checkoutBackBtn');
-            var modal = document.getElementById('cancelPaymentModal');
-            var stayBtn = document.getElementById('cancelStayBtn');
-            var confirmBtn = document.getElementById('cancelConfirmBtn');
-            var modalCloseTimer;
+        setValue(hiddenInput.value || '');
+        toggleCardFields();
 
-            if (!backBtn || !modal || !stayBtn || !confirmBtn) {
-                return;
+        button.addEventListener('click', function() {
+            if (selectRoot.classList.contains('open')) {
+                closeDropdown();
+            } else {
+                openDropdown();
             }
+        });
 
-            function openModal() {
-                if (modalCloseTimer) {
-                    clearTimeout(modalCloseTimer);
-                }
-
-                modal.classList.add('show');
-                modal.setAttribute('aria-hidden', 'false');
-                document.body.style.overflow = 'hidden';
-                stayBtn.focus();
-            }
-
-            function closeModal() {
-                modal.classList.remove('show');
-                modal.setAttribute('aria-hidden', 'true');
-                document.body.style.overflow = '';
-                modalCloseTimer = setTimeout(function() {
-                    backBtn.focus();
-                }, 180);
-            }
-
-            function proceedBack() {
-                document.body.style.overflow = '';
-                window.location.href = backBtn.getAttribute('href');
-            }
-
-            backBtn.addEventListener('click', function(event) {
-                event.preventDefault();
-                openModal();
+        optionButtons.forEach(function(option) {
+            option.addEventListener('click', function() {
+                closeDropdown();
+                setValue(option.getAttribute('data-value'));
+                toggleCardFields();
+                button.focus();
             });
+        });
 
-            stayBtn.addEventListener('click', function() {
+        document.addEventListener('click', function(event) {
+            if (!selectRoot.contains(event.target)) {
+                closeDropdown();
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeDropdown();
+            }
+        });
+    }
+
+    function initBackButtonConfirm() {
+        var backBtn = document.getElementById('checkoutBackBtn');
+        var modal = document.getElementById('cancelPaymentModal');
+        var stayBtn = document.getElementById('cancelStayBtn');
+        var confirmBtn = document.getElementById('cancelConfirmBtn');
+        var modalCloseTimer;
+
+        if (!backBtn || !modal || !stayBtn || !confirmBtn) {
+            return;
+        }
+
+        function openModal() {
+            if (modalCloseTimer) {
+                clearTimeout(modalCloseTimer);
+            }
+
+            modal.classList.add('show');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            stayBtn.focus();
+        }
+
+        function closeModal() {
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            modalCloseTimer = setTimeout(function() {
+                backBtn.focus();
+            }, 180);
+        }
+
+        function proceedBack() {
+            document.body.style.overflow = '';
+            window.location.href = backBtn.getAttribute('href');
+        }
+
+        backBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            openModal();
+        });
+
+        stayBtn.addEventListener('click', function() {
+            closeModal();
+        });
+
+        confirmBtn.addEventListener('click', function() {
+            proceedBack();
+        });
+
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
                 closeModal();
-            });
+            }
+        });
 
-            confirmBtn.addEventListener('click', function() {
-                proceedBack();
-            });
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && modal.classList.contains('show')) {
+                closeModal();
+            }
+        });
+    }
 
-            modal.addEventListener('click', function(event) {
-                if (event.target === modal) {
-                    closeModal();
-                }
-            });
+    function initCardTypeDetection() {
+        var cardNumberInput = document.getElementById('cardNumber');
+        var cardTypeIndicator = document.getElementById('cardTypeIndicator');
 
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape' && modal.classList.contains('show')) {
-                    closeModal();
-                }
-            });
-        }
+        if (!cardNumberInput || !cardTypeIndicator) return;
 
-        function initCardTypeDetection() {
-            var cardNumberInput = document.getElementById('cardNumber');
-            var cardTypeIndicator = document.getElementById('cardTypeIndicator');
+        cardNumberInput.addEventListener('input', function(e) {
+            var val = this.value.replace(/\D/g, '');
+            var formatted = val.match(/.{1,4}/g);
+            this.value = formatted ? formatted.join(' ') : val;
 
-            if (!cardNumberInput || !cardTypeIndicator) return;
+            var cardType = '';
+            if (/^4/.test(val)) {
+                cardType = 'Visa';
+            } else if (/^5[1-5]/.test(val) || /^2(2[2-9][1-9]|2[3-9][0-9]|[3-6][0-9]{2}|7[0-1][0-9]|720)/.test(
+                    val)) {
+                cardType = 'Mastercard';
+            } else if (/^3[47]/.test(val)) {
+                cardType = 'American Express';
+            } else if (/^6(011|5|4[4-9]|22)/.test(val)) {
+                cardType = 'Discover';
+            } else if (/^35/.test(val)) {
+                cardType = 'JCB';
+            } else if (/^3(?:0[0-5]|[68])/.test(val)) {
+                cardType = 'Diners Club';
+            } else if (val.length > 0) {
+                cardType = 'Unknown Card';
+            }
 
-            cardNumberInput.addEventListener('input', function(e) {
-                // Remove non-digits
-                var val = this.value.replace(/\D/g, '');
+            cardTypeIndicator.textContent = cardType;
+        });
+    }
 
-                // Format with spaces
-                var formatted = val.match(/.{1,4}/g);
-                this.value = formatted ? formatted.join(' ') : val;
-
-                // Detect card type
-                var cardType = '';
-                if (/^4/.test(val)) {
-                    cardType = 'Visa';
-                } else if (/^5[1-5]/.test(val) || /^2(2[2-9][1-9]|2[3-9][0-9]|[3-6][0-9]{2}|7[0-1][0-9]|720)/
-                    .test(val)) {
-                    cardType = 'Mastercard';
-                } else if (/^3[47]/.test(val)) {
-                    cardType = 'American Express';
-                } else if (/^6(011|5|4[4-9]|22)/.test(val)) {
-                    cardType = 'Discover';
-                } else if (/^35/.test(val)) {
-                    cardType = 'JCB';
-                } else if (/^3(?:0[0-5]|[68])/.test(val)) {
-                    cardType = 'Diners Club';
-                } else if (val.length > 0) {
-                    cardType = 'Unknown Card';
-                }
-
-                cardTypeIndicator.textContent = cardType;
-            });
-        }
-
+    // Ensure scripts only mount once when the document is ready
+    document.addEventListener('DOMContentLoaded', function() {
         initPaymentMethodSelect();
         initBackButtonConfirm();
         initCardTypeDetection();
-        toggleCardFields(); // Check state on page load in case of old() input
-    }
+        toggleCardFields();
+    });
+
+    // ---------------------------------------------------------
+    // PROMO CODE LOGIC
+    // ---------------------------------------------------------
+    var promoBtn = document.getElementById('applyPromoBtn');
+    var promoInput = document.getElementById('promoCode');
+    var promoFeedback = document.getElementById('promoFeedback');
+    var ticketSelect = document.getElementById('ticket_selection');
+
+    promoBtn.addEventListener('click', function() {
+        const code = promoInput.value.trim().toUpperCase();
+        const selectedTicketOption = ticketSelect.options[ticketSelect.selectedIndex];
+
+        if (!selectedTicketOption || !selectedTicketOption.dataset.ticket) {
+            promoFeedback.textContent = 'Please select a ticket first.';
+            promoFeedback.style.display = 'block';
+            promoFeedback.style.color = '#e11d48';
+            return;
+        }
+
+        const ticketData = JSON.parse(selectedTicketOption.dataset.ticket);
+        const ticketType = (ticketData.type || '').toUpperCase();
+
+        if (code !== "") {
+            // Update the global currentDiscount variable
+            if (['PLATINUM', 'SVIP', 'VIP'].includes(ticketType)) {
+                currentDiscount = 0.10;
+            } else if (['GOLD', 'SILVER', 'BRONZE'].includes(ticketType)) {
+                currentDiscount = 0.05;
+            } else {
+                currentDiscount = 0;
+            }
+
+            if (currentDiscount > 0) {
+                promoFeedback.textContent = `Promo applied: ${Math.round(currentDiscount * 100)}% off.`;
+                promoFeedback.style.display = 'block';
+                promoFeedback.style.color = '#38bdf8';
+            } else {
+                promoFeedback.textContent = 'Promo code not applicable for this ticket type.';
+                promoFeedback.style.display = 'block';
+                promoFeedback.style.color = '#e11d48';
+            }
+        } else {
+            currentDiscount = 0;
+            promoFeedback.textContent = 'Please enter a promo code.';
+            promoFeedback.style.display = 'block';
+            promoFeedback.style.color = '#e11d48';
+        }
+
+        // 3. Trigger the total price calculation manually to update the DOM
+        const quantityInput = document.getElementById('quantityInput');
+        updateTotalPrice(quantityInput);
+    });
 </script>
