@@ -500,8 +500,11 @@ class PublicController extends Controller
             // Check if PayMongo says it's paid AND we haven't sent the email yet
             if ($status === 'paid' && $resp->is_email_sent == 0) {
                 // Ensure the correct unit price is used for the ticket email
-                $promoCode = $resp->promo_code ?? null;
+
+                $resp->promo_code ?? null;
                 $unitPrice = $tick->price;
+                $promoCode = $request->promo_code ?? null;
+
                 $discountedUnitPrice = $unitPrice;
                 if ($promoCode) {
                     $promoExists = \App\Models\PromoCodes::where('slug', $promoCode)->exists();
