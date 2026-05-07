@@ -31,6 +31,7 @@ class UserSeeder extends Seeder
                 'is_email_resent' => false,
                 'role_id' => Role::where('type', 'admin')->first()->id,
                 'password' => Hash::make('12345678'),
+                'verified_at' => now(),
             ]
         );
         User::firstOrCreate(
@@ -53,6 +54,7 @@ class UserSeeder extends Seeder
                 'is_email_resent' => false,
                 'role_id' => Role::where('type', 'merchant')->first()->id,
                 'password' => Hash::make('12345678'),
+                'verified_at' => now(),
             ]
         );
         User::firstOrCreate(
@@ -75,6 +77,7 @@ class UserSeeder extends Seeder
                 'is_email_resent' => false,
                 'role_id' => Role::where('type', 'staff')->first()->id,
                 'password' => Hash::make('12345678'),
+                'verified_at' => now(),
             ]
         );
         User::firstOrCreate(
@@ -97,6 +100,7 @@ class UserSeeder extends Seeder
                 'is_email_resent' => false,
                 'role_id' => Role::where('type', 'user')->first()->id,
                 'password' => Hash::make('12345678'),
+                'verified_at' => now(),
             ]
         );
     }
