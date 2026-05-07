@@ -164,8 +164,7 @@ class EventsController extends Controller
                 'performers'         => 'nullable|string',
             ]);
 
-            $event->performers = !empty($normalizedPerformers) ? $normalizedPerformers : null;
-
+            $normalizedPerformers = $this->normalizePerformersPayload($request->input('performers'));
             $imageName = '';
 
             if ($request->hasFile('image')) {
