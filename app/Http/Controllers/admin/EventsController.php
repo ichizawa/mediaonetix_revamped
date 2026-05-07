@@ -165,6 +165,7 @@ class EventsController extends Controller
             ]);
 
             $normalizedPerformers = $this->normalizePerformersPayload($request->input('performers'));
+            
             $imageName = '';
 
             if ($request->hasFile('image')) {

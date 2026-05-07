@@ -1,4 +1,4 @@
-e@extends('layouts')
+@extends('layouts')
 
 @section('content')
 @php

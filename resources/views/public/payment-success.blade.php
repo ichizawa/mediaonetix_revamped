@@ -567,7 +567,7 @@
                 </svg>
                 Back to Home
             </a>
-            <a href="/events" class="btn-ghost">Browse More Events</a>
+            <a href="/all-events" class="btn-ghost">Browse More Events</a>
         </div>
         @endif
 

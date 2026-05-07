@@ -744,7 +744,7 @@
                         <h2 class="tp-empty__title">No Orders Yet</h2>
                         <p class="tp-empty__text">You haven't purchased any tickets yet. Explore upcoming events and grab your spot.</p>
                         <div class="tp-empty__actions">
-                            <a href="{{ route('events.index') }}" class="tp-btn-primary">
+                            <a href="/all-events" class="tp-btn-primary">
                                 Browse Events
                                 <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.22 4.22a.75.75 0 011.06 0l5.25 5.25a.75.75 0 010 1.06l-5.25 5.25a.75.75 0 11-1.06-1.06L11.94 10 7.22 5.28a.75.75 0 010-1.06z" clip-rule="evenodd"/></svg>
                             </a>
